@@ -1,0 +1,128 @@
+﻿@model IEnumerable<Project2_Nhom5.Models.Movie>
+
+@{
+    ViewData["Title"] = "Quản lý Phim";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-film me-2 text-primary"></i>Quản lý Phim
+        </h2>
+        <p class="text-muted mb-0">Danh sách tất cả phim trong hệ thống</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Thêm phim mới
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card-dashboard p-5 text-center">
+        <i class="fas fa-film fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Chưa có phim nào</h4>
+        <p class="text-muted">Bắt đầu bằng cách thêm phim đầu tiên vào hệ thống</p>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Thêm phim đầu tiên
+        </a>
+    </div>
+}
+else
+{
+    <div class="card-dashboard">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            <i class="fas fa-image me-1"></i>Poster
+                        </th>
+                        <th>
+                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(model => model.Title)
+                        </th>
+                        <th>
+                            <i class="fas fa-tags me-1"></i>@Html.DisplayNameFor(model => model.Genre)
+                        </th>
+                        <th>
+                            <i class="fas fa-clock me-1"></i>@Html.DisplayNameFor(model => model.Duration)
+                        </th>
+                        <th>
+                            <i class="fas fa-info-circle me-1"></i>@Html.DisplayNameFor(model => model.Status)
+                        </th>
+                        <th class="text-center">
+                            <i class="fas fa-cogs me-1"></i>Thao tác
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.PosterUrl))
+                                {
+                                    <img src="@item.PosterUrl" alt="@item.Title" class="rounded" style="width: 50px; height: 70px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 70px;">
+                                        <i class="fas fa-image text-muted"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <div>
+                                    <strong>@Html.DisplayFor(modelItem => item.Title)</strong>
+                                    @if (!string.IsNullOrEmpty(item.Description))
+                                    {
+                                        <br><small class="text-muted">@(item.Description.Length > 50 ? item.Description.Substring(0, 50) + "..." : item.Description)</small>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">@Html.DisplayFor(modelItem => item.Genre)</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">@Html.DisplayFor(modelItem => item.Duration) phút</span>
+                            </td>
+                            <td>
+                                @{
+                                    var statusClass = item.Status switch
+                                    {
+                                        "dang_chieu" => "bg-success",
+                                        "sap_chieu" => "bg-warning",
+                                        "ket_thuc" => "bg-danger",
+                                        "ngung_chieu" => "bg-secondary",
+                                        _ => "bg-secondary"
+                                    };
+                                    var statusText = item.Status switch
+                                    {
+                                        "dang_chieu" => "Đang chiếu",
+                                        "sap_chieu" => "Sắp chiếu",
+                                        "ket_thuc" => "Kết thúc",
+                                        "ngung_chieu" => "Ngừng chiếu",
+                                        _ => item.Status
+                                    };
+                                }
+                                <span class="badge @statusClass">@statusText</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.MovieId" class="btn btn-sm btn-outline-info" title="Chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.MovieId" class="btn btn-sm btn-outline-warning" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.MovieId" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}

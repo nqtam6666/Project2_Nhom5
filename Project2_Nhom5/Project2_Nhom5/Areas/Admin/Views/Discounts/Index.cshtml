@@ -1,0 +1,144 @@
+@model IEnumerable<Project2_Nhom5.Models.Discount>
+
+@{
+    ViewData["Title"] = "Discounts";
+}
+
+<h1>Discounts</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New</a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <h4>No discounts found</h4>
+        <p>Start by adding the first discount to the system.</p>
+        <a asp-action="Create" class="btn btn-primary">Add First Discount</a>
+    </div>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Code</th>
+                            <th>Description</th>
+                            <th>Type</th>
+                            <th>Value</th>
+                            <th>Expiry Date</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <strong>@Html.DisplayFor(modelItem => item.Code)</strong>
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(item.Description))
+                                    {
+                                        <span>@(item.Description.Length > 50 ? item.Description.Substring(0, 50) + "..." : item.Description)</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">No description</span>
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        string discountTypeClass;
+                                        string discountTypeText;
+                                        
+                                        switch (item.DiscountType)
+                                        {
+                                            case "percentage":
+                                                discountTypeClass = "badge bg-success";
+                                                discountTypeText = "Percentage";
+                                                break;
+                                            case "fixed_amount":
+                                                discountTypeClass = "badge bg-info";
+                                                discountTypeText = "Fixed Amount";
+                                                break;
+                                            case "free_ticket":
+                                                discountTypeClass = "badge bg-warning";
+                                                discountTypeText = "Free Ticket";
+                                                break;
+                                            default:
+                                                discountTypeClass = "badge bg-secondary";
+                                                discountTypeText = item.DiscountType;
+                                                break;
+                                        }
+                                    }
+                                    <span class="@discountTypeClass">@discountTypeText</span>
+                                </td>
+                                <td>
+                                    @if (item.DiscountType == "percentage")
+                                    {
+                                        <span class="badge bg-success">@item.Value%</span>
+                                    }
+                                    else if (item.DiscountType == "fixed_amount")
+                                    {
+                                        <span class="badge bg-info">@item.Value.ToString("N0") VND</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-warning">@item.Value</span>
+                                    }
+                                </td>
+                                <td>
+                                    <strong>@item.ExpiryDate.ToString("dd/MM/yyyy")</strong>
+                                    @{
+                                        var today = DateTime.Today;
+                                        var expiryDate = item.ExpiryDate.ToDateTime(TimeOnly.MinValue);
+                                        var daysLeft = (expiryDate - today).Days;
+                                        
+                                        string statusClass;
+                                        string statusText;
+                                        
+                                        if (daysLeft < 0)
+                                        {
+                                            statusClass = "text-danger";
+                                            statusText = "Expired";
+                                        }
+                                        else if (daysLeft < 7)
+                                        {
+                                            statusClass = "text-warning";
+                                            statusText = $"Expires in {daysLeft} days";
+                                        }
+                                        else
+                                        {
+                                            statusClass = "text-success";
+                                            statusText = $"Expires in {daysLeft} days";
+                                        }
+                                    }
+                                    <br />
+                                    <small class="@statusClass">@statusText</small>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <a asp-action="Details" asp-route-id="@item.DiscountId" class="btn btn-sm btn-outline-info">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a asp-action="Edit" asp-route-id="@item.DiscountId" class="btn btn-sm btn-outline-warning">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.DiscountId" class="btn btn-sm btn-outline-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}

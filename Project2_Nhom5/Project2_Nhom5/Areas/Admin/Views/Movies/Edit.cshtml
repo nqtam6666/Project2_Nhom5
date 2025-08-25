@@ -1,0 +1,136 @@
+﻿@model Project2_Nhom5.Models.Movie
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Phim";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-warning"></i>Chỉnh sửa Phim
+        </h2>
+        <p class="text-muted mb-0">Cập nhật thông tin phim: @Model.Title</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
+
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Edit" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <input type="hidden" asp-for="MovieId" />
+            
+            <div class="col-md-8">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Title" class="form-label">
+                            <i class="fas fa-heading me-1"></i>Tên phim <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Title" class="form-control" placeholder="Nhập tên phim..." />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="Genre" class="form-label">
+                            <i class="fas fa-tags me-1"></i>Thể loại <span class="text-danger">*</span>
+                        </label>
+                        <select asp-for="Genre" class="form-select">
+                            <option value="">Chọn thể loại...</option>
+                            <option value="Hành động">Hành động</option>
+                            <option value="Tình cảm">Tình cảm</option>
+                            <option value="Hài hước">Hài hước</option>
+                            <option value="Kinh dị">Kinh dị</option>
+                            <option value="Viễn tưởng">Viễn tưởng</option>
+                            <option value="Hoạt hình">Hoạt hình</option>
+                            <option value="Tài liệu">Tài liệu</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                        <span asp-validation-for="Genre" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="Duration" class="form-label">
+                            <i class="fas fa-clock me-1"></i>Thời lượng (phút) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Duration" class="form-control" type="number" min="1" placeholder="120" />
+                        <span asp-validation-for="Duration" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label">
+                            <i class="fas fa-info-circle me-1"></i>Trạng thái
+                        </label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="sap_chieu">Sắp chiếu</option>
+                            <option value="dang_chieu">Đang chiếu</option>
+                            <option value="ket_thuc">Kết thúc</option>
+                            <option value="ngung_chieu">Ngừng chiếu</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label">
+                            <i class="fas fa-align-left me-1"></i>Mô tả
+                        </label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả phim..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="PosterUrl" class="form-label">
+                            <i class="fas fa-image me-1"></i>URL Poster
+                        </label>
+                        <input asp-for="PosterUrl" class="form-control" placeholder="https://example.com/poster.jpg" />
+                        <span asp-validation-for="PosterUrl" class="text-danger small"></span>
+                        <div class="form-text">Nhập đường dẫn hình ảnh poster của phim</div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <label asp-for="TrailerUrl" class="form-label">
+                            <i class="fas fa-video me-1"></i>URL Trailer
+                        </label>
+                        <input asp-for="TrailerUrl" class="form-control" placeholder="https://youtube.com/watch?v=..." />
+                        <span asp-validation-for="TrailerUrl" class="text-danger small"></span>
+                        <div class="form-text">Nhập đường dẫn video trailer trên YouTube</div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <i class="fas fa-info-circle fa-2x text-warning mb-2"></i>
+                                <h6>Lưu ý</h6>
+                                <small class="text-muted">
+                                    Các trường có dấu <span class="text-danger">*</span> là bắt buộc phải nhập.
+                                    Nhấn "Lưu thay đổi" để cập nhật thông tin phim.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

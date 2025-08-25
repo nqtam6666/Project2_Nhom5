@@ -1,0 +1,111 @@
+﻿@model IEnumerable<Project2_Nhom5.Models.Revenue>
+
+@{
+    ViewData["Title"] = "Quản lý Doanh thu";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-chart-line me-2 text-primary"></i>Quản lý Doanh thu
+        </h2>
+        <p class="text-muted mb-0">Danh sách tất cả báo cáo doanh thu trong hệ thống</p>
+    </div>
+    <a asp-action="Create" class="btn btn-primary">
+        <i class="fas fa-plus me-2"></i>Thêm báo cáo mới
+    </a>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card-dashboard p-5 text-center">
+        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Chưa có báo cáo doanh thu nào</h4>
+        <p class="text-muted">Bắt đầu bằng cách thêm báo cáo doanh thu đầu tiên vào hệ thống</p>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus me-2"></i>Thêm báo cáo đầu tiên
+        </a>
+    </div>
+}
+else
+{
+    <div class="card-dashboard">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            <i class="fas fa-hashtag me-1"></i>Mã báo cáo
+                        </th>
+                        <th>
+                            <i class="fas fa-dollar-sign me-1"></i>Tổng doanh thu
+                        </th>
+                        <th>
+                            <i class="fas fa-percent me-1"></i>Hoa hồng
+                        </th>
+                        <th>
+                            <i class="fas fa-calendar me-1"></i>Lịch chiếu
+                        </th>
+                        <th class="text-center">
+                            <i class="fas fa-cogs me-1"></i>Thao tác
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary text-white rounded-circle p-2 me-3">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div>
+                                        <strong>#@item.RevenueId.ToString("D6")</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-success">
+                                    <i class="fas fa-dollar-sign me-1"></i>@(item.TotalAmount?.ToString("N0") ?? "0") VNĐ
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">
+                                    <i class="fas fa-percent me-1"></i>@(item.AgencyCommission?.ToString("F1") ?? "0")%
+                                </span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-warning text-white rounded-circle p-2 me-3">
+                                        <i class="fas fa-calendar"></i>
+                                    </div>
+                                    <div>
+                                        <strong>@(item.Showtime?.Movie?.Title ?? "N/A")</strong>
+                                        @if (item.Showtime != null)
+                                        {
+                                            <br><small class="text-muted">@item.Showtime.ShowDate.ToString("dd/MM/yyyy") @item.Showtime.ShowTime.ToString("HH:mm")</small>
+                                        }
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.RevenueId" class="btn btn-sm btn-outline-info" title="Chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.RevenueId" class="btn btn-sm btn-outline-warning" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.RevenueId" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
