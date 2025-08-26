@@ -1,47 +1,97 @@
 ﻿@model Project2_Nhom5.Models.Payment
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa Thanh toán";
 }
 
-<h1>Edit</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-warning"></i>Chỉnh sửa Thanh toán
+        </h2>
+        <p class="text-muted mb-0">Cập nhật giao dịch #@Model.PaymentId.ToString("000000")</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
 
-<h4>Payment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Edit" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
             <input type="hidden" asp-for="PaymentId" />
-            <div class="form-group">
-                <label asp-for="TicketId" class="control-label"></label>
-                <select asp-for="TicketId" class="form-control" asp-items="ViewBag.TicketId"></select>
-                <span asp-validation-for="TicketId" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="TicketId" class="form-label">
+                    <i class="fas fa-ticket-alt me-1"></i>Vé liên quan <span class="text-danger">*</span>
+                </label>
+                <select asp-for="TicketId" class="form-select" asp-items="ViewBag.TicketId"></select>
+                <span asp-validation-for="TicketId" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Amount" class="form-label">
+                    <i class="fas fa-dollar-sign me-1"></i>Số tiền <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <input asp-for="Amount" class="form-control" type="number" min="0" step="1000" value="@((int)Model.Amount)" placeholder="Nhập số tiền..." />
+                    <span class="input-group-text">VNĐ</span>
+                </div>
+                <span asp-validation-for="Amount" class="text-danger small"></span>
+                <div class="form-text">Nhập số tiền bằng VNĐ, bội số của 1000</div>
             </div>
-            <div class="form-group">
-                <label asp-for="PaymentMethod" class="control-label"></label>
-                <input asp-for="PaymentMethod" class="form-control" />
-                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="PaymentMethod" class="form-label">
+                    <i class="fas fa-credit-card me-1"></i>Phương thức <span class="text-danger">*</span>
+                </label>
+                <select asp-for="PaymentMethod" class="form-select">
+                    <option value="cash">Tiền mặt</option>
+                    <option value="credit_card">Thẻ tín dụng</option>
+                    <option value="bank_transfer">Chuyển khoản</option>
+                    <option value="momo">MoMo</option>
+                    <option value="zalopay">ZaloPay</option>
+                </select>
+                <span asp-validation-for="PaymentMethod" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="PaymentDate" class="control-label"></label>
-                <input asp-for="PaymentDate" class="form-control" />
-                <span asp-validation-for="PaymentDate" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="PaymentDate" class="form-label">
+                    <i class="fas fa-calendar me-1"></i>Ngày thanh toán
+                </label>
+                <input asp-for="PaymentDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="PaymentDate" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-warning"></i>Lưu ý khi chỉnh sửa
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Thay đổi số tiền cần kiểm tra với hóa đơn gốc</li>
+                            <li>Chuyển đổi phương thức có thể ảnh hưởng đến phí</li>
+                            <li>Ngày thanh toán nên phản ánh thời điểm thực tế</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i>Lưu thay đổi
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

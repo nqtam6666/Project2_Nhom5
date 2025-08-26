@@ -58,17 +58,13 @@ else
                                         
                                         switch (item.DiscountType)
                                         {
-                                            case "percentage":
+                                            case "percent":
                                                 discountTypeClass = "badge bg-success";
-                                                discountTypeText = "Percentage";
+                                                discountTypeText = "Phần trăm";
                                                 break;
-                                            case "fixed_amount":
+                                            case "fixed":
                                                 discountTypeClass = "badge bg-info";
-                                                discountTypeText = "Fixed Amount";
-                                                break;
-                                            case "free_ticket":
-                                                discountTypeClass = "badge bg-warning";
-                                                discountTypeText = "Free Ticket";
+                                                discountTypeText = "Số tiền cố định";
                                                 break;
                                             default:
                                                 discountTypeClass = "badge bg-secondary";
@@ -79,13 +75,13 @@ else
                                     <span class="@discountTypeClass">@discountTypeText</span>
                                 </td>
                                 <td>
-                                    @if (item.DiscountType == "percentage")
+                                    @if (item.DiscountType == "percent")
                                     {
-                                        <span class="badge bg-success">@item.Value%</span>
+                                        <span class="text-success fw-bold">@item.Value%</span>
                                     }
-                                    else if (item.DiscountType == "fixed_amount")
+                                    else if (item.DiscountType == "fixed")
                                     {
-                                        <span class="badge bg-info">@item.Value.ToString("N0") VND</span>
+                                        <span class="text-info fw-bold">@item.Value.ToString("N0") VNĐ</span>
                                     }
                                     else
                                     {

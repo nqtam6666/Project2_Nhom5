@@ -1,48 +1,170 @@
 ﻿@model Project2_Nhom5.Models.User
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Thêm Người dùng Mới";
 }
 
-<h1>Create</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-plus-circle me-2 text-primary"></i>Thêm Người dùng Mới
+        </h2>
+        <p class="text-muted mb-0">Tạo tài khoản người dùng mới trong hệ thống</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
 
-<h4>User</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Username" class="control-label"></label>
-                <input asp-for="Username" class="form-control" />
-                <span asp-validation-for="Username" class="text-danger"></span>
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post" class="row g-3">
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+            
+            <div class="col-md-6">
+                <label asp-for="Username" class="form-label">
+                    <i class="fas fa-user me-1"></i>Tên đăng nhập <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Username" class="form-control" placeholder="Nhập tên đăng nhập..." />
+                <span asp-validation-for="Username" class="text-danger small"></span>
+                <div class="form-text">Tên đăng nhập phải là duy nhất</div>
             </div>
-            <div class="form-group">
-                <label asp-for="Password" class="control-label"></label>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Password" class="form-label">
+                    <i class="fas fa-lock me-1"></i>Mật khẩu <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Password" class="form-control" type="password" placeholder="Nhập mật khẩu..." />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+                <div class="form-text">Mật khẩu tối thiểu 6 ký tự</div>
             </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label">
+                    <i class="fas fa-envelope me-1"></i>Email <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Email" class="form-control" type="email" placeholder="Nhập email..." />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+                <div class="form-text">Email sẽ được dùng để đăng nhập</div>
             </div>
-            <div class="form-group">
-                <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control" />
-                <span asp-validation-for="Phone" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Phone" class="form-label">
+                    <i class="fas fa-phone me-1"></i>Số điện thoại
+                </label>
+                <input asp-for="Phone" class="form-control" placeholder="Nhập số điện thoại..." />
+                <span asp-validation-for="Phone" class="text-danger small"></span>
+                <div class="form-text">Ví dụ: 0123456789</div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            
+            <div class="col-md-6">
+                <label asp-for="Role" class="form-label">
+                    <i class="fas fa-user-tag me-1"></i>Vai trò <span class="text-danger">*</span>
+                </label>
+                <select asp-for="Role" class="form-select">
+                    <option value="">Chọn vai trò...</option>
+                    <option value="Guest">Khách</option>
+                    <option value="User">Người dùng</option>
+                    <option value="Admin">Quản trị viên</option>
+                    <option value="Agency">Đại lý</option>
+                </select>
+                <span asp-validation-for="Role" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="Status" class="form-label">
+                    <i class="fas fa-info-circle me-1"></i>Trạng thái <span class="text-danger">*</span>
+                </label>
+                <select asp-for="Status" class="form-select">
+                    <option value="">Chọn trạng thái...</option>
+                    <option value="active">Hoạt động</option>
+                    <option value="inactive">Không hoạt động</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-primary"></i>Hướng dẫn tạo người dùng
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Tên đăng nhập và email phải là duy nhất</li>
+                            <li>Chọn vai trò phù hợp: Guest, User, Admin, Agency</li>
+                            <li>Trạng thái "Hoạt động" cho phép đăng nhập</li>
+                            <li>Mật khẩu sẽ được mã hóa khi lưu vào hệ thống</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Tạo người dùng
+                    </button>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Add custom validation for email uniqueness
+            $('#Email').on('blur', function() {
+                var email = $(this).val();
+                if (email) {
+                    $.get('/Admin/Users/CheckEmailExists', { email: email }, function(exists) {
+                        if (exists) {
+                            $('#Email').addClass('is-invalid');
+                            if (!$('#Email').next('.text-danger').length) {
+                                $('#Email').after('<span class="text-danger small">Email này đã được sử dụng</span>');
+                            }
+                        } else {
+                            $('#Email').removeClass('is-invalid');
+                            $('#Email').next('.text-danger').remove();
+                        }
+                    });
+                }
+            });
+
+            // Add custom validation for username uniqueness
+            $('#Username').on('blur', function() {
+                var username = $(this).val();
+                if (username) {
+                    $.get('/Admin/Users/CheckUsernameExists', { username: username }, function(exists) {
+                        if (exists) {
+                            $('#Username').addClass('is-invalid');
+                            if (!$('#Username').next('.text-danger').length) {
+                                $('#Username').after('<span class="text-danger small">Tên đăng nhập này đã được sử dụng</span>');
+                            }
+                        } else {
+                            $('#Username').removeClass('is-invalid');
+                            $('#Username').next('.text-danger').remove();
+                        }
+                    });
+                }
+            });
+
+            // Show validation summary if there are errors
+            @if (!ViewData.ModelState.IsValid)
+            {
+                <text>
+                // Scroll to validation summary
+                $('html, body').animate({
+                    scrollTop: $('.alert-danger').offset().top - 100
+                }, 500);
+                </text>
+            }
+        });
+    </script>
 }
