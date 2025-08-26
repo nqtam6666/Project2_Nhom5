@@ -1,35 +1,51 @@
 ﻿@model Project2_Nhom5.Models.Seat
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Thêm Ghế Mới";
 }
 
-<h1>Create</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-plus-circle me-2 text-primary"></i>Thêm Ghế Mới
+        </h2>
+        <p class="text-muted mb-0">Tạo ghế ngồi cho rạp</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
 
-<h4>Seat</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TheaterId" class="control-label"></label>
-                <select asp-for="TheaterId" class ="form-control" asp-items="ViewBag.TheaterId"></select>
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <div class="col-md-6">
+                <label asp-for="TheaterId" class="form-label">
+                    <i class="fas fa-building me-1"></i>Rạp chiếu <span class="text-danger">*</span>
+                </label>
+                <select asp-for="TheaterId" class ="form-select" asp-items="ViewBag.TheaterId"></select>
             </div>
-            <div class="form-group">
-                <label asp-for="SeatCode" class="control-label"></label>
+            <div class="col-md-6">
+                <label asp-for="SeatCode" class="form-label">
+                    <i class="fas fa-chair me-1"></i>Mã ghế <span class="text-danger">*</span>
+                </label>
                 <input asp-for="SeatCode" class="form-control" />
-                <span asp-validation-for="SeatCode" class="text-danger"></span>
+                <span asp-validation-for="SeatCode" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Tạo ghế
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

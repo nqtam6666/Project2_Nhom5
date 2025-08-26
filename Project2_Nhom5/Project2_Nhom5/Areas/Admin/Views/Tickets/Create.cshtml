@@ -1,45 +1,131 @@
 ﻿@model Project2_Nhom5.Models.Ticket
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Thêm Vé xem phim Mới";
 }
 
-<h1>Create</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-plus-circle me-2 text-primary"></i>Thêm Vé xem phim Mới
+        </h2>
+        <p class="text-muted mb-0">Tạo vé xem phim mới trong hệ thống</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
 
-<h4>Ticket</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            
+            <div class="col-md-6">
+                <label asp-for="UserId" class="form-label">
+                    <i class="fas fa-user me-1"></i>Chọn khách hàng
+                </label>
+                <select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId">
+                    <option value="">Chọn khách hàng...</option>
+                </select>
+                <span asp-validation-for="UserId" class="text-danger small"></span>
+                <div class="form-text">Để trống nếu là khách vãng lai</div>
             </div>
-            <div class="form-group">
-                <label asp-for="ShowtimeId" class="control-label"></label>
-                <select asp-for="ShowtimeId" class ="form-control" asp-items="ViewBag.ShowtimeId"></select>
+            
+            <div class="col-md-6">
+                <label asp-for="ShowtimeId" class="form-label">
+                    <i class="fas fa-calendar-alt me-1"></i>Chọn lịch chiếu <span class="text-danger">*</span>
+                </label>
+                <select asp-for="ShowtimeId" class="form-select" asp-items="ViewBag.ShowtimeId" required>
+                    <option value="">Chọn lịch chiếu...</option>
+                </select>
+                <span asp-validation-for="ShowtimeId" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="SeatId" class="control-label"></label>
-                <select asp-for="SeatId" class ="form-control" asp-items="ViewBag.SeatId"></select>
+            
+            <div class="col-md-6">
+                <label asp-for="SeatId" class="form-label">
+                    <i class="fas fa-chair me-1"></i>Chọn ghế ngồi <span class="text-danger">*</span>
+                </label>
+                <select asp-for="SeatId" class="form-select" asp-items="ViewBag.SeatId" required>
+                    <option value="">Chọn ghế ngồi...</option>
+                </select>
+                <span asp-validation-for="SeatId" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Price" class="form-label">
+                    <i class="fas fa-money-bill me-1"></i>Giá vé <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <input asp-for="Price" class="form-control" type="number" step="1000" min="0" placeholder="Nhập giá vé..." required />
+                    <span class="input-group-text">VNĐ</span>
+                </div>
+                <span asp-validation-for="Price" class="text-danger small"></span>
+                <div class="form-text">Nhập giá vé bằng VNĐ, bội số của 1000 (VD: 50000, 75000)</div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            
+            <div class="col-md-6">
+                <label asp-for="Status" class="form-label">
+                    <i class="fas fa-info-circle me-1"></i>Trạng thái <span class="text-danger">*</span>
+                </label>
+                <select asp-for="Status" class="form-select" required>
+                    <option value="pending">Chờ xử lý</option>
+                    <option value="paid" >Đã thanh toán</option>
+                    <option value="canceled">Đã hủy</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger small"></span>
+                <div class="form-text">Chọn trạng thái ban đầu của vé</div>
+            </div>
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-primary"></i>Hướng dẫn tạo vé
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Chọn lịch chiếu phù hợp với thời gian</li>
+                            <li>Đảm bảo ghế không bị trùng lịch</li>
+                            <li>Giá vé phải là bội số của 1000 VNĐ</li>
+                            <li>Kiểm tra thông tin khách hàng chính xác</li>
+                            <li>Trạng thái mặc định là "Chờ xử lý"</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>Tạo vé
+                    </button>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        // Custom validation for Price to ensure it's a multiple of 1000
+        document.addEventListener('DOMContentLoaded', function() {
+            const priceInput = document.querySelector('input[name="Price"]');
+            if (priceInput) {
+                priceInput.addEventListener('input', function() {
+                    const value = parseFloat(this.value);
+                    if (value % 1000 !== 0 && value !== 0) {
+                        this.setCustomValidity('Giá vé phải là bội số của 1000 VNĐ');
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            }
+        });
+    </script>
 }

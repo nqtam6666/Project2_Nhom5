@@ -1,6 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Project2_Nhom5.Models;
 
+// Load .env if present
+try
+{
+    DotNetEnv.Env.Load();
+}
+catch { }
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.

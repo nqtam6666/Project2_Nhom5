@@ -18,14 +18,14 @@
 
 <div class="card-dashboard">
     <div class="card-body p-4">
-        <form asp-action="Create" class="row g-3">
+        <form asp-action="Create" method="post" class="row g-3">
             <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
             
             <div class="col-md-6">
                 <label asp-for="MovieId" class="form-label">
                     <i class="fas fa-film me-1"></i>Chọn phim <span class="text-danger">*</span>
                 </label>
-                <select asp-for="MovieId" class="form-select" asp-items="ViewBag.MovieId">
+                <select name="MovieId" class="form-select" asp-items="ViewBag.MovieId" required>
                     <option value="">Chọn phim...</option>
                 </select>
                 <span asp-validation-for="MovieId" class="text-danger small"></span>
@@ -35,7 +35,7 @@
                 <label asp-for="TheaterId" class="form-label">
                     <i class="fas fa-building me-1"></i>Chọn rạp chiếu <span class="text-danger">*</span>
                 </label>
-                <select asp-for="TheaterId" class="form-select" asp-items="ViewBag.TheaterId">
+                <select name="TheaterId" class="form-select" asp-items="ViewBag.TheaterId" required>
                     <option value="">Chọn rạp chiếu...</option>
                 </select>
                 <span asp-validation-for="TheaterId" class="text-danger small"></span>
@@ -45,7 +45,7 @@
                 <label asp-for="ShowDate" class="form-label">
                     <i class="fas fa-calendar me-1"></i>Ngày chiếu <span class="text-danger">*</span>
                 </label>
-                <input asp-for="ShowDate" class="form-control" type="date" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <input name="ShowDate" class="form-control" type="date" asp-format="{0:yyyy-MM-dd}" min="@DateTime.Now.ToString("yyyy-MM-dd")" />
                 <span asp-validation-for="ShowDate" class="text-danger small"></span>
                 <div class="form-text">Chọn ngày chiếu (từ hôm nay trở đi)</div>
             </div>
@@ -54,7 +54,7 @@
                 <label asp-for="ShowTime" class="form-label">
                     <i class="fas fa-clock me-1"></i>Giờ chiếu <span class="text-danger">*</span>
                 </label>
-                <input asp-for="ShowTime" class="form-control" type="time" />
+                <input name="ShowTime" class="form-control" type="time" asp-format="{0:hh\:mm}" />
                 <span asp-validation-for="ShowTime" class="text-danger small"></span>
                 <div class="form-text">Chọn giờ chiếu (VD: 19:30, 20:00)</div>
             </div>

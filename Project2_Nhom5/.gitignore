@@ -1,0 +1,7 @@
+# Environment files
+.env
+*.env
+!.env.example
+
+# User secrets (if any)
+secrets.json 

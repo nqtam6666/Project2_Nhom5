@@ -1,42 +1,83 @@
 ﻿@model Project2_Nhom5.Models.Theater
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa Rạp chiếu";
 }
 
-<h1>Edit</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-warning"></i>Chỉnh sửa Rạp chiếu
+        </h2>
+        <p class="text-muted mb-0">Cập nhật thông tin rạp chiếu: @Model.Name</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
 
-<h4>Theater</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Edit" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
             <input type="hidden" asp-for="TheaterId" />
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Name" class="form-label">
+                    <i class="fas fa-building me-1"></i>Tên rạp chiếu <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Name" class="form-control" placeholder="Nhập tên rạp chiếu..." />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+                <div class="form-text">Ví dụ: CGV Aeon Mall, Lotte Cinema, BHD Star</div>
             </div>
-            <div class="form-group">
-                <label asp-for="Location" class="control-label"></label>
-                <input asp-for="Location" class="form-control" />
-                <span asp-validation-for="Location" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Location" class="form-label">
+                    <i class="fas fa-map-marker-alt me-1"></i>Địa điểm <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Location" class="form-control" placeholder="Nhập địa điểm..." />
+                <span asp-validation-for="Location" class="text-danger small"></span>
+                <div class="form-text">Ví dụ: Quận 1, TP.HCM hoặc Quận Ba Đình, Hà Nội</div>
             </div>
-            <div class="form-group">
-                <label asp-for="RoomNumber" class="control-label"></label>
-                <input asp-for="RoomNumber" class="form-control" />
-                <span asp-validation-for="RoomNumber" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="RoomNumber" class="form-label">
+                    <i class="fas fa-door-open me-1"></i>Số phòng chiếu <span class="text-danger">*</span>
+                </label>
+                <input asp-for="RoomNumber" class="form-control" type="number" min="1" placeholder="Nhập số phòng..." />
+                <span asp-validation-for="RoomNumber" class="text-danger small"></span>
+                <div class="form-text">Số thứ tự phòng chiếu trong rạp</div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-warning"></i>Lưu ý khi chỉnh sửa
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Thay đổi tên rạp có thể ảnh hưởng đến lịch chiếu hiện tại</li>
+                            <li>Cập nhật địa điểm giúp khách hàng dễ tìm hơn</li>
+                            <li>Thay đổi số phòng cần kiểm tra trùng lặp</li>
+                            <li>Đảm bảo thông tin chính xác để tránh nhầm lẫn</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i>Lưu thay đổi
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

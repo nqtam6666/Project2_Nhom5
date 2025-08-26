@@ -1,42 +1,86 @@
 ﻿@model Project2_Nhom5.Models.Revenue
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa Báo cáo Doanh thu";
 }
 
-<h1>Edit</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-warning"></i>Chỉnh sửa Báo cáo Doanh thu
+        </h2>
+        <p class="text-muted mb-0">Cập nhật báo cáo doanh thu #@Model.RevenueId.ToString("000000")</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
 
-<h4>Revenue</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Edit" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
             <input type="hidden" asp-for="RevenueId" />
-            <div class="form-group">
-                <label asp-for="ShowtimeId" class="control-label"></label>
-                <select asp-for="ShowtimeId" class="form-control" asp-items="ViewBag.ShowtimeId"></select>
-                <span asp-validation-for="ShowtimeId" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="ShowtimeId" class="form-label">
+                    <i class="fas fa-film me-1"></i>Lịch chiếu <span class="text-danger">*</span>
+                </label>
+                <select asp-for="ShowtimeId" class="form-select" asp-items="ViewBag.ShowtimeId"></select>
+                <span asp-validation-for="ShowtimeId" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="TotalAmount" class="control-label"></label>
-                <input asp-for="TotalAmount" class="form-control" />
-                <span asp-validation-for="TotalAmount" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="TotalAmount" class="form-label">
+                    <i class="fas fa-dollar-sign me-1"></i>Tổng doanh thu <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <input asp-for="TotalAmount" class="form-control" type="number" min="0" step="1000" value="@((int)Model.TotalAmount)" placeholder="Nhập tổng doanh thu..." />
+                    <span class="input-group-text">VNĐ</span>
+                </div>
+                <span asp-validation-for="TotalAmount" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="AgencyCommission" class="control-label"></label>
-                <input asp-for="AgencyCommission" class="form-control" />
-                <span asp-validation-for="AgencyCommission" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="AgencyCommission" class="form-label">
+                    <i class="fas fa-percent me-1"></i>Hoa hồng đại lý (%) <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <input asp-for="AgencyCommission" class="form-control" type="number" min="0" max="100" step="0.1" value="@(Model.AgencyCommission?.ToString("F1") ?? "0")" placeholder="Nhập phần trăm hoa hồng..." />
+                    <span class="input-group-text">%</span>
+                </div>
+                <span asp-validation-for="AgencyCommission" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-warning"></i>Lưu ý khi chỉnh sửa
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Thay đổi tổng doanh thu sẽ ảnh hưởng đến báo cáo tài chính</li>
+                            <li>Điều chỉnh hoa hồng cần được thống nhất với đại lý</li>
+                            <li>Doanh thu thực tế sẽ được tính lại tự động</li>
+                            <li>Lưu ý kiểm tra tính chính xác của dữ liệu</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i>Lưu thay đổi
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

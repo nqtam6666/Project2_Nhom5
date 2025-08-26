@@ -46,9 +46,17 @@ namespace Project2_Nhom5.Controllers
         }
 
         // GET: Payments/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "TicketId", "TicketId");
+            // Chỉ hiển thị những vé chưa có thanh toán
+            var availableTickets = await _context.Tickets
+                .Include(t => t.Showtime)
+                .ThenInclude(s => s.Movie)
+                .Where(t => !_context.Payments.Any(p => p.TicketId == t.TicketId))
+                .Select(t => new { t.TicketId, DisplayText = $"Vé #{t.TicketId} - {t.Showtime.Movie.Title} ({t.Showtime.ShowDate:dd/MM/yyyy} {t.Showtime.ShowTime:HH:mm})" })
+                .ToListAsync();
+
+            ViewData["TicketId"] = new SelectList(availableTickets, "TicketId", "DisplayText");
             return View();
         }
 
@@ -59,6 +67,13 @@ namespace Project2_Nhom5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentId,TicketId,Amount,PaymentMethod,PaymentDate")] Payment payment)
         {
+            // Kiểm tra xem vé đã có thanh toán chưa
+            var existingPayment = await _context.Payments.FirstOrDefaultAsync(p => p.TicketId == payment.TicketId);
+            if (existingPayment != null)
+            {
+                ModelState.AddModelError("TicketId", "Vé này đã có thanh toán. Mỗi vé chỉ có thể có một thanh toán.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(payment);
@@ -77,12 +92,20 @@ namespace Project2_Nhom5.Controllers
                 return NotFound();
             }
 
-            var payment = await _context.Payments.FindAsync(id);
+            var payment = await _context.Payments
+                .Include(p => p.Ticket)
+                .ThenInclude(t => t.Showtime)
+                .ThenInclude(s => s.Movie)
+                .FirstOrDefaultAsync(p => p.PaymentId == id);
+            
             if (payment == null)
             {
                 return NotFound();
             }
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "TicketId", "TicketId", payment.TicketId);
+
+            // Hiển thị thông tin vé hiện tại
+            var ticketInfo = $"Vé #{payment.TicketId?.ToString() ?? "N/A"} - {payment.Ticket?.Showtime?.Movie?.Title ?? "N/A"} ({payment.Ticket?.Showtime?.ShowDate:dd/MM/yyyy} {payment.Ticket?.Showtime?.ShowTime:HH:mm})";
+            ViewData["TicketId"] = new SelectList(new[] { new { payment.TicketId, DisplayText = ticketInfo } }, "TicketId", "DisplayText", payment.TicketId);
             return View(payment);
         }
 
@@ -118,7 +141,7 @@ namespace Project2_Nhom5.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["TicketId"] = new SelectList(_context.Tickets, "TicketId", "TicketId", payment.TicketId);
+            ViewData["TicketId"] = new SelectList(_context.Tickets, "TicketId", "TicketId", payment.TicketId ?? 0);
             return View(payment);
         }
 

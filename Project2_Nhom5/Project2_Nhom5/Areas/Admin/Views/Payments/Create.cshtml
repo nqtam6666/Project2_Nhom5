@@ -1,40 +1,116 @@
 ﻿@model Project2_Nhom5.Models.Payment
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Thêm Thanh toán Mới";
 }
 
-<h1>Create</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-plus-circle me-2 text-primary"></i>Thêm Thanh toán Mới
+        </h2>
+        <p class="text-muted mb-0">Tạo giao dịch thanh toán mới</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
 
-<h4>Payment</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="TicketId" class="control-label"></label>
-                <select asp-for="TicketId" class ="form-control" asp-items="ViewBag.TicketId"></select>
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Create" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            
+            <div class="col-md-6">
+                <label asp-for="TicketId" class="form-label">
+                    <i class="fas fa-ticket-alt me-1"></i>Vé liên quan <span class="text-danger">*</span>
+                </label>
+                @{
+                    var availableTickets = ViewBag.TicketId as SelectList;
+                    if (availableTickets != null && availableTickets.Any())
+                    {
+                        <select asp-for="TicketId" class="form-select" asp-items="ViewBag.TicketId">
+                            <option value="">Chọn vé...</option>
+                        </select>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning mb-0">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            Không có vé nào chưa thanh toán. Tất cả vé đã có thanh toán.
+                        </div>
+                    }
+                }
+                <span asp-validation-for="TicketId" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Amount" class="control-label"></label>
-                <input asp-for="Amount" class="form-control" />
-                <span asp-validation-for="Amount" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Amount" class="form-label">
+                    <i class="fas fa-dollar-sign me-1"></i>Số tiền <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <input asp-for="Amount" class="form-control" type="number" min="0" step="1000" placeholder="Nhập số tiền..." />
+                    <span class="input-group-text">VNĐ</span>
+                </div>
+                <span asp-validation-for="Amount" class="text-danger small"></span>
+                <div class="form-text">Nhập số tiền bằng VNĐ, bội số của 1000</div>
             </div>
-            <div class="form-group">
-                <label asp-for="PaymentMethod" class="control-label"></label>
-                <input asp-for="PaymentMethod" class="form-control" />
-                <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="PaymentMethod" class="form-label">
+                    <i class="fas fa-credit-card me-1"></i>Phương thức <span class="text-danger">*</span>
+                </label>
+                <select asp-for="PaymentMethod" class="form-select">
+                    <option value="">Chọn phương thức...</option>
+                    <option value="cash">Tiền mặt</option>
+                    <option value="credit_card">Thẻ tín dụng</option>
+                    <option value="bank_transfer">Chuyển khoản</option>
+                    <option value="momo">MoMo</option>
+                    <option value="zalopay">ZaloPay</option>
+                </select>
+                <span asp-validation-for="PaymentMethod" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            
+            <div class="col-md-6">
+                <label asp-for="PaymentDate" class="form-label">
+                    <i class="fas fa-calendar me-1"></i>Ngày thanh toán
+                </label>
+                <input asp-for="PaymentDate" class="form-control" type="datetime-local" />
+                <span asp-validation-for="PaymentDate" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-primary"></i>Hướng dẫn tạo thanh toán
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Chọn đúng vé liên quan đến giao dịch</li>
+                            <li>Nhập số tiền chính xác theo hóa đơn</li>
+                            <li>Chọn phương thức thanh toán phù hợp</li>
+                            <li>Ngày thanh toán có thể để trống để mặc định là hiện tại</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </a>
+                    @{
+                        var hasTickets = availableTickets != null && availableTickets.Any();
+                    }
+                    <button type="submit" class="btn btn-primary" @(hasTickets ? "" : "disabled")>
+                        <i class="fas fa-save me-2"></i>Tạo thanh toán
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

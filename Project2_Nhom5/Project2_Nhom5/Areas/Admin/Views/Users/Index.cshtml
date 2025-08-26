@@ -60,7 +60,7 @@ else
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-primary text-white rounded-circle p-2 me-3">
+                                    <div class="bg-primary text-white icon-circle me-3">
                                         <i class="fas fa-user"></i>
                                     </div>
                                     <div>
@@ -71,7 +71,7 @@ else
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-info text-white rounded-circle p-2 me-3">
+                                    <div class="bg-info text-white icon-circle me-3">
                                         <i class="fas fa-envelope"></i>
                                     </div>
                                     <div>
@@ -81,7 +81,7 @@ else
                             </td>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-success text-white rounded-circle p-2 me-3">
+                                    <div class="bg-success text-white icon-circle me-3">
                                         <i class="fas fa-phone"></i>
                                     </div>
                                     <div>
@@ -93,16 +93,18 @@ else
                                 @{
                                     var roleClass = item.Role switch
                                     {
-                                        "admin" => "bg-danger",
-                                        "staff" => "bg-warning",
-                                        "customer" => "bg-info",
+                                        "Admin" => "bg-danger",
+                                        "Agency" => "bg-warning",
+                                        "User" => "bg-info",
+                                        "Guest" => "bg-secondary",
                                         _ => "bg-secondary"
                                     };
                                     var roleText = item.Role switch
                                     {
-                                        "admin" => "Quản trị viên",
-                                        "staff" => "Nhân viên",
-                                        "customer" => "Khách hàng",
+                                        "Admin" => "Quản trị viên",
+                                        "Agency" => "Đại lý",
+                                        "User" => "Người dùng",
+                                        "Guest" => "Khách",
                                         _ => item.Role
                                     };
                                 }
@@ -116,14 +118,12 @@ else
                                     {
                                         "active" => "bg-success",
                                         "inactive" => "bg-warning",
-                                        "banned" => "bg-danger",
                                         _ => "bg-secondary"
                                     };
                                     var statusText = item.Status switch
                                     {
                                         "active" => "Hoạt động",
                                         "inactive" => "Không hoạt động",
-                                        "banned" => "Bị cấm",
                                         _ => item.Status
                                     };
                                 }

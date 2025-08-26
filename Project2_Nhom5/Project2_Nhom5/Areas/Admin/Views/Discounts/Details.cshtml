@@ -1,48 +1,158 @@
 ﻿@model Project2_Nhom5.Models.Discount
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Chi tiết Khuyến mãi";
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Discount</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Code)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Code)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Description)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Description)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DiscountType)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DiscountType)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Value)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Value)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ExpiryDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ExpiryDate)
-        </dd>
-    </dl>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-eye me-2 text-info"></i>Chi tiết Khuyến mãi
+        </h2>
+        <p class="text-muted mb-0">Thông tin chi tiết về khuyến mãi: @(Model?.Code ?? "N/A")</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model?.DiscountId" class="btn btn-warning">
+            <i class="fas fa-edit me-2"></i>Chỉnh sửa
+        </a>
+        <a asp-action="Index" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+        </a>
+    </div>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.DiscountId">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-dashboard">
+            <div class="card-body text-center p-4">
+                <div class="bg-primary text-white rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-percent fa-2x"></i>
+                </div>
+                <h4 class="mb-2">@Model.Code</h4>
+                @{
+                    var discountTypeClass = Model.DiscountType switch
+                    {
+                        "percent" => "bg-success",
+                        "fixed" => "bg-info",
+                        _ => "bg-secondary"
+                    };
+                    
+                    var discountTypeText = Model.DiscountType switch
+                    {
+                        "percent" => "Phần trăm",
+                        "fixed" => "Số tiền cố định",
+                        _ => Model.DiscountType
+                    };
+                }
+                <span class="badge @discountTypeClass mb-2">@discountTypeText</span>
+                
+                @{
+                    var today = DateTime.Today;
+                    var expiryDate = Model.ExpiryDate.ToDateTime(TimeOnly.MinValue);
+                    var daysLeft = (expiryDate - today).Days;
+                    
+                    string statusClass;
+                    string statusText;
+                    
+                    if (daysLeft < 0)
+                    {
+                        statusClass = "bg-danger";
+                        statusText = "Đã hết hạn";
+                    }
+                    else if (daysLeft < 7)
+                    {
+                        statusClass = "bg-warning";
+                        statusText = $"Hết hạn trong {daysLeft} ngày";
+                    }
+                    else
+                    {
+                        statusClass = "bg-success";
+                        statusText = $"Còn {daysLeft} ngày";
+                    }
+                }
+                <span class="badge @statusClass">@statusText</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card-dashboard">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Thông tin chi tiết
+                </h5>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-primary text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Mã khuyến mãi</small>
+                                <div class="fw-bold">@Model.Code</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-info text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-percent"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Loại khuyến mãi</small>
+                                <div class="fw-bold">@discountTypeText</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-success text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Giá trị khuyến mãi</small>
+                                <div class="fw-bold">
+                                    @if (Model.DiscountType == "percent")
+                                    {
+                                        <div class="text-success fw-bold fs-5">@Model.Value%</div>
+                                    }
+                                    else if (Model.DiscountType == "fixed")
+                                    {
+                                        <div class="text-info fw-bold fs-5">@Model.Value.ToString("N0") VNĐ</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-warning text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-calendar-times"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Ngày hết hạn</small>
+                                <div class="fw-bold">@Model.ExpiryDate.ToString("dd/MM/yyyy")</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <div class="mt-4">
+                        <h6 class="mb-3">
+                            <i class="fas fa-align-left me-2 text-primary"></i>Mô tả
+                        </h6>
+                        <div class="p-3 bg-light rounded">
+                            @Model.Description
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
 </div>
