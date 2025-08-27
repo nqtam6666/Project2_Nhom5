@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Environment variables
 .env
 .env.local
@@ -449,3 +450,12 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+=======
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.dbmdl
+*.jfm
+*.log
+>>>>>>> a69d7324732afbefcaf0432d6ab73e02d6596805

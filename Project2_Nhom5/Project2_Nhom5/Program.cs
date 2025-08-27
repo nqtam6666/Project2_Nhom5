@@ -3,11 +3,28 @@ using Project2_Nhom5.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Load .env if present
+try
+{
+    DotNetEnv.Env.Load();
+}
+catch { }
+
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
+// Configure database connection
+var connectionString = Environment.GetEnvironmentVariable("ConnectionStrings__DefaultConnection") 
+    ?? builder.Configuration.GetConnectionString("DefaultConnection");
+
+if (string.IsNullOrEmpty(connectionString))
+{
+    // Fallback connection string for development
+    connectionString = "Server=DESKTOP-5VDN8L9\\NQTAM;Database=BanVeXemPhim;Trusted_Connection=true;TrustServerCertificate=true;";
+}
+
 builder.Services.AddDbContext<Project2_Nhom5Context>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(connectionString));
 
 var app = builder.Build();
 

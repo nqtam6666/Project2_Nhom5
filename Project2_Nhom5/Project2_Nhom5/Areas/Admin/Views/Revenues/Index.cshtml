@@ -7,11 +7,11 @@
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
         <h2 class="mb-1">
-            <i class="fas fa-chart-line me-2 text-primary"></i>Quản lý Doanh thu
+            <i class="fas fa-chart-line me-2 text-success"></i>Quản lý Doanh thu
         </h2>
         <p class="text-muted mb-0">Danh sách tất cả báo cáo doanh thu trong hệ thống</p>
     </div>
-    <a asp-action="Create" class="btn btn-primary">
+    <a asp-action="Create" class="btn btn-success">
         <i class="fas fa-plus me-2"></i>Thêm báo cáo mới
     </a>
 </div>
@@ -19,10 +19,12 @@
 @if (!Model.Any())
 {
     <div class="card-dashboard p-5 text-center">
-        <i class="fas fa-chart-line fa-3x text-muted mb-3"></i>
+        <div class="bg-light text-muted icon-circle-lg mx-auto mb-3">
+            <i class="fas fa-chart-line fa-2x"></i>
+        </div>
         <h4 class="text-muted">Chưa có báo cáo doanh thu nào</h4>
         <p class="text-muted">Bắt đầu bằng cách thêm báo cáo doanh thu đầu tiên vào hệ thống</p>
-        <a asp-action="Create" class="btn btn-primary">
+        <a asp-action="Create" class="btn btn-success">
             <i class="fas fa-plus me-2"></i>Thêm báo cáo đầu tiên
         </a>
     </div>
@@ -38,13 +40,16 @@ else
                             <i class="fas fa-hashtag me-1"></i>Mã báo cáo
                         </th>
                         <th>
+                            <i class="fas fa-film me-1"></i>Lịch chiếu
+                        </th>
+                        <th>
                             <i class="fas fa-dollar-sign me-1"></i>Tổng doanh thu
                         </th>
                         <th>
                             <i class="fas fa-percent me-1"></i>Hoa hồng
                         </th>
                         <th>
-                            <i class="fas fa-calendar me-1"></i>Lịch chiếu
+                            <i class="fas fa-calculator me-1"></i>Doanh thu thực
                         </th>
                         <th class="text-center">
                             <i class="fas fa-cogs me-1"></i>Thao tác
@@ -54,40 +59,50 @@ else
                 <tbody>
                     @foreach (var item in Model)
                     {
+                        var actualRevenue = (item.TotalAmount ?? 0) - ((item.TotalAmount ?? 0) * (item.AgencyCommission ?? 0) / 100);
                         <tr>
                             <td>
                                 <div class="d-flex align-items-center">
-                                    <div class="bg-primary text-white rounded-circle p-2 me-3">
+                                    <div class="bg-success text-white icon-circle me-3">
                                         <i class="fas fa-chart-line"></i>
                                     </div>
                                     <div>
-                                        <strong>#@item.RevenueId.ToString("D6")</strong>
+                                        <strong>#@item.RevenueId.ToString("000000")</strong>
+                                        <br>
+                                        <small class="text-muted">@item.Showtime?.Movie?.Title</small>
                                     </div>
                                 </div>
                             </td>
                             <td>
-                                <span class="badge bg-success">
+                                @if (item.Showtime != null)
+                                {
+                                    <div>
+                                        <strong>@item.Showtime.Movie?.Title</strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            @item.Showtime.ShowDate.ToString("dd/MM/yyyy") @item.Showtime.ShowTime.ToString("HH:mm")
+                                        </small>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-success fs-6">
                                     <i class="fas fa-dollar-sign me-1"></i>@(item.TotalAmount?.ToString("N0") ?? "0") VNĐ
                                 </span>
                             </td>
                             <td>
-                                <span class="badge bg-info">
+                                <span class="badge bg-info fs-6">
                                     <i class="fas fa-percent me-1"></i>@(item.AgencyCommission?.ToString("F1") ?? "0")%
                                 </span>
                             </td>
                             <td>
-                                <div class="d-flex align-items-center">
-                                    <div class="bg-warning text-white rounded-circle p-2 me-3">
-                                        <i class="fas fa-calendar"></i>
-                                    </div>
-                                    <div>
-                                        <strong>@(item.Showtime?.Movie?.Title ?? "N/A")</strong>
-                                        @if (item.Showtime != null)
-                                        {
-                                            <br><small class="text-muted">@item.Showtime.ShowDate.ToString("dd/MM/yyyy") @item.Showtime.ShowTime.ToString("HH:mm")</small>
-                                        }
-                                    </div>
-                                </div>
+                                <span class="badge bg-warning fs-6">
+                                    <i class="fas fa-calculator me-1"></i>@actualRevenue.ToString("N0") VNĐ
+                                </span>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
@@ -108,4 +123,6 @@ else
             </table>
         </div>
     </div>
+}
+
 }

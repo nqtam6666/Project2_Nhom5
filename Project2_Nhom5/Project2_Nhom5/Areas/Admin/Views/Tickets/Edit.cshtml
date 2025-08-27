@@ -1,52 +1,112 @@
 ﻿@model Project2_Nhom5.Models.Ticket
 
 @{
-    ViewData["Title"] = "Edit";
+    ViewData["Title"] = "Chỉnh sửa Vé xem phim";
 }
 
-<h1>Edit</h1>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-warning"></i>Chỉnh sửa Vé xem phim
+        </h2>
+        <p class="text-muted mb-0">Cập nhật thông tin vé xem phim trong hệ thống</p>
+    </div>
+    <a asp-action="Index" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    </a>
+</div>
 
-<h4>Ticket</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Edit" method="post" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
             <input type="hidden" asp-for="TicketId" />
-            <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="UserId" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="UserId" class="form-label">
+                    <i class="fas fa-user me-1"></i>Chọn khách hàng
+                </label>
+                <select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId">
+                    <option value="">Chọn khách hàng...</option>
+                </select>
+                <span asp-validation-for="UserId" class="text-danger small"></span>
+                <div class="form-text">Để trống nếu là khách vãng lai</div>
             </div>
-            <div class="form-group">
-                <label asp-for="ShowtimeId" class="control-label"></label>
-                <select asp-for="ShowtimeId" class="form-control" asp-items="ViewBag.ShowtimeId"></select>
-                <span asp-validation-for="ShowtimeId" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="ShowtimeId" class="form-label">
+                    <i class="fas fa-calendar-alt me-1"></i>Chọn lịch chiếu <span class="text-danger">*</span>
+                </label>
+                <select asp-for="ShowtimeId" class="form-select" asp-items="ViewBag.ShowtimeId" required>
+                    <option value="">Chọn lịch chiếu...</option>
+                </select>
+                <span asp-validation-for="ShowtimeId" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="SeatId" class="control-label"></label>
-                <select asp-for="SeatId" class="form-control" asp-items="ViewBag.SeatId"></select>
-                <span asp-validation-for="SeatId" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="SeatId" class="form-label">
+                    <i class="fas fa-chair me-1"></i>Chọn ghế ngồi <span class="text-danger">*</span>
+                </label>
+                <select asp-for="SeatId" class="form-select" asp-items="ViewBag.SeatId" required>
+                    <option value="">Chọn ghế ngồi...</option>
+                </select>
+                <span asp-validation-for="SeatId" class="text-danger small"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Price" class="control-label"></label>
-                <input asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Price" class="form-label">
+                    <i class="fas fa-money-bill me-1"></i>Giá vé <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <input asp-for="Price" class="form-control" type="number" step="1000" min="0" value="@((int)Model.Price)" placeholder="Nhập giá vé..." />
+                    <span class="input-group-text">VNĐ</span>
+                </div>
+                <span asp-validation-for="Price" class="text-danger small"></span>
+                <div class="form-text">Nhập giá vé bằng VNĐ (VD: 50000, 75000)</div>
             </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <input asp-for="Status" class="form-control" />
-                <span asp-validation-for="Status" class="text-danger"></span>
+            
+            <div class="col-md-6">
+                <label asp-for="Status" class="form-label">
+                    <i class="fas fa-info-circle me-1"></i>Trạng thái <span class="text-danger">*</span>
+                </label>
+                <select asp-for="Status" class="form-select" required>
+                    <option value="pending">Chờ xử lý</option>
+                    <option value="paid">Đã thanh toán</option>
+                    <option value="canceled">Đã hủy</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger small"></span>
+                <div class="form-text">Chọn trạng thái hiện tại của vé</div>
             </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-warning"></i>Lưu ý khi chỉnh sửa vé
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Thay đổi giá vé có thể ảnh hưởng đến thanh toán</li>
+                            <li>Thay đổi trạng thái cần thông báo cho khách hàng</li>
+                            <li>Kiểm tra ghế không bị trùng lịch</li>
+                            <li>Đảm bảo thông tin khách hàng chính xác</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-2"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="btn btn-warning">
+                        <i class="fas fa-save me-2"></i>Lưu thay đổi
+                    </button>
+                </div>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {

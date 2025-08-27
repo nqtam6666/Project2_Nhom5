@@ -45,7 +45,7 @@ public partial class Project2_Nhom5Context : DbContext
             entity.Property(e => e.MovieId).HasColumnName("movie_id");
             entity.Property(e => e.Description).HasColumnType("text").HasColumnName("description");
             entity.Property(e => e.Duration).HasColumnName("duration");
-            entity.Property(e => e.Genre).HasMaxLength(255).IsUnicode(false).HasColumnName("genre");
+            entity.Property(e => e.Genre).HasMaxLength(255).IsUnicode(true).HasColumnName("genre");
             entity.Property(e => e.PosterUrl).HasMaxLength(255).IsUnicode(false).HasColumnName("poster_url");
             entity.Property(e => e.Status).HasMaxLength(50).IsUnicode(false).HasDefaultValue("sap_chieu").HasColumnName("status");
             entity.Property(e => e.Title).HasMaxLength(255).IsUnicode(false).HasColumnName("title");

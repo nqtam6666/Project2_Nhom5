@@ -20,6 +20,7 @@ namespace Project2_Nhom5.Controllers
         }
 
         // GET: Showtimes
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var project2_Nhom5Context = _context.Showtimes.Include(s => s.Movie).Include(s => s.Theater);
@@ -27,6 +28,7 @@ namespace Project2_Nhom5.Controllers
         }
 
         // GET: Showtimes/Details/5
+        [HttpGet]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,32 +49,71 @@ namespace Project2_Nhom5.Controllers
         }
 
         // GET: Showtimes/Create
+        [HttpGet]
         public IActionResult Create()
         {
-            ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title");
-            ViewData["TheaterId"] = new SelectList(_context.Theaters, "TheaterId", "Name");
+            var movies = _context.Movies.ToList();
+            var theaters = _context.Theaters.ToList();
+            
+            var movieList = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "", Text = "Chọn phim...", Selected = true }
+            };
+            movieList.AddRange(movies.Select(m => new SelectListItem { Value = m.MovieId.ToString(), Text = m.Title }));
+            
+            var theaterList = new List<SelectListItem>
+            {
+                new SelectListItem { Value = "", Text = "Chọn rạp chiếu...", Selected = true }
+            };
+            theaterList.AddRange(theaters.Select(t => new SelectListItem { Value = t.TheaterId.ToString(), Text = t.Name }));
+            
+            ViewBag.MovieId = new SelectList(movieList, "Value", "Text");
+            ViewBag.TheaterId = new SelectList(theaterList, "Value", "Text");
             return View();
         }
 
         // POST: Showtimes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ShowtimeId,MovieId,TheaterId,ShowDate,ShowTime")] Showtime showtime)
+        public async Task<IActionResult> Create([FromForm] int MovieId, [FromForm] int TheaterId, [FromForm] DateTime ShowDate, [FromForm] TimeSpan ShowTime)
         {
+            // Create new showtime object
+            var showtime = new Showtime
+            {
+                MovieId = MovieId,
+                TheaterId = TheaterId,
+                ShowDate = DateOnly.FromDateTime(ShowDate),
+                ShowTime = TimeOnly.FromTimeSpan(ShowTime)
+            };
+
+            // Validate that MovieId and TheaterId exist
+            var movieExists = await _context.Movies.AnyAsync(m => m.MovieId == MovieId);
+            var theaterExists = await _context.Theaters.AnyAsync(t => t.TheaterId == TheaterId);
+
+            if (!movieExists)
+            {
+                ModelState.AddModelError("MovieId", "Phim được chọn không tồn tại trong hệ thống.");
+            }
+
+            if (!theaterExists)
+            {
+                ModelState.AddModelError("TheaterId", "Rạp chiếu được chọn không tồn tại trong hệ thống.");
+            }
+
             if (ModelState.IsValid)
             {
                 _context.Add(showtime);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", showtime.MovieId);
-            ViewData["TheaterId"] = new SelectList(_context.Theaters, "TheaterId", "Name", showtime.TheaterId);
+            
+            ViewBag.MovieId = new SelectList(_context.Movies, "MovieId", "Title", MovieId);
+            ViewBag.TheaterId = new SelectList(_context.Theaters, "TheaterId", "Name", TheaterId);
             return View(showtime);
         }
 
         // GET: Showtimes/Edit/5
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -83,24 +124,33 @@ namespace Project2_Nhom5.Controllers
             var showtime = await _context.Showtimes.FindAsync(id);
             if (showtime == null)
             {
-                return NotFound();
+                TempData["ErrorMessage"] = "Không tìm thấy lịch chiếu yêu cầu.";
+                return RedirectToAction(nameof(Index));
             }
-            ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", showtime.MovieId);
-            ViewData["TheaterId"] = new SelectList(_context.Theaters, "TheaterId", "Name", showtime.TheaterId);
+            ViewBag.MovieId = new SelectList(_context.Movies, "MovieId", "Title", showtime.MovieId);
+            ViewBag.TheaterId = new SelectList(_context.Theaters, "TheaterId", "Name", showtime.TheaterId);
             return View(showtime);
         }
 
         // POST: Showtimes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ShowtimeId,MovieId,TheaterId,ShowDate,ShowTime")] Showtime showtime)
+        public async Task<IActionResult> Edit(int id, [FromForm] int ShowtimeId, [FromForm] int MovieId, [FromForm] int TheaterId, [FromForm] DateTime ShowDate, [FromForm] TimeSpan ShowTime)
         {
-            if (id != showtime.ShowtimeId)
+            if (id != ShowtimeId)
             {
                 return NotFound();
             }
+
+            // Create showtime object
+            var showtime = new Showtime
+            {
+                ShowtimeId = ShowtimeId,
+                MovieId = MovieId,
+                TheaterId = TheaterId,
+                ShowDate = DateOnly.FromDateTime(ShowDate),
+                ShowTime = TimeOnly.FromTimeSpan(ShowTime)
+            };
 
             if (ModelState.IsValid)
             {
@@ -122,12 +172,14 @@ namespace Project2_Nhom5.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["MovieId"] = new SelectList(_context.Movies, "MovieId", "Title", showtime.MovieId);
-            ViewData["TheaterId"] = new SelectList(_context.Theaters, "TheaterId", "Name", showtime.TheaterId);
+            
+            ViewBag.MovieId = new SelectList(_context.Movies, "MovieId", "Title", MovieId);
+            ViewBag.TheaterId = new SelectList(_context.Theaters, "TheaterId", "Name", TheaterId);
             return View(showtime);
         }
 
         // GET: Showtimes/Delete/5
+        [HttpGet]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -148,7 +200,8 @@ namespace Project2_Nhom5.Controllers
         }
 
         // POST: Showtimes/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -160,6 +213,28 @@ namespace Project2_Nhom5.Controllers
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // Debug action to check available data
+        [HttpGet]
+        public async Task<IActionResult> DebugData()
+        {
+            var movies = await _context.Movies.ToListAsync();
+            var theaters = await _context.Theaters.ToListAsync();
+            
+            var result = $"Movies ({movies.Count}):\n";
+            foreach (var movie in movies)
+            {
+                result += $"  MovieId: {movie.MovieId}, Title: {movie.Title}\n";
+            }
+            
+            result += $"\nTheaters ({theaters.Count}):\n";
+            foreach (var theater in theaters)
+            {
+                result += $"  TheaterId: {theater.TheaterId}, Name: {theater.Name}\n";
+            }
+            
+            return Content(result);
         }
 
         private bool ShowtimeExists(int id)
