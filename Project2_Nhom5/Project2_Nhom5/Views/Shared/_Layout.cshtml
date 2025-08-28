@@ -7,11 +7,13 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Project2_Nhom5.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    @RenderSection("Styles", required: false)
 </head>
 <body>
     <div class="app d-flex flex-column min-vh-100">
         <header>
-            @Html.Partial("_Navbar");
+            @Html.Partial("_Navbar")
         </header>
         <div class="container flex-grow-1">
             <main role="main" class="pb-3">
@@ -19,9 +21,38 @@
             </main>
         </div>
 
-        <footer class="border-top footer text-muted mt-auto">
+        <footer class="footer mt-auto" id="contact">
             <div class="container">
-                &copy; 2025 - Project2_Nhom5 - <a asp-area="" asp-controller="Home" asp-action="About">Giới thiệu</a>
+                <div class="row">
+                    <div class="col-lg-4 mb-3">
+                        <h5 class="mb-2">CineMax</h5>
+                        <p class="mb-2">Hệ thống rạp chiếu phim hàng đầu Việt Nam với công nghệ hiện đại và dịch vụ tốt nhất.</p>
+                        <div class="social-links">
+                            <a href="#" class="me-3"><i class="fab fa-facebook fa-2x"></i></a>
+                            <a href="#" class="me-3"><i class="fab fa-instagram fa-2x"></i></a>
+                            <a href="#" class="me-3"><i class="fab fa-youtube fa-2x"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                        <h5 class="mb-2">Liên Kết</h5>
+                        <ul class="list-unstyled">
+                            <li class="mb-1"><a href="#">Về Chúng Tôi</a></li>
+                            <li class="mb-1"><a href="#">Điều Khoản</a></li>
+                            <li class="mb-1"><a href="#">Chính Sách</a></li>
+                            <li class="mb-1"><a href="#">Hỗ Trợ</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-4 mb-3">
+                        <h5 class="mb-2">Liên Hệ</h5>
+                        <p class="mb-1"><i class="fas fa-phone me-2"></i>1900 6017</p>
+                        <p class="mb-1"><i class="fas fa-envelope me-2"></i>info@cinemax.vn</p>
+                        <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i>123 Đường ABC, Quận 1, TP.HCM</p>
+                    </div>
+                </div>
+                <hr class="my-3">
+                <div class="text-center">
+                    <p class="mb-0">&copy; 2025 CineMax. All rights reserved.</p>
+                </div>
             </div>
         </footer>
     </div>

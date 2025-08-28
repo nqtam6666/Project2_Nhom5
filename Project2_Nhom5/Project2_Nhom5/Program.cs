@@ -41,11 +41,6 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
-app.MapGet("/", context =>
-{
-    context.Response.Redirect("/Admin");
-    return Task.CompletedTask;
-});
 
 // Route cho khu vực Admin
 app.MapAreaControllerRoute(
@@ -53,9 +48,16 @@ app.MapAreaControllerRoute(
     areaName: "Admin",
     pattern: "Admin/{controller=Home}/{action=Index}/{id?}");
 
-// Route mặc định cho các controller ngoài khu vực
+// Route cho khu vực Guest (root)
+app.MapAreaControllerRoute(
+    name: "guest_root",
+    areaName: "Guest",
+    pattern: "{controller=Home}/{action=Index}/{id?}");
+
+// Route mặc định (fallback)
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}",
+    defaults: new { area = "Guest" });
 
 app.Run();

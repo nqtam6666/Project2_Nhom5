@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Project2_Nhom5.Models;
 using System.Diagnostics;
 
-namespace Project2_Nhom5.Controllers
+namespace Project2_Nhom5.Areas.Admin.Controllers
 {
     [Area("Admin")]
     public class HomeController : Controller

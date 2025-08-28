@@ -39,10 +39,7 @@ button.accept-policy[b-7c5gizlqqq] {
   line-height: inherit;
 }
 
+/* Footer inherits layout flex behavior; no absolute positioning */
 .footer[b-7c5gizlqqq] {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
   line-height: 60px;
 }

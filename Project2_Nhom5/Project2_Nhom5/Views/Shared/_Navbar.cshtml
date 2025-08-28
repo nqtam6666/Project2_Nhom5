@@ -1,20 +1,33 @@
 ﻿<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
     <div class="container-fluid">
-        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Project2_Nhom5</a>
+        <a class="navbar-brand" asp-area="Guest" asp-controller="Home" asp-action="Index">Cinema</a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                 aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
         <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
             <ul class="navbar-nav flex-grow-1">
-                <!-- Dynamic navigation items -->
-                @foreach (var controller in new[] { "Home", "Movies", "Payments", "Seats", "Theaters", "Tickets", "Users", "Discounts", "Revenues", "Showtimes" })
-                {
-                    <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="@controller" asp-action="Index">@controller</a>
-                    </li>
-                }
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="Guest" asp-controller="Home" asp-action="Index">Trang chủ</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="Guest" asp-controller="Movies" asp-action="Index">Phim</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="Guest" asp-controller="Showtimes" asp-action="Index">Lịch chiếu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-dark" asp-area="Guest" asp-controller="Theaters" asp-action="Index">Rạp chiếu</a>
+                </li>
             </ul>
+            <div class="d-flex align-items-center">
+                <button class="theme-toggle ms-3" type="button" id="themeToggleBtn">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
+                <button class="login-button ms-3" type="button" data-bs-toggle="modal" data-bs-target="#loginModal">
+                    <i class="fas fa-user me-2"></i>Đăng Nhập
+                </button>
+            </div>
         </div>
     </div>
 </nav>
