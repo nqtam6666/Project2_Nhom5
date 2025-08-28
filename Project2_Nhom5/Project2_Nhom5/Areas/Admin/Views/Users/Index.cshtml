@@ -94,17 +94,17 @@ else
                                     var roleClass = item.Role switch
                                     {
                                         "Admin" => "bg-danger",
-                                        "Agency" => "bg-warning",
-                                        "User" => "bg-info",
-                                        "Guest" => "bg-secondary",
+                                        "DaiLy" => "bg-warning",
+                                        "NguoiDung" => "bg-info",
+                                        "Khach" => "bg-secondary",
                                         _ => "bg-secondary"
                                     };
                                     var roleText = item.Role switch
                                     {
                                         "Admin" => "Quản trị viên",
-                                        "Agency" => "Đại lý",
-                                        "User" => "Người dùng",
-                                        "Guest" => "Khách",
+                                        "DaiLy" => "Đại lý",
+                                        "NguoiDung" => "Người dùng",
+                                        "Khach" => "Khách",
                                         _ => item.Role
                                     };
                                 }
@@ -116,14 +116,14 @@ else
                                 @{
                                     var statusClass = item.Status switch
                                     {
-                                        "active" => "bg-success",
-                                        "inactive" => "bg-warning",
+                                        "hoatdong" => "bg-success",
+                                        "khonghoatdong" => "bg-warning",
                                         _ => "bg-secondary"
                                     };
                                     var statusText = item.Status switch
                                     {
-                                        "active" => "Hoạt động",
-                                        "inactive" => "Không hoạt động",
+                                        "hoatdong" => "Hoạt động",
+                                        "khonghoatdong" => "Không hoạt động",
                                         _ => item.Status
                                     };
                                 }

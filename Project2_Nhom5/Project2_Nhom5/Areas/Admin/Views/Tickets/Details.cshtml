@@ -41,15 +41,15 @@
                             <div>
                                 <h6 class="mb-1 text-muted">Trạng thái</h6>
                                 <h5 class="mb-0">
-                                    @if (Model.Status == "pending")
+                                    @if (Model.Status == "choxuly")
                                     {
                                         <span class="badge bg-warning">Chờ xử lý</span>
                                     }
-                                    else if (Model.Status == "confirmed")
+                                    else if (Model.Status == "dathanhtoan")
                                     {
-                                        <span class="badge bg-success">Đã xác nhận</span>
+                                        <span class="badge bg-success">Đã thanh toán</span>
                                     }
-                                    else if (Model.Status == "cancelled")
+                                    else if (Model.Status == "dahuy")
                                     {
                                         <span class="badge bg-danger">Đã hủy</span>
                                     }

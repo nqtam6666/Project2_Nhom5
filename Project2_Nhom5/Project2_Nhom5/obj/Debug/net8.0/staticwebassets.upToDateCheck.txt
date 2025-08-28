@@ -2,6 +2,8 @@ wwwroot\css\site.css
 wwwroot\favicon.ico
 wwwroot\img\poster_20250826_085348_1089a838.png
 wwwroot\img\poster_20250827_113330_7cf50d9f.jpg
+wwwroot\img\poster_20250828_181715_e56496d9.png
+wwwroot\img\poster_20250828_182058_70edae82.png
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map

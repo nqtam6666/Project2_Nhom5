@@ -1,21 +1,21 @@
 @model IEnumerable<Project2_Nhom5.Models.Discount>
 
 @{
-    ViewData["Title"] = "Discounts";
+    ViewData["Title"] = "Khuyến mãi";
 }
 
-<h1>Discounts</h1>
+<h1>Khuyến mãi</h1>
 
 <p>
-    <a asp-action="Create" class="btn btn-primary">Create New</a>
+    <a asp-action="Create" class="btn btn-primary">Thêm khuyến mãi</a>
 </p>
 
 @if (!Model.Any())
 {
     <div class="alert alert-info">
-        <h4>No discounts found</h4>
-        <p>Start by adding the first discount to the system.</p>
-        <a asp-action="Create" class="btn btn-primary">Add First Discount</a>
+        <h4>Chưa có khuyến mãi nào</h4>
+        <p>Bắt đầu bằng cách thêm khuyến mãi đầu tiên vào hệ thống.</p>
+        <a asp-action="Create" class="btn btn-primary">Thêm khuyến mãi đầu tiên</a>
     </div>
 }
 else
@@ -26,12 +26,12 @@ else
                 <table class="table table-hover">
                     <thead class="table-light">
                         <tr>
-                            <th>Code</th>
-                            <th>Description</th>
-                            <th>Type</th>
-                            <th>Value</th>
-                            <th>Expiry Date</th>
-                            <th>Actions</th>
+                            <th>Mã</th>
+                            <th>Mô tả</th>
+                            <th>Loại</th>
+                            <th>Giá trị</th>
+                            <th>Hết hạn</th>
+                            <th>Thao tác</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -58,11 +58,11 @@ else
                                         
                                         switch (item.DiscountType)
                                         {
-                                            case "percent":
+                                            case "phantram":
                                                 discountTypeClass = "badge bg-success";
                                                 discountTypeText = "Phần trăm";
                                                 break;
-                                            case "fixed":
+                                            case "codinh":
                                                 discountTypeClass = "badge bg-info";
                                                 discountTypeText = "Số tiền cố định";
                                                 break;
@@ -75,11 +75,11 @@ else
                                     <span class="@discountTypeClass">@discountTypeText</span>
                                 </td>
                                 <td>
-                                    @if (item.DiscountType == "percent")
+                                    @if (item.DiscountType == "phantram")
                                     {
                                         <span class="text-success fw-bold">@item.Value%</span>
                                     }
-                                    else if (item.DiscountType == "fixed")
+                                    else if (item.DiscountType == "codinh")
                                     {
                                         <span class="text-info fw-bold">@item.Value.ToString("N0") VNĐ</span>
                                     }
@@ -101,17 +101,17 @@ else
                                         if (daysLeft < 0)
                                         {
                                             statusClass = "text-danger";
-                                            statusText = "Expired";
+                                            statusText = "Đã hết hạn";
                                         }
                                         else if (daysLeft < 7)
                                         {
                                             statusClass = "text-warning";
-                                            statusText = $"Expires in {daysLeft} days";
+                                            statusText = $"Hết hạn trong {daysLeft} ngày";
                                         }
                                         else
                                         {
                                             statusClass = "text-success";
-                                            statusText = $"Expires in {daysLeft} days";
+                                            statusText = $"Còn {daysLeft} ngày";
                                         }
                                     }
                                     <br />

@@ -41,6 +41,11 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.MapGet("/", context =>
+{
+    context.Response.Redirect("/Admin");
+    return Task.CompletedTask;
+});
 
 // Route cho khu vực Admin
 app.MapAreaControllerRoute(

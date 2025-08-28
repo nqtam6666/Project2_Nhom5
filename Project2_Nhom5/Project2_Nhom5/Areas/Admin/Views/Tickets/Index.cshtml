@@ -80,16 +80,16 @@ else
                                 @{
                                     var statusClass = item.Status switch
                                     {
-                                        "pending" => "bg-warning",
-                                        "paid" => "bg-success",
-                                        "canceled" => "bg-danger",
+                                        "choxuly" => "bg-warning",
+                                        "dathanhtoan" => "bg-success",
+                                        "dahuy" => "bg-danger",
                                         _ => "bg-info"
                                     };
                                     var statusText = item.Status switch
                                     {
-                                        "pending" => "Chờ xử lý",
-                                        "paid" => "Đã thanh toán",
-                                        "canceled" => "Đã hủy",
+                                        "choxuly" => "Chờ xử lý",
+                                        "dathanhtoan" => "Đã thanh toán",
+                                        "dahuy" => "Đã hủy",
                                         _ => item.Status
                                     };
                                 }

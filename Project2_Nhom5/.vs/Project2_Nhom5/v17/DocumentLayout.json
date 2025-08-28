@@ -3,12 +3,16 @@
   "WorkspaceRootPath": "D:\\Project2_Nhom5\\Project2_Nhom5\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|d:\\project2_nhom5\\project2_nhom5\\project2_nhom5\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|solutionrelative:project2_nhom5\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+      "AbsoluteMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|d:\\project2_nhom5\\project2_nhom5\\project2_nhom5\\areas\\admin\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|solutionrelative:project2_nhom5\\areas\\admin\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|d:\\project2_nhom5\\project2_nhom5\\project2_nhom5\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|solutionrelative:project2_nhom5\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|d:\\project2_nhom5\\project2_nhom5\\project2_nhom5\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|solutionrelative:project2_nhom5\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|d:\\project2_nhom5\\project2_nhom5\\project2_nhom5\\areas\\admin\\controllers\\moviescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -94,10 +98,6 @@
       "RelativeMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|solutionrelative:project2_nhom5\\areas\\admin\\controllers\\ticketscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|d:\\project2_nhom5\\project2_nhom5\\project2_nhom5\\areas\\admin\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|solutionrelative:project2_nhom5\\areas\\admin\\controllers\\userscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|d:\\project2_nhom5\\project2_nhom5\\project2_nhom5\\areas\\admin\\controllers\\theaterscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{062CD0F9-EA4E-4CBF-8246-4001EBC16279}|Project2_Nhom5\\Project2_Nhom5.csproj|solutionrelative:project2_nhom5\\areas\\admin\\controllers\\theaterscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -137,55 +137,7 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 14,
-              "Title": "DiscountsController.cs",
-              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\DiscountsController.cs",
-              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\DiscountsController.cs",
-              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\DiscountsController.cs",
-              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\DiscountsController.cs",
-              "ViewState": "AgIAAJAAAAAAAAAAAAAkwJkAAABDAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-25T02:45:12.154Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 7,
-              "Title": "Details.cshtml",
-              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Details.cshtml",
-              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Details.cshtml",
-              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Details.cshtml",
-              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Details.cshtml",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAlwEMAAABwAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-26T00:58:18.316Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "Delete.cshtml",
-              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Delete.cshtml",
-              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Delete.cshtml",
-              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Delete.cshtml",
-              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Delete.cshtml",
-              "ViewState": "AgIAAEgAAAAAAAAAAAAjwE0AAABoAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-26T01:31:01.212Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "HomeController.cs",
-              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\HomeController.cs",
-              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\HomeController.cs",
-              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\HomeController.cs",
-              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\HomeController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAJAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-25T02:45:22.416Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
               "Title": "MoviesController.cs",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\MoviesController.cs",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\MoviesController.cs",
@@ -203,14 +155,14 @@
               "RelativeDocumentMoniker": "Project2_Nhom5\\Program.cs",
               "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Program.cs",
               "RelativeToolTip": "Project2_Nhom5\\Program.cs",
-              "ViewState": "AgIAAAkAAAAAAAAAAAAAABMAAAApAAAAAAAAAA==",
+              "ViewState": "AgIAACYAAAAAAAAAAAAswCsAAAAEAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-08-25T01:06:19.016Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 11,
+              "DocumentIndex": 12,
               "Title": "Details.cshtml",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Tickets\\Details.cshtml",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\Tickets\\Details.cshtml",
@@ -222,7 +174,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 9,
+              "DocumentIndex": 10,
               "Title": "Delete.cshtml",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Tickets\\Delete.cshtml",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\Tickets\\Delete.cshtml",
@@ -234,7 +186,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 2,
               "Title": "appsettings.json",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\appsettings.json",
               "RelativeDocumentMoniker": "Project2_Nhom5\\appsettings.json",
@@ -247,7 +199,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 4,
+              "DocumentIndex": 5,
               "Title": "_Layout.cshtml",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Views\\Shared\\_Layout.cshtml",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Views\\Shared\\_Layout.cshtml",
@@ -259,7 +211,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
+              "DocumentIndex": 6,
               "Title": "site.css",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\wwwroot\\css\\site.css",
               "RelativeDocumentMoniker": "Project2_Nhom5\\wwwroot\\css\\site.css",
@@ -271,7 +223,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 12,
+              "DocumentIndex": 13,
               "Title": "Edit.cshtml",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Movies\\Edit.cshtml",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\Movies\\Edit.cshtml",
@@ -283,7 +235,68 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 10,
+              "DocumentIndex": 0,
+              "Title": "UsersController.cs",
+              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\UsersController.cs",
+              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\UsersController.cs",
+              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\UsersController.cs",
+              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\UsersController.cs",
+              "ViewState": "AgIAAEQAAAAAAAAAAAAvwFQAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-25T02:46:32.489Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "HomeController.cs",
+              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\HomeController.cs",
+              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\HomeController.cs",
+              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\HomeController.cs",
+              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\HomeController.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAYAAAAJAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-25T02:45:22.416Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "Delete.cshtml",
+              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Delete.cshtml",
+              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Delete.cshtml",
+              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Delete.cshtml",
+              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Delete.cshtml",
+              "ViewState": "AgIAAEgAAAAAAAAAAAAjwE0AAABoAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-26T01:31:01.212Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "Details.cshtml",
+              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Details.cshtml",
+              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Details.cshtml",
+              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Details.cshtml",
+              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Views\\Revenues\\Details.cshtml",
+              "ViewState": "AgIAAD4AAAAAAAAAAAAlwEMAAABwAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
+              "WhenOpened": "2025-08-26T00:58:18.316Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "DiscountsController.cs",
+              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\DiscountsController.cs",
+              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\DiscountsController.cs",
+              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\DiscountsController.cs",
+              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\DiscountsController.cs",
+              "ViewState": "AgIAAJAAAAAAAAAAAAAkwJkAAABDAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2025-08-25T02:45:12.154Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
               "Title": "ShowtimesController.cs",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\ShowtimesController.cs",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\ShowtimesController.cs",
@@ -295,7 +308,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 15,
+              "DocumentIndex": 16,
               "Title": "Discount.cs",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Models\\Discount.cs",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Models\\Discount.cs",
@@ -307,7 +320,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 18,
+              "DocumentIndex": 19,
               "Title": "Error.cshtml",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Views\\Shared\\Error.cshtml",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Views\\Shared\\Error.cshtml",
@@ -331,7 +344,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 8,
+              "DocumentIndex": 9,
               "Title": "RevenuesController.cs",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\RevenuesController.cs",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\RevenuesController.cs",
@@ -343,19 +356,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 23,
-              "Title": "UsersController.cs",
-              "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\UsersController.cs",
-              "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\UsersController.cs",
-              "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\UsersController.cs",
-              "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\UsersController.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAsAAAATAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-25T02:46:32.489Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 16,
+              "DocumentIndex": 17,
               "Title": "Project2_Nhom5.csproj",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5.csproj",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Project2_Nhom5.csproj",
@@ -367,7 +368,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 13,
+              "DocumentIndex": 14,
               "Title": "Microsoft.Common.CurrentVersion.targets",
               "DocumentMoniker": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
               "ToolTip": "C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\MSBuild\\Current\\Bin\\amd64\\Microsoft.Common.CurrentVersion.targets",
@@ -377,7 +378,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 22,
+              "DocumentIndex": 23,
               "Title": "TicketsController.cs",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Controllers\\TicketsController.cs",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Controllers\\TicketsController.cs",
@@ -389,7 +390,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 19,
+              "DocumentIndex": 20,
               "Title": "_ViewImports.cshtml",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\_ViewImports.cshtml",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\_ViewImports.cshtml",
@@ -401,7 +402,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 20,
+              "DocumentIndex": 21,
               "Title": "ErrorViewModel.cs",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Models\\ErrorViewModel.cs",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Models\\ErrorViewModel.cs",
@@ -461,7 +462,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 17,
+              "DocumentIndex": 18,
               "Title": "Index.cshtml",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Home\\Index.cshtml",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\Home\\Index.cshtml",
@@ -485,7 +486,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 21,
+              "DocumentIndex": 22,
               "Title": "Project2_Nhom5Context.cs",
               "DocumentMoniker": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Models\\Project2_Nhom5Context.cs",
               "RelativeDocumentMoniker": "Project2_Nhom5\\Models\\Project2_Nhom5Context.cs",

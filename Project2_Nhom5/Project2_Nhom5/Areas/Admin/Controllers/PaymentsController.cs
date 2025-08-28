@@ -48,11 +48,11 @@ namespace Project2_Nhom5.Controllers
         // GET: Payments/Create
         public async Task<IActionResult> Create()
         {
-            // Chỉ hiển thị những vé chưa có thanh toán
+            // Chỉ hiển thị những vé chưa có thanh toán và đang chờ xử lý
             var availableTickets = await _context.Tickets
                 .Include(t => t.Showtime)
                 .ThenInclude(s => s.Movie)
-                .Where(t => !_context.Payments.Any(p => p.TicketId == t.TicketId))
+                .Where(t => t.Status == "choxuly" && !_context.Payments.Any(p => p.TicketId == t.TicketId))
                 .Select(t => new { t.TicketId, DisplayText = $"Vé #{t.TicketId} - {t.Showtime.Movie.Title} ({t.Showtime.ShowDate:dd/MM/yyyy} {t.Showtime.ShowTime:HH:mm})" })
                 .ToListAsync();
 
@@ -77,6 +77,13 @@ namespace Project2_Nhom5.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(payment);
+                // Sau khi thanh toán, cập nhật trạng thái vé thành 'dathanhtoan'
+                var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == payment.TicketId);
+                if (ticket != null)
+                {
+                    ticket.Status = "dathanhtoan";
+                    _context.Tickets.Update(ticket);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }

@@ -32,15 +32,15 @@
                 @{
                     var discountTypeClass = Model.DiscountType switch
                     {
-                        "percent" => "bg-success",
-                        "fixed" => "bg-info",
+                        "phantram" => "bg-success",
+                        "codinh" => "bg-info",
                         _ => "bg-secondary"
                     };
                     
                     var discountTypeText = Model.DiscountType switch
                     {
-                        "percent" => "Phần trăm",
-                        "fixed" => "Số tiền cố định",
+                        "phantram" => "Phần trăm",
+                        "codinh" => "Số tiền cố định",
                         _ => Model.DiscountType
                     };
                 }
@@ -115,11 +115,11 @@
                             <div>
                                 <small class="text-muted">Giá trị khuyến mãi</small>
                                 <div class="fw-bold">
-                                    @if (Model.DiscountType == "percent")
+                                    @if (Model.DiscountType == "phantram")
                                     {
                                         <div class="text-success fw-bold fs-5">@Model.Value%</div>
                                     }
-                                    else if (Model.DiscountType == "fixed")
+                                    else if (Model.DiscountType == "codinh")
                                     {
                                         <div class="text-info fw-bold fs-5">@Model.Value.ToString("N0") VNĐ</div>
                                     }

@@ -9,20 +9,22 @@
     <link rel="stylesheet" href="~/Project2_Nhom5.styles.css" asp-append-version="true" />
 </head>
 <body>
-    <header>
-        @Html.Partial("_Navbar");
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2025 - Project2_Nhom5 - <a asp-area="" asp-controller="Home" asp-action="About">Giới thiệu</a>
+    <div class="app d-flex flex-column min-vh-100">
+        <header>
+            @Html.Partial("_Navbar");
+        </header>
+        <div class="container flex-grow-1">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
         </div>
-    </footer>
+
+        <footer class="border-top footer text-muted mt-auto">
+            <div class="container">
+                &copy; 2025 - Project2_Nhom5 - <a asp-area="" asp-controller="Home" asp-action="About">Giới thiệu</a>
+            </div>
+        </footer>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

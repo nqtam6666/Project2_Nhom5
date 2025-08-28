@@ -36,7 +36,17 @@
                         <label asp-for="Genre" class="form-label">
                             <i class="fas fa-tags me-1"></i>Thể loại <span class="text-danger">*</span>
                         </label>
-                        <select asp-for="Genre" asp-items="ViewBag.Genres" class="form-select"></select>
+                        <input asp-for="Genre" class="form-control" list="genreOptions" placeholder="Chọn hoặc nhập thể loại..." />
+                        <datalist id="genreOptions">
+                            <option value="Hành động"></option>
+                            <option value="Tình cảm"></option>
+                            <option value="Hài hước"></option>
+                            <option value="Kinh dị"></option>
+                            <option value="Viễn tưởng"></option>
+                            <option value="Hoạt hình"></option>
+                            <option value="Tài liệu"></option>
+                            <option value="Khác"></option>
+                        </datalist>
                         <span asp-validation-for="Genre" class="text-danger small"></span>
                     </div>
                     
@@ -53,10 +63,9 @@
                             <i class="fas fa-info-circle me-1"></i>Trạng thái
                         </label>
                         <select asp-for="Status" class="form-select">
-                            <option value="sap_chieu">Sắp chiếu</option>
-                            <option value="dang_chieu">Đang chiếu</option>
-                            <option value="ket_thuc">Kết thúc</option>
-                            <option value="ngung_chieu">Ngừng chiếu</option>
+                            <option value="sapchieu">Sắp chiếu</option>
+                            <option value="dangchieu">Đang chiếu</option>
+                            <option value="ngungchieu">Ngừng chiếu</option>
                         </select>
                         <span asp-validation-for="Status" class="text-danger small"></span>
                     </div>

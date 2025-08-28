@@ -19,7 +19,9 @@
 <div class="card-dashboard">
     <div class="card-body p-4">
         <form asp-action="Edit" method="post" class="row g-3">
-            <div asp-validation-summary="All" class="alert alert-danger" role="alert"></div>
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;">
+                <i class="fas fa-exclamation-triangle me-2"></i>Message Error: @ViewData["ErrorMessage"]
+            </div>
             <input type="hidden" asp-for="UserId" />
             
             <div class="col-md-6">
@@ -75,8 +77,8 @@
                 </label>
                 <select asp-for="Status" class="form-select">
                     <option value="">Chọn trạng thái...</option>
-                    <option value="active">Hoạt động</option>
-                    <option value="inactive">Không hoạt động</option>
+                    <option value="hoatdong">Hoạt động</option>
+                    <option value="khonghoatdong">Không hoạt động</option>
                 </select>
                 <span asp-validation-for="Status" class="text-danger small"></span>
             </div>

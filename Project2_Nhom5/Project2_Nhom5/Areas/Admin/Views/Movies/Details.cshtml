@@ -42,18 +42,16 @@
                 @{
                     var statusClass = Model.Status switch
                     {
-                        "dang_chieu" => "bg-success",
-                        "sap_chieu" => "bg-warning",
-                        "ket_thuc" => "bg-danger",
-                        "ngung_chieu" => "bg-secondary",
+                        "dangchieu" => "bg-success",
+                        "sapchieu" => "bg-warning",
+                        "ngungchieu" => "bg-secondary",
                         _ => "bg-secondary"
                     };
                     var statusText = Model.Status switch
                     {
-                        "dang_chieu" => "Đang chiếu",
-                        "sap_chieu" => "Sắp chiếu",
-                        "ket_thuc" => "Kết thúc",
-                        "ngung_chieu" => "Ngừng chiếu",
+                        "dangchieu" => "Đang chiếu",
+                        "sapchieu" => "Sắp chiếu",
+                        "ngungchieu" => "Ngừng chiếu",
                         _ => Model.Status
                     };
                 }

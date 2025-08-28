@@ -19,7 +19,6 @@ html {
 }
 
 body {
-    margin-bottom: 60px;
     background: var(--bg-primary, #ffffff);
     color: var(--text-primary, #333);
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -78,6 +77,15 @@ body {
 * {
     transition: all 0.3s ease;
 }
+
+html, body {
+    height: 100%;
+}
+
+.app {
+    min-height: 100vh;
+}
+
 
 /* Header Styles */
 .navbar {

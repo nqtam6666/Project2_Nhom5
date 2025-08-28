@@ -38,16 +38,16 @@ else
                             <i class="fas fa-image me-1"></i>Poster
                         </th>
                         <th>
-                            <i class="fas fa-heading me-1"></i>@Html.DisplayNameFor(model => model.Title)
+                            <i class="fas fa-heading me-1"></i>Tên phim
                         </th>
                         <th>
-                            <i class="fas fa-tags me-1"></i>@Html.DisplayNameFor(model => model.Genre)
+                            <i class="fas fa-tags me-1"></i>Thể loại
                         </th>
                         <th>
-                            <i class="fas fa-clock me-1"></i>@Html.DisplayNameFor(model => model.Duration)
+                            <i class="fas fa-clock me-1"></i>Thời lượng
                         </th>
                         <th>
-                            <i class="fas fa-info-circle me-1"></i>@Html.DisplayNameFor(model => model.Status)
+                            <i class="fas fa-info-circle me-1"></i>Trạng thái
                         </th>
                         <th class="text-center">
                             <i class="fas fa-cogs me-1"></i>Thao tác
@@ -83,24 +83,22 @@ else
                                 <span class="badge bg-info">@Html.DisplayFor(modelItem => item.Genre)</span>
                             </td>
                             <td>
-                                <span class="badge bg-secondary">@Html.DisplayFor(modelItem => item.Duration) phút</span>
+                                <span class="badge bg-secondary">@item.Duration phút</span>
                             </td>
                             <td>
                                 @{
                                     var statusClass = item.Status switch
                                     {
-                                        "dang_chieu" => "bg-success",
-                                        "sap_chieu" => "bg-warning",
-                                        "ket_thuc" => "bg-danger",
-                                        "ngung_chieu" => "bg-secondary",
+                                        "dangchieu" => "bg-success",
+                                        "sapchieu" => "bg-warning",
+                                        "ngungchieu" => "bg-secondary",
                                         _ => "bg-secondary"
                                     };
                                     var statusText = item.Status switch
                                     {
-                                        "dang_chieu" => "Đang chiếu",
-                                        "sap_chieu" => "Sắp chiếu",
-                                        "ket_thuc" => "Kết thúc",
-                                        "ngung_chieu" => "Ngừng chiếu",
+                                        "dangchieu" => "Đang chiếu",
+                                        "sapchieu" => "Sắp chiếu",
+                                        "ngungchieu" => "Ngừng chiếu",
                                         _ => item.Status
                                     };
                                 }
