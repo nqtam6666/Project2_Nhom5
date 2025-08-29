@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Admin Login";
+    var error = ViewData["Error"] as string;
+    var returnUrl = ViewData["ReturnUrl"] as string ?? "/Admin";
+}
+
+<style>
+    .auth-hero {
+        min-height: 100vh;
+        background: radial-gradient(800px 400px at 10% -10%, rgba(99,102,241,.15), transparent),
+                    radial-gradient(800px 400px at 110% 110%, rgba(16,185,129,.15), transparent),
+                    linear-gradient(180deg, #f7f9fc, #eef2f7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 16px;
+    }
+    .auth-card {
+        border: 1px solid rgba(17,24,39,0.06);
+        border-radius: 16px;
+        box-shadow: 0 30px 60px rgba(15, 23, 42, 0.15);
+        backdrop-filter: blur(6px);
+        overflow: hidden;
+    }
+    .auth-header {
+        padding: 24px 24px 0 24px;
+        text-align: center;
+    }
+    .auth-title {
+        font-weight: 800;
+        letter-spacing: .2px;
+        color: #0f172a;
+        margin-bottom: 8px;
+    }
+    .auth-subtitle {
+        color: #475569;
+        font-size: 0.95rem;
+        margin-bottom: 0;
+    }
+    .auth-body { padding: 24px; }
+    .form-control.form-control-lg { padding-top: .9rem; padding-bottom: .9rem; }
+    
+    @@media (min-width: 576px) { 
+        .auth-body { padding: 32px; } 
+    }
+    .btn-gradient {
+        background: linear-gradient(135deg, #4f46e5, #2563eb);
+        border: none;
+        color: #fff;
+        font-weight: 700;
+        box-shadow: 0 14px 24px rgba(37, 99, 235, .35);
+    }
+    .btn-gradient:hover { filter: brightness(1.05); }
+    .brand-mark {
+        width: 44px; height: 44px; border-radius: 12px;
+        background: linear-gradient(135deg, #6366f1, #10b981);
+        display: inline-flex; align-items: center; justify-content: center;
+        color: #fff; font-weight: 800; margin-right: 10px;
+        box-shadow: 0 10px 18px rgba(16,185,129,.35);
+    }
+</style>
+
+<section class="auth-hero">
+  <div class="w-100 auth-card bg-white" style="max-width: 460px;">
+      <div class="auth-header">
+          <div class="d-inline-flex align-items-center justify-content-center mb-2">
+              <div class="brand-mark">A</div>
+              <div class="text-start">
+                  <div class="auth-title h3 mb-0">Admin</div>
+                  <p class="auth-subtitle">Đăng nhập để quản trị hệ thống</p>
+              </div>
+          </div>
+      </div>
+      <div class="auth-body">
+          @if (!string.IsNullOrEmpty(error))
+          {
+              <div class="alert alert-danger mb-3">@error</div>
+          }
+          <form method="post" asp-area="Admin" asp-controller="Auth" asp-action="Login">
+              <input type="hidden" name="returnUrl" value="@returnUrl" />
+              <div class="mb-3">
+                  <label class="form-label">Tài khoản</label>
+                  <input type="text" name="username" class="form-control form-control-lg" placeholder="Tên đăng nhập" autocomplete="username" required />
+              </div>
+              <div class="mb-3">
+                  <label class="form-label">Mật khẩu</label>
+                  <input type="password" name="password" class="form-control form-control-lg" placeholder="Mật khẩu" autocomplete="current-password" required />
+              </div>
+              <button type="submit" class="btn btn-gradient w-100 btn-lg">Đăng nhập</button>
+          </form>
+      </div>
+  </div>
+</section> 

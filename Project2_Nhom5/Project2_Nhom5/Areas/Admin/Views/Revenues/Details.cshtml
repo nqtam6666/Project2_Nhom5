@@ -12,8 +12,8 @@
         </h2>
         <p class="text-muted mb-0">Thông tin chi tiết báo cáo #@Model.RevenueId.ToString("000000")</p>
     </div>
-    <a asp-action="Index" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    <a asp-action="Index" class="admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i>Quay lại danh sách
     </a>
 </div>
 
@@ -107,14 +107,17 @@
                     <i class="fas fa-cogs me-2 text-secondary"></i>Thao tác
                 </h5>
                 <div class="d-grid gap-2">
-                    <a asp-action="Edit" asp-route-id="@Model.RevenueId" class="btn btn-warning">
-                        <i class="fas fa-edit me-2"></i>Chỉnh sửa
+                    <a asp-action="Edit" asp-route-id="@Model.RevenueId" class="admin-btn-success">
+                        <i class="fas fa-edit"></i>Chỉnh sửa
                     </a>
-                    <a asp-action="Delete" asp-route-id="@Model.RevenueId" class="btn btn-outline-danger">
-                        <i class="fas fa-trash me-2"></i>Xóa báo cáo
+                    <a asp-action="Delete" asp-route-id="@Model.RevenueId" class="admin-btn-danger">
+                        <i class="fas fa-trash"></i>Xóa báo cáo
                     </a>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+
+

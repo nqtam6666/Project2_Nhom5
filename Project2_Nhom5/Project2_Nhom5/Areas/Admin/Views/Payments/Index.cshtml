@@ -2,6 +2,21 @@
 
 @{
     ViewData["Title"] = "Quản lý Thanh toán";
+    var searchTerm = ViewBag.Search?.ToString() ?? "";
+    var sortOrder = ViewBag.SortOrder?.ToString() ?? "";
+    var currentSort = ViewBag.CurrentSort?.ToString() ?? "";
+    var page = ViewBag.CurrentPage?.ToString() ?? "1";
+    var pageSize = ViewBag.PageSize?.ToString() ?? "10";
+    var paymentMethodFilter = ViewBag.PaymentMethod?.ToString() ?? "";
+    var statusFilter = ViewBag.Status?.ToString() ?? "";
+    var startDateFilter = ViewBag.StartDate?.ToString() ?? "";
+    var endDateFilter = ViewBag.EndDate?.ToString() ?? "";
+    var totalCount = ViewBag.TotalCount ?? 0;
+    var totalPages = ViewBag.TotalPages ?? 1;
+    var currentPageInt = int.Parse(page);
+    var pageSizeInt = int.Parse(pageSize);
+    var startItem = ((currentPageInt - 1) * pageSizeInt) + 1;
+    var endItem = Math.Min(currentPageInt * pageSizeInt, totalCount);
 }
 
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -11,9 +26,156 @@
         </h2>
         <p class="text-muted mb-0">Danh sách tất cả giao dịch thanh toán trong hệ thống</p>
     </div>
-    <a asp-action="Create" class="btn btn-primary">
-        <i class="fas fa-plus me-2"></i>Thêm thanh toán mới
+    <a asp-action="Create" class="admin-btn-primary">
+        <i class="fas fa-plus"></i>Thêm thanh toán mới
     </a>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="card-dashboard mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">
+                    <i class="fas fa-search"></i>Tìm kiếm
+                </label>
+                <input type="text" name="search" class="form-control" placeholder="Tìm theo mã GD, vé, KH, phim..." value="@searchTerm">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-credit-card"></i>Phương thức
+                </label>
+                <select name="paymentMethod" class="form-select">
+                    <option value="">Tất cả phương thức</option>
+                    @if (paymentMethodFilter == "cash")
+                    {
+                        <option value="cash" selected>Tiền mặt</option>
+                    }
+                    else
+                    {
+                        <option value="cash">Tiền mặt</option>
+                    }
+                    @if (paymentMethodFilter == "credit_card")
+                    {
+                        <option value="credit_card" selected>Thẻ tín dụng</option>
+                    }
+                    else
+                    {
+                        <option value="credit_card">Thẻ tín dụng</option>
+                    }
+                    @if (paymentMethodFilter == "bank_transfer")
+                    {
+                        <option value="bank_transfer" selected>Chuyển khoản</option>
+                    }
+                    else
+                    {
+                        <option value="bank_transfer">Chuyển khoản</option>
+                    }
+                    @if (paymentMethodFilter == "momo")
+                    {
+                        <option value="momo" selected>MoMo</option>
+                    }
+                    else
+                    {
+                        <option value="momo">MoMo</option>
+                    }
+                    @if (paymentMethodFilter == "zalopay")
+                    {
+                        <option value="zalopay" selected>ZaloPay</option>
+                    }
+                    else
+                    {
+                        <option value="zalopay">ZaloPay</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-toggle-on"></i>Trạng thái vé
+                </label>
+                <select name="status" class="form-select">
+                    <option value="">Tất cả trạng thái</option>
+                    @if (statusFilter == "dathanhtoan")
+                    {
+                        <option value="dathanhtoan" selected>Đã thanh toán</option>
+                    }
+                    else
+                    {
+                        <option value="dathanhtoan">Đã thanh toán</option>
+                    }
+                    @if (statusFilter == "choxuly")
+                    {
+                        <option value="choxuly" selected>Chờ xử lý</option>
+                    }
+                    else
+                    {
+                        <option value="choxuly">Chờ xử lý</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-calendar"></i>Từ ngày
+                </label>
+                <input type="date" name="startDate" class="form-control" value="@startDateFilter">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-calendar"></i>Đến ngày
+                </label>
+                <input type="date" name="endDate" class="form-control" value="@endDateFilter">
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">
+                    <i class="fas fa-list"></i>Số dòng
+                </label>
+                <select name="pageSize" class="form-select">
+                    @if (pageSize == "10")
+                    {
+                        <option value="10" selected>10</option>
+                    }
+                    else
+                    {
+                        <option value="10">10</option>
+                    }
+                    @if (pageSize == "25")
+                    {
+                        <option value="25" selected>25</option>
+                    }
+                    else
+                    {
+                        <option value="25">25</option>
+                    }
+                    @if (pageSize == "50")
+                    {
+                        <option value="50" selected>50</option>
+                    }
+                    else
+                    {
+                        <option value="50">50</option>
+                    }
+                    @if (pageSize == "100")
+                    {
+                        <option value="100" selected>100</option>
+                    }
+                    else
+                    {
+                        <option value="100">100</option>
+                    }
+                </select>
+            </div>
+            <div class="col-12">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="admin-btn-primary">
+                        <i class="fas fa-search"></i>Tìm kiếm
+                    </button>
+                    <a asp-action="Index" class="admin-btn-secondary">
+                        <i class="fas fa-refresh"></i>Làm mới
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 @if (!Model.Any())
@@ -22,8 +184,8 @@
         <i class="fas fa-credit-card fa-3x text-muted mb-3"></i>
         <h4 class="text-muted">Chưa có giao dịch thanh toán nào</h4>
         <p class="text-muted">Bắt đầu bằng cách thêm giao dịch thanh toán đầu tiên vào hệ thống</p>
-        <a asp-action="Create" class="btn btn-primary">
-            <i class="fas fa-plus me-2"></i>Thêm thanh toán đầu tiên
+        <a asp-action="Create" class="admin-btn-primary">
+            <i class="fas fa-plus"></i>Thêm thanh toán đầu tiên
         </a>
     </div>
 }
@@ -35,22 +197,79 @@ else
                 <thead class="table-light">
                     <tr>
                         <th>
-                            <i class="fas fa-hashtag me-1"></i>Mã giao dịch
+                            <i class="fas fa-hashtag"></i>Mã giao dịch
                         </th>
                         <th>
-                            <i class="fas fa-dollar-sign me-1"></i>Số tiền
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                paymentMethod = paymentMethodFilter, 
+                                status = statusFilter,
+                                startDate = startDateFilter,
+                                endDate = endDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "amount" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "amount"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-dollar-sign"></i>Số tiền
+                                @if (currentSort == "amount")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
                         </th>
                         <th>
-                            <i class="fas fa-credit-card me-1"></i>Phương thức
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                paymentMethod = paymentMethodFilter, 
+                                status = statusFilter,
+                                startDate = startDateFilter,
+                                endDate = endDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "paymentMethod" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "paymentMethod"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-credit-card"></i>Phương thức
+                                @if (currentSort == "paymentMethod")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
                         </th>
                         <th>
-                            <i class="fas fa-calendar me-1"></i>Ngày thanh toán
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                paymentMethod = paymentMethodFilter, 
+                                status = statusFilter,
+                                startDate = startDateFilter,
+                                endDate = endDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "paymentDate" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "paymentDate"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-calendar"></i>Ngày thanh toán
+                                @if (currentSort == "paymentDate")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
                         </th>
                         <th>
-                            <i class="fas fa-ticket-alt me-1"></i>Vé liên quan
+                            <i class="fas fa-ticket-alt"></i>Vé liên quan
                         </th>
                         <th class="text-center">
-                            <i class="fas fa-cogs me-1"></i>Thao tác
+                            <i class="fas fa-cogs"></i>Thao tác
                         </th>
                     </tr>
                 </thead>
@@ -69,8 +288,8 @@ else
                                 </div>
                             </td>
                             <td>
-                                                                    <span class="badge bg-success">
-                                        <i class="fas fa-dollar-sign me-1"></i>@item.Amount.ToString("N0") VNĐ
+                                    <span class="badge bg-success">
+                                        <i class="fas fa-dollar-sign"></i>@item.Amount.ToString("N0") VNĐ
                                     </span>
                             </td>
                             <td>
@@ -95,7 +314,7 @@ else
                                     };
                                 }
                                 <span class="badge @methodClass">
-                                    <i class="fas fa-credit-card me-1"></i>@methodText
+                                    <i class="fas fa-credit-card"></i>@methodText
                                 </span>
                             </td>
                             <td>
@@ -104,8 +323,8 @@ else
                                         <i class="fas fa-calendar"></i>
                                     </div>
                                     <div>
-                                        <strong>@item.PaymentDate?.ToString("dd/MM/yyyy")</strong>
-                                        <br><small class="text-muted">@item.PaymentDate?.ToString("HH:mm")</small>
+                                        <strong>@(item.PaymentDate?.ToString("dd/MM/yyyy") ?? "N/A")</strong>
+                                        <br><small class="text-muted">@(item.PaymentDate?.ToString("HH:mm") ?? "N/A")</small>
                                     </div>
                                 </div>
                             </td>
@@ -115,23 +334,27 @@ else
                                         <i class="fas fa-ticket-alt"></i>
                                     </div>
                                     <div>
-                                        <strong>#@(item.Ticket?.TicketId.ToString("000000") ?? "N/A")</strong>
-                                        @if (item.Ticket != null)
+                                        <strong>Vé #@(item.Ticket?.TicketId.ToString("000000") ?? "N/A")</strong>
+                                        @if (item.Ticket.Showtime?.Movie != null)
                                         {
-                                            <br><small class="text-muted">@item.Ticket.Showtime?.Movie?.Title</small>
+                                            <br><small class="text-muted">@item.Ticket.Showtime.Movie.Title</small>
+                                        }
+                                        @if (item.Ticket.User != null)
+                                        {
+                                            <br><small class="text-muted">@item.Ticket.User.Username</small>
                                         }
                                     </div>
                                 </div>
                             </td>
                             <td class="text-center">
                                 <div class="btn-group" role="group">
-                                    <a asp-action="Details" asp-route-id="@item.PaymentId" class="btn btn-sm btn-outline-info" title="Chi tiết">
+                                    <a asp-action="Details" asp-route-id="@item.PaymentId" class="admin-btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" title="Chi tiết">
                                         <i class="fas fa-eye"></i>
                                     </a>
-                                    <a asp-action="Edit" asp-route-id="@item.PaymentId" class="btn btn-sm btn-outline-warning" title="Sửa">
+                                    <a asp-action="Edit" asp-route-id="@item.PaymentId" class="admin-btn-success" style="padding: 6px 12px; font-size: 0.8rem;" title="Sửa">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a asp-action="Delete" asp-route-id="@item.PaymentId" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                    <a asp-action="Delete" asp-route-id="@item.PaymentId" class="admin-btn-danger" style="padding: 6px 12px; font-size: 0.8rem;" title="Xóa">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
@@ -142,4 +365,90 @@ else
             </table>
         </div>
     </div>
+    
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="text-muted">
+            Hiển thị @startItem đến @endItem trong tổng số @totalCount giao dịch
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination mb-0">
+                @if (currentPageInt > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            paymentMethod = paymentMethodFilter, 
+                            status = statusFilter,
+                            startDate = startDateFilter,
+                            endDate = endDateFilter,
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = currentPageInt - 1
+                        })">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                }
+                
+                @for (int i = Math.Max(1, currentPageInt - 2); i <= Math.Min(totalPages, currentPageInt + 2); i++)
+                {
+                    <li class="page-item @(i == currentPageInt ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            paymentMethod = paymentMethodFilter, 
+                            status = statusFilter,
+                            startDate = startDateFilter,
+                            endDate = endDateFilter,
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = i
+                        })">@i</a>
+                    </li>
+                }
+                
+                @if (currentPageInt < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            paymentMethod = paymentMethodFilter, 
+                            status = statusFilter,
+                            startDate = startDateFilter,
+                            endDate = endDateFilter,
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = currentPageInt + 1
+                        })">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
 }
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-submit form when pageSize changes
+            $('select[name="pageSize"]').change(function() {
+                $(this).closest('form').submit();
+            });
+            
+            // Clear search when clicking refresh
+            $('a[href*="Index"]').click(function() {
+                if ($(this).text().includes('Làm mới')) {
+                    $(this).attr('href', '@Url.Action("Index")');
+                }
+            });
+        });
+    </script>
+}
+
+
+

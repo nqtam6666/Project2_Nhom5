@@ -11,8 +11,8 @@
         </h2>
         <p class="text-muted mb-0">Xác nhận xóa giao dịch khỏi hệ thống</p>
     </div>
-    <a asp-action="Index" class="btn btn-outline-secondary">
-        <i class="fas fa-arrow-left me-2"></i>Quay lại danh sách
+    <a asp-action="Index" class="admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i>Quay lại danh sách
     </a>
 </div>
 
@@ -46,7 +46,7 @@
                 </h5>
                 
                 <div class="alert alert-warning" role="alert">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <i class="fas fa-exclamation-triangle"></i>
                     <strong>Lưu ý:</strong> Việc xóa có thể ảnh hưởng đến báo cáo doanh thu.
                 </div>
                 
@@ -103,11 +103,11 @@
                 <form asp-action="Delete" class="mt-4">
                     <input type="hidden" asp-for="PaymentId" />
                     <div class="d-flex justify-content-end gap-2">
-                        <a asp-action="Index" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-2"></i>Hủy bỏ
+                        <a asp-action="Index" class="admin-btn-secondary">
+                            <i class="fas fa-times"></i>Hủy bỏ
                         </a>
-                        <button type="submit" class="btn btn-danger">
-                            <i class="fas fa-trash me-2"></i>Xác nhận xóa
+                        <button type="submit" class="admin-btn-danger" id="deleteBtn">
+                            <i class="fas fa-trash"></i>Xác nhận xóa
                         </button>
                     </div>
                 </form>
@@ -115,3 +115,102 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Form submission with beautiful dialog
+            $('form').on('submit', async function(e) {
+                e.preventDefault();
+                
+                // Show confirmation dialog
+                const result = await Swal.fire({
+                    title: 'Xác nhận xóa?',
+                    text: "Bạn có chắc chắn muốn xóa giao dịch thanh toán này? Hành động này không thể hoàn tác.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Có, xóa!',
+                    cancelButtonText: 'Hủy bỏ'
+                });
+                
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Đang xóa giao dịch thanh toán...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    try {
+                        const formData = new FormData(this);
+                        const response = await fetch('@Url.Action("Delete", "Payments", new { area = "Admin" })', {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            },
+                            body: formData
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            Swal.fire({
+                                html: `
+                                    <div class="mt-3 text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                        </lord-icon>
+                                        <div class="mt-4 pt-2 fs-15">
+                                            <h4 style="color: #333; font-weight: 600; margin-bottom: 8px;">Thành công!</h4>
+                                            <p style="color: #666; margin: 0;">${result.message}</p>
+                                        </div>
+                                    </div>
+                                `,
+                                showConfirmButton: true,
+                                confirmButtonText: 'Ok',
+                                confirmButtonColor: '#0ab39c',
+                                allowOutsideClick: true,
+                                allowEscapeKey: true,
+                                customClass: {
+                                    popup: 'swal2-custom-popup',
+                                    confirmButton: 'btn btn-primary w-xs mb-1'
+                                },
+                                background: '#fff',
+                                backdrop: 'rgba(0,0,0,0.4)'
+                            }).then(() => {
+                                window.location.href = '@Url.Action("Index", "Payments", new { area = "Admin" })';
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi!',
+                                text: result.message,
+                                confirmButtonText: 'Đóng',
+                                confirmButtonColor: '#dc3545'
+                            });
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Có lỗi xảy ra khi xóa giao dịch thanh toán',
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

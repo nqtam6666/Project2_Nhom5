@@ -20,10 +20,90 @@ namespace Project2_Nhom5.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search, string paymentMethod, string status, string startDate, string endDate, string sortOrder, string currentSort, int page = 1, int pageSize = 10)
         {
-            var project2_Nhom5Context = _context.Payments.Include(p => p.Ticket);
-            return View(await project2_Nhom5Context.ToListAsync());
+            // Get all payments with includes
+            var payments = _context.Payments
+                .Include(p => p.Ticket)
+                .ThenInclude(t => t.User)
+                .Include(p => p.Ticket)
+                .ThenInclude(t => t.Showtime)
+                .ThenInclude(s => s.Movie)
+                .AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrEmpty(search))
+            {
+                payments = payments.Where(p => 
+                    p.PaymentId.ToString().Contains(search) ||
+                    p.Ticket.TicketId.ToString().Contains(search) ||
+                    p.Ticket.User.Username.Contains(search) ||
+                    p.Ticket.User.Email.Contains(search) ||
+                    p.Ticket.Showtime.Movie.Title.Contains(search)
+                );
+            }
+
+            // Apply payment method filter
+            if (!string.IsNullOrEmpty(paymentMethod))
+            {
+                payments = payments.Where(p => p.PaymentMethod == paymentMethod);
+            }
+
+            // Apply status filter
+            if (!string.IsNullOrEmpty(status))
+            {
+                payments = payments.Where(p => p.Ticket.Status == status);
+            }
+
+            // Apply date range filter
+            if (!string.IsNullOrEmpty(startDate) && DateTime.TryParse(startDate, out DateTime startDateFilter))
+            {
+                payments = payments.Where(p => p.PaymentDate >= startDateFilter);
+            }
+
+            if (!string.IsNullOrEmpty(endDate) && DateTime.TryParse(endDate, out DateTime endDateFilter))
+            {
+                endDateFilter = endDateFilter.AddDays(1).AddSeconds(-1); // End of day
+                payments = payments.Where(p => p.PaymentDate <= endDateFilter);
+            }
+
+            // Apply sorting
+            if (!string.IsNullOrEmpty(currentSort))
+            {
+                sortOrder = sortOrder == "asc" ? "desc" : "asc";
+            }
+
+            payments = currentSort switch
+            {
+                "amount" => sortOrder == "desc" ? payments.OrderByDescending(p => p.Amount) : payments.OrderBy(p => p.Amount),
+                "paymentDate" => sortOrder == "desc" ? payments.OrderByDescending(p => p.PaymentDate) : payments.OrderBy(p => p.PaymentDate),
+                "paymentMethod" => sortOrder == "desc" ? payments.OrderByDescending(p => p.PaymentMethod) : payments.OrderBy(p => p.PaymentMethod),
+                "status" => sortOrder == "desc" ? payments.OrderByDescending(p => p.Ticket.Status) : payments.OrderBy(p => p.Ticket.Status),
+                "user" => sortOrder == "desc" ? payments.OrderByDescending(p => p.Ticket.User.Username) : payments.OrderBy(p => p.Ticket.User.Username),
+                _ => payments.OrderByDescending(p => p.PaymentDate)
+            };
+
+            // Get total count for pagination
+            var totalCount = await payments.CountAsync();
+
+            // Apply pagination
+            var skip = (page - 1) * pageSize;
+            var pagedPayments = await payments.Skip(skip).Take(pageSize).ToListAsync();
+
+            // Pass pagination info to view
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalCount = totalCount;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            ViewBag.Search = search;
+            ViewBag.PaymentMethod = paymentMethod;
+            ViewBag.Status = status;
+            ViewBag.StartDate = startDate;
+            ViewBag.EndDate = endDate;
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.CurrentSort = currentSort;
+
+            return View(pagedPayments);
         }
 
         // GET: Payments/Details/5
@@ -53,7 +133,10 @@ namespace Project2_Nhom5.Controllers
                 .Include(t => t.Showtime)
                 .ThenInclude(s => s.Movie)
                 .Where(t => t.Status == "choxuly" && !_context.Payments.Any(p => p.TicketId == t.TicketId))
-                .Select(t => new { t.TicketId, DisplayText = $"Vé #{t.TicketId} - {t.Showtime.Movie.Title} ({t.Showtime.ShowDate:dd/MM/yyyy} {t.Showtime.ShowTime:HH:mm})" })
+                .Select(t => new { 
+                    t.TicketId, 
+                    DisplayText = $"Vé #{t.TicketId} - {(t.Showtime != null && t.Showtime.Movie != null ? t.Showtime.Movie.Title : "N/A")} ({(t.Showtime != null ? $"{t.Showtime.ShowDate:dd/MM/yyyy} {t.Showtime.ShowTime:HH:mm}" : "N/A")})" 
+                })
                 .ToListAsync();
 
             ViewData["TicketId"] = new SelectList(availableTickets, "TicketId", "DisplayText");
@@ -67,26 +150,63 @@ namespace Project2_Nhom5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("PaymentId,TicketId,Amount,PaymentMethod,PaymentDate")] Payment payment)
         {
-            // Kiểm tra xem vé đã có thanh toán chưa
-            var existingPayment = await _context.Payments.FirstOrDefaultAsync(p => p.TicketId == payment.TicketId);
-            if (existingPayment != null)
+            try
             {
-                ModelState.AddModelError("TicketId", "Vé này đã có thanh toán. Mỗi vé chỉ có thể có một thanh toán.");
-            }
-
-            if (ModelState.IsValid)
-            {
-                _context.Add(payment);
-                // Sau khi thanh toán, cập nhật trạng thái vé thành 'dathanhtoan'
-                var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == payment.TicketId);
-                if (ticket != null)
+                // Kiểm tra xem vé đã có thanh toán chưa
+                var existingPayment = await _context.Payments.FirstOrDefaultAsync(p => p.TicketId == payment.TicketId);
+                if (existingPayment != null)
                 {
-                    ticket.Status = "dathanhtoan";
-                    _context.Tickets.Update(ticket);
+                    ModelState.AddModelError("TicketId", "Vé này đã có thanh toán. Mỗi vé chỉ có thể có một thanh toán.");
                 }
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                if (ModelState.IsValid)
+                {
+                    _context.Add(payment);
+                    // Sau khi thanh toán, cập nhật trạng thái vé thành 'dathanhtoan'
+                    var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == payment.TicketId);
+                    if (ticket != null)
+                    {
+                        ticket.Status = "dathanhtoan";
+                        _context.Tickets.Update(ticket);
+                    }
+                    await _context.SaveChangesAsync();
+                    
+                    // Check if request wants JSON response
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = true, message = "Tạo thanh toán thành công!" });
+                    }
+                    
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                        return Json(new { success = false, message = string.Join(", ", errors) });
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    string userMessage = "Có lỗi xảy ra khi tạo thanh toán";
+                    
+                    if (ex.InnerException?.Message?.Contains("REFERENCE constraint") == true)
+                    {
+                        userMessage = "Không thể tạo thanh toán vì vé không tồn tại hoặc đã bị xóa. Vui lòng kiểm tra lại.";
+                    }
+                    else if (ex.Message.Contains("duplicate") || ex.Message.Contains("trùng"))
+                    {
+                        userMessage = "Thanh toán này đã tồn tại cho vé này. Vui lòng kiểm tra lại.";
+                    }
+                    
+                    return Json(new { success = false, message = userMessage });
+                }
+            }
+            
             ViewData["TicketId"] = new SelectList(_context.Tickets, "TicketId", "TicketId", payment.TicketId);
             return View(payment);
         }
@@ -123,31 +243,68 @@ namespace Project2_Nhom5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("PaymentId,TicketId,Amount,PaymentMethod,PaymentDate")] Payment payment)
         {
-            if (id != payment.PaymentId)
+            try
             {
-                return NotFound();
-            }
+                if (id != payment.PaymentId)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
-            {
-                try
+                if (ModelState.IsValid)
                 {
-                    _context.Update(payment);
-                    await _context.SaveChangesAsync();
+                    try
+                    {
+                        _context.Update(payment);
+                        await _context.SaveChangesAsync();
+                        
+                        // Check if request wants JSON response
+                        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                        {
+                            return Json(new { success = true, message = "Cập nhật thanh toán thành công!" });
+                        }
+                        
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!PaymentExists(payment.PaymentId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
                 }
-                catch (DbUpdateConcurrencyException)
+                else
                 {
-                    if (!PaymentExists(payment.PaymentId))
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                     {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
+                        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                        return Json(new { success = false, message = string.Join(", ", errors) });
                     }
                 }
-                return RedirectToAction(nameof(Index));
             }
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    string userMessage = "Có lỗi xảy ra khi cập nhật thanh toán";
+                    
+                    if (ex.InnerException?.Message?.Contains("REFERENCE constraint") == true)
+                    {
+                        userMessage = "Không thể cập nhật thanh toán vì vé không tồn tại hoặc đã bị xóa. Vui lòng kiểm tra lại.";
+                    }
+                    else if (ex.Message.Contains("duplicate") || ex.Message.Contains("trùng"))
+                    {
+                        userMessage = "Thanh toán này đã tồn tại cho vé này. Vui lòng kiểm tra lại.";
+                    }
+                    
+                    return Json(new { success = false, message = userMessage });
+                }
+            }
+            
             ViewData["TicketId"] = new SelectList(_context.Tickets, "TicketId", "TicketId", payment.TicketId ?? 0);
             return View(payment);
         }
@@ -176,13 +333,43 @@ namespace Project2_Nhom5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var payment = await _context.Payments.FindAsync(id);
-            if (payment != null)
+            try
             {
-                _context.Payments.Remove(payment);
+                var payment = await _context.Payments.FindAsync(id);
+                if (payment != null)
+                {
+                    _context.Payments.Remove(payment);
+                    await _context.SaveChangesAsync();
+                    
+                    // Check if request wants JSON response
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = true, message = "Xóa thanh toán thành công!" });
+                    }
+                }
+                else
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "Không tìm thấy thanh toán để xóa" });
+                    }
+                }
             }
-
-            await _context.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    string userMessage = "Có lỗi xảy ra khi xóa thanh toán";
+                    
+                    if (ex.InnerException?.Message?.Contains("REFERENCE constraint") == true)
+                    {
+                        userMessage = "Không thể xóa thanh toán vì có dữ liệu liên quan. Vui lòng kiểm tra lại.";
+                    }
+                    
+                    return Json(new { success = false, message = userMessage });
+                }
+            }
+            
             return RedirectToAction(nameof(Index));
         }
 

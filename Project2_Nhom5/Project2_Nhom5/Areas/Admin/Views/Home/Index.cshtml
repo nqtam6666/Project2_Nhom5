@@ -9,7 +9,7 @@
             <div class="row align-items-center">
                 <div class="col-md-8">
                     <h2 class="text-primary mb-2">
-                        <i class="fas fa-film me-2"></i>Chào mừng đến với Cinema Admin
+                        <i class="fas fa-film"></i>Chào mừng đến với Cinema Admin
                     </h2>
                     <p class="text-muted mb-0">Hệ thống quản lý rạp chiếu phim - Nhóm 5</p>
                 </div>
@@ -128,30 +128,30 @@
     <!-- Quick Actions -->
     <div class="col-12">
         <div class="card-dashboard p-4">
-            <h4 class="mb-3">
-                <i class="fas fa-bolt me-2 text-primary"></i>Thao tác nhanh
+            <h4 class="mb-3 quick-actions">
+                <i class="fas fa-bolt text-primary"></i>Thao tác nhanh
             </h4>
             <div class="row">
                 <div class="col-md-3 mb-3">
-                    <a href="@Url.Action("Create", "Movies", new { area = "Admin" })" class="btn btn-outline-primary w-100 p-3">
+                    <a href="@Url.Action("Create", "Movies", new { area = "Admin" })" class="admin-btn-primary w-100 p-3">
                         <i class="fas fa-plus fa-2x mb-2"></i><br>
                         Thêm phim mới
                     </a>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <a href="@Url.Action("Create", "Theaters", new { area = "Admin" })" class="btn btn-outline-success w-100 p-3">
+                    <a href="@Url.Action("Create", "Theaters", new { area = "Admin" })" class="admin-btn-success w-100 p-3">
                         <i class="fas fa-plus fa-2x mb-2"></i><br>
                         Thêm rạp chiếu
                     </a>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <a href="@Url.Action("Create", "Showtimes", new { area = "Admin" })" class="btn btn-outline-warning w-100 p-3">
+                    <a href="@Url.Action("Create", "Showtimes", new { area = "Admin" })" class="admin-btn-warning w-100 p-3">
                         <i class="fas fa-plus fa-2x mb-2"></i><br>
                         Tạo lịch chiếu
                     </a>
                 </div>
                 <div class="col-md-3 mb-3">
-                    <a href="@Url.Action("Index", "Revenues", new { area = "Admin" })" class="btn btn-outline-info w-100 p-3">
+                    <a href="@Url.Action("Index", "Revenues", new { area = "Admin" })" class="admin-btn-secondary w-100 p-3">
                         <i class="fas fa-chart-line fa-2x mb-2"></i><br>
                         Xem doanh thu
                     </a>
@@ -160,3 +160,6 @@
         </div>
     </div>
 </div>
+
+
+

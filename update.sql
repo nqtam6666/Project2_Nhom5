@@ -11,7 +11,7 @@ CREATE TABLE NguoiDung (
     MatKhau NVARCHAR(255) NOT NULL,
     Email NVARCHAR(100) NOT NULL UNIQUE,
     SoDienThoai NVARCHAR(20),
-    VaiTro NVARCHAR(50) CHECK (VaiTro IN ('Khach', 'NguoiDung', 'Admin', 'DaiLy')) DEFAULT 'NguoiDung',
+    VaiTro NVARCHAR(50) CHECK (VaiTro IN ('NguoiDung', 'Admin', 'DaiLy')) DEFAULT 'NguoiDung',
     TrangThai NVARCHAR(50) CHECK (TrangThai IN ('hoatdong', 'khonghoatdong')) DEFAULT 'hoatdong'
 );
 

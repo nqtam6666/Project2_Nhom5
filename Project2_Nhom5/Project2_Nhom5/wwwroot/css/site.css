@@ -88,11 +88,18 @@ html, body {
 
 
 /* Header Styles */
+header {
+    position: relative;
+    z-index: 2000;
+}
 .navbar {
     background: var(--card-bg) !important;
     box-shadow: var(--shadow);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-color);
+    position: relative;
+    z-index: 2001;
+    pointer-events: auto;
 }
 
 .navbar-brand {
@@ -140,6 +147,9 @@ html, body {
     color: white;
     transition: all 0.3s ease;
     box-shadow: var(--shadow);
+    position: relative;
+    z-index: 2001;
+    pointer-events: auto;
 }
 
     .theme-toggle:hover {
@@ -332,6 +342,7 @@ html, body {
     position: absolute;
     animation: float 6s ease-in-out infinite;
     opacity: 0.1;
+    pointer-events: none;
 }
 
 @keyframes float {
@@ -641,6 +652,18 @@ html, body {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.icon-circle i {
+    font-size: 16px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 .icon-circle-lg {
@@ -650,6 +673,46 @@ html, body {
     align-items: center;
     justify-content: center;
     border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+}
+
+.icon-circle-lg i {
+    font-size: 32px;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Additional icon alignment fixes */
+.d-flex.align-items-center .icon-circle {
+    margin-right: 12px;
+}
+
+/* Ensure icons are perfectly centered in all browsers */
+.icon-circle,
+.icon-circle-lg {
+    text-align: center;
+    vertical-align: middle;
+}
+
+/* Fix for FontAwesome icons alignment */
+.icon-circle .fas,
+.icon-circle .far,
+.icon-circle .fab,
+.icon-circle-lg .fas,
+.icon-circle-lg .far,
+.icon-circle-lg .fab {
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
 }
 
 /* File Upload Styles */

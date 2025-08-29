@@ -24,9 +24,67 @@ namespace Project2_Nhom5.Controllers
         }
 
         // GET: Movies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string search, string genre, string status, string sortOrder, string currentSort, int page = 1, int pageSize = 10)
         {
-            return View(await _context.Movies.ToListAsync());
+            // Get all movies
+            var movies = _context.Movies.AsQueryable();
+
+            // Apply search filter
+            if (!string.IsNullOrEmpty(search))
+            {
+                movies = movies.Where(m => 
+                    m.Title.Contains(search) || 
+                    m.Genre.Contains(search) || 
+                    m.Description.Contains(search)
+                );
+            }
+
+            // Apply genre filter
+            if (!string.IsNullOrEmpty(genre))
+            {
+                movies = movies.Where(m => m.Genre == genre);
+            }
+
+            // Apply status filter
+            if (!string.IsNullOrEmpty(status))
+            {
+                movies = movies.Where(m => m.Status == status);
+            }
+
+            // Apply sorting
+            if (!string.IsNullOrEmpty(currentSort))
+            {
+                sortOrder = sortOrder == "asc" ? "desc" : "asc";
+            }
+
+            movies = currentSort switch
+            {
+                "title" => sortOrder == "desc" ? movies.OrderByDescending(m => m.Title) : movies.OrderBy(m => m.Title),
+                "genre" => sortOrder == "desc" ? movies.OrderByDescending(m => m.Genre) : movies.OrderBy(m => m.Genre),
+                "duration" => sortOrder == "desc" ? movies.OrderByDescending(m => m.Duration) : movies.OrderBy(m => m.Duration),
+                "status" => sortOrder == "desc" ? movies.OrderByDescending(m => m.Status) : movies.OrderBy(m => m.Status),
+                _ => movies.OrderBy(m => m.MovieId)
+            };
+
+            // Get total count for pagination
+            var totalCount = await movies.CountAsync();
+
+            // Apply pagination
+            var skip = (page - 1) * pageSize;
+            var pagedMovies = await movies.Skip(skip).Take(pageSize).ToListAsync();
+
+            // Pass pagination info to view
+            ViewBag.CurrentPage = page;
+            ViewBag.PageSize = pageSize;
+            ViewBag.TotalCount = totalCount;
+            ViewBag.TotalPages = (int)Math.Ceiling((double)totalCount / pageSize);
+            ViewBag.Search = search;
+            ViewBag.Genre = genre;
+            ViewBag.Status = status;
+            ViewBag.SortOrder = sortOrder;
+            ViewBag.CurrentSort = currentSort;
+
+            return View(pagedMovies);
         }
 
         // GET: Movies/Details/5
@@ -60,12 +118,49 @@ namespace Project2_Nhom5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MovieId,Title,Genre,Duration,Description,PosterUrl,TrailerUrl,Status")] Movie movie)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _context.Add(movie);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    _context.Add(movie);
+                    await _context.SaveChangesAsync();
+                    
+                    // Check if request wants JSON response
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = true, message = "Tạo phim thành công!" });
+                    }
+                    
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                        return Json(new { success = false, message = string.Join(", ", errors) });
+                    }
+                }
             }
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    string userMessage = "Có lỗi xảy ra khi tạo phim";
+                    
+                    if (ex.InnerException?.Message?.Contains("REFERENCE constraint") == true)
+                    {
+                        userMessage = "Không thể xóa phim này vì đã có lịch chiếu được tạo. Vui lòng xóa lịch chiếu trước.";
+                    }
+                    else if (ex.Message.Contains("duplicate") || ex.Message.Contains("trùng"))
+                    {
+                        userMessage = "Tên phim này đã tồn tại. Vui lòng chọn tên khác.";
+                    }
+                    
+                    return Json(new { success = false, message = userMessage });
+                }
+            }
+            
             return View(movie);
         }
 
@@ -108,30 +203,66 @@ namespace Project2_Nhom5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MovieId,Title,Genre,Duration,Description,PosterUrl,TrailerUrl,Status")] Movie movie)
         {
-            if (id != movie.MovieId)
+            try
             {
-                return NotFound();
-            }
+                if (id != movie.MovieId)
+                {
+                    return NotFound();
+                }
 
-            if (ModelState.IsValid)
+                if (ModelState.IsValid)
+                {
+                    try
+                    {
+                        _context.Update(movie);
+                        await _context.SaveChangesAsync();
+                        
+                        // Check if request wants JSON response
+                        if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                        {
+                            return Json(new { success = true, message = "Cập nhật phim thành công!" });
+                        }
+                        
+                        return RedirectToAction(nameof(Index));
+                    }
+                    catch (DbUpdateConcurrencyException)
+                    {
+                        if (!MovieExists(movie.MovieId))
+                        {
+                            return NotFound();
+                        }
+                        else
+                        {
+                            throw;
+                        }
+                    }
+                }
+                else
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                        return Json(new { success = false, message = string.Join(", ", errors) });
+                    }
+                }
+            }
+            catch (Exception ex)
             {
-                try
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
                 {
-                    _context.Update(movie);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!MovieExists(movie.MovieId))
+                    string userMessage = "Có lỗi xảy ra khi cập nhật phim";
+                    
+                    if (ex.InnerException?.Message?.Contains("REFERENCE constraint") == true)
                     {
-                        return NotFound();
+                        userMessage = "Không thể cập nhật phim này vì đã có lịch chiếu được tạo. Vui lòng xóa lịch chiếu trước.";
                     }
-                    else
+                    else if (ex.Message.Contains("duplicate") || ex.Message.Contains("trùng"))
                     {
-                        throw;
+                        userMessage = "Tên phim này đã tồn tại. Vui lòng chọn tên khác.";
                     }
+                    
+                    return Json(new { success = false, message = userMessage });
                 }
-                return RedirectToAction(nameof(Index));
             }
             
             // Recreate genre list for validation errors
@@ -175,13 +306,43 @@ namespace Project2_Nhom5.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var movie = await _context.Movies.FindAsync(id);
-            if (movie != null)
+            try
             {
-                _context.Movies.Remove(movie);
+                var movie = await _context.Movies.FindAsync(id);
+                if (movie != null)
+                {
+                    _context.Movies.Remove(movie);
+                    await _context.SaveChangesAsync();
+                    
+                    // Check if request wants JSON response
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = true, message = "Xóa phim thành công!" });
+                    }
+                }
+                else
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { success = false, message = "Không tìm thấy phim để xóa" });
+                    }
+                }
             }
-
-            await _context.SaveChangesAsync();
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    string userMessage = "Có lỗi xảy ra khi xóa phim";
+                    
+                    if (ex.InnerException?.Message?.Contains("REFERENCE constraint") == true)
+                    {
+                        userMessage = "Không thể xóa phim vì có lịch chiếu hoặc dữ liệu liên quan. Vui lòng kiểm tra lại.";
+                    }
+                    
+                    return Json(new { success = false, message = userMessage });
+                }
+            }
+            
             return RedirectToAction(nameof(Index));
         }
 

@@ -25,9 +25,11 @@ public partial class User
     public string? Phone { get; set; }
 
     [StringLength(50, ErrorMessage = "Vai trò không được vượt quá 50 ký tự")]
+    [RegularExpression("^(NguoiDung|Admin|DaiLy)$", ErrorMessage = "Vai trò phải là một trong các giá trị: NguoiDung, Admin, DaiLy")]
     public string? Role { get; set; }
 
     [StringLength(50, ErrorMessage = "Trạng thái không được vượt quá 50 ký tự")]
+    [RegularExpression("^(hoatdong|khonghoatdong)$", ErrorMessage = "Trạng thái phải là một trong các giá trị: hoatdong, khonghoatdong")]
     public string? Status { get; set; }
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
@@ -54,8 +56,10 @@ public class EditUserViewModel
     public string? Phone { get; set; }
 
     [StringLength(50, ErrorMessage = "Vai trò không được vượt quá 50 ký tự")]
+    [RegularExpression("^(NguoiDung|Admin|DaiLy)$", ErrorMessage = "Vai trò phải là một trong các giá trị: NguoiDung, Admin, DaiLy")]
     public string? Role { get; set; }
 
     [StringLength(50, ErrorMessage = "Trạng thái không được vượt quá 50 ký tự")]
+    [RegularExpression("^(hoatdong|khonghoatdong)$", ErrorMessage = "Trạng thái phải là một trong các giá trị: hoatdong, khonghoatdong")]
     public string? Status { get; set; }
 }
