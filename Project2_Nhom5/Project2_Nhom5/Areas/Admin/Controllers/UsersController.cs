@@ -62,7 +62,7 @@ namespace Project2_Nhom5.Areas.Admin.Controllers
                 "email" => sortOrder == "desc" ? users.OrderByDescending(u => u.Email) : users.OrderBy(u => u.Email),
                 "role" => sortOrder == "desc" ? users.OrderByDescending(u => u.Role) : users.OrderBy(u => u.Role),
                 "status" => sortOrder == "desc" ? users.OrderByDescending(u => u.Status) : users.OrderBy(u => u.Status),
-                _ => users.OrderBy(u => u.UserId)
+                _ => users.OrderByDescending(u => u.UserId)
             };
 
             // Get total count for pagination

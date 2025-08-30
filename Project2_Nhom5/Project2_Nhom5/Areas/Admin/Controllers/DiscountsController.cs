@@ -71,7 +71,7 @@ namespace Project2_Nhom5.Controllers
                 "type" => sortOrder == "desc" ? discounts.OrderByDescending(d => d.DiscountType) : discounts.OrderBy(d => d.DiscountType),
                 "value" => sortOrder == "desc" ? discounts.OrderByDescending(d => d.Value) : discounts.OrderBy(d => d.Value),
                 "expiry" => sortOrder == "desc" ? discounts.OrderByDescending(d => d.ExpiryDate) : discounts.OrderBy(d => d.ExpiryDate),
-                _ => discounts.OrderBy(d => d.DiscountId)
+                _ => discounts.OrderByDescending(d => d.DiscountId)
             };
 
             // Get total count for pagination

@@ -25,6 +25,15 @@ public partial class Project2_Nhom5Context : DbContext
     public virtual DbSet<Ticket> Tickets { get; set; }
     public virtual DbSet<User> Users { get; set; }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        if (!optionsBuilder.IsConfigured)
+        {
+            // Đảm bảo encoding UTF-8 cho tiếng Việt
+            optionsBuilder.UseSqlServer("Server=DESKTOP-5VDN8L9\\NQTAM;Database=BanVeXemPhim;Trusted_Connection=true;TrustServerCertificate=true;");
+        }
+    }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         // Map Discount -> GiamGia
@@ -35,7 +44,7 @@ public partial class Project2_Nhom5Context : DbContext
             entity.Property(e => e.DiscountId).HasColumnName("MaGiamGia");
             entity.HasIndex(e => e.Code).IsUnique();
             entity.Property(e => e.Code).HasColumnName("MaCode");
-            entity.Property(e => e.Description).HasColumnName("MoTa").HasColumnType("text");
+            entity.Property(e => e.Description).HasColumnName("MoTa").HasColumnType("nvarchar(max)");
             entity.Property(e => e.DiscountType).HasColumnName("LoaiGiamGia");
             entity.Property(e => e.Value).HasColumnName("GiaTri").HasColumnType("decimal(10,2)");
             entity.Property(e => e.ExpiryDate).HasColumnName("NgayHetHan").HasColumnType("date");
@@ -50,7 +59,7 @@ public partial class Project2_Nhom5Context : DbContext
             entity.Property(e => e.Title).HasColumnName("TieuDe");
             entity.Property(e => e.Genre).HasColumnName("TheLoai");
             entity.Property(e => e.Duration).HasColumnName("ThoiLuong");
-            entity.Property(e => e.Description).HasColumnName("MoTa").HasColumnType("text");
+            entity.Property(e => e.Description).HasColumnName("MoTa").HasColumnType("nvarchar(max)");
             entity.Property(e => e.PosterUrl).HasColumnName("AnhBia");
             entity.Property(e => e.TrailerUrl).HasColumnName("Trailer");
             entity.Property(e => e.Status).HasColumnName("TrangThai").HasDefaultValue("sapchieu");

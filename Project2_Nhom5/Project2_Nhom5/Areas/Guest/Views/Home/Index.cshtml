@@ -78,7 +78,7 @@
                             <h3 class="movie-title">@m.Title</h3>
                             <p class="movie-genre">@m.Genre</p>
                             <div class="rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><span>@(m.Duration?.ToString() ?? "") phút</span></div>
-                            <button class="book-btn" onclick="bookMovie('@m.Title')"><i class="fas fa-ticket-alt me-2"></i>Đặt Vé</button>
+                            <a href="@Url.Action("SelectShowtime", "Booking", new { movieId = m.MovieId })" class="book-btn" style="text-decoration: none; display: block;"><i class="fas fa-ticket-alt me-2"></i>Đặt Vé</a>
                         </div>
                     </div>
                 </div>
@@ -95,7 +95,7 @@
                             <h3 class="movie-title">@m.Title</h3>
                             <p class="movie-genre">@m.Genre</p>
                             <div class="rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div><span>@(m.Duration?.ToString() ?? "") phút</span></div>
-                            <button class="book-btn" onclick="bookMovie('@m.Title')"><i class="fas fa-ticket-alt me-2"></i>Đặt Vé</button>
+                            <button class="book-btn" style="text-decoration: none; display: block; background: #6c757d; cursor: not-allowed;" disabled><i class="fas fa-clock me-2"></i>Sắp Chiếu</button>
                         </div>
                     </div>
                 </div>

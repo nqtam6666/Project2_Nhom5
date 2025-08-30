@@ -21,7 +21,7 @@ CREATE TABLE Phim (
     TieuDe NVARCHAR(255) NOT NULL,
     TheLoai NVARCHAR(255),
     ThoiLuong INT, -- phút
-    MoTa TEXT,
+    MoTa NVARCHAR(255),
     AnhBia NVARCHAR(255),
     Trailer NVARCHAR(255),
     TrangThai NVARCHAR(50) CHECK (TrangThai IN ('dangchieu', 'sapchieu', 'ngungchieu')) DEFAULT 'sapchieu'
@@ -72,7 +72,7 @@ CREATE TABLE Ve (
 CREATE TABLE GiamGia (
     MaGiamGia INT IDENTITY(1,1) PRIMARY KEY,
     MaCode NVARCHAR(50) UNIQUE NOT NULL,
-    MoTa TEXT,
+    MoTa NVARCHAR(50),
     LoaiGiamGia NVARCHAR(50) CHECK (LoaiGiamGia IN ('phantram', 'codinh')) NOT NULL,
     GiaTri DECIMAL(10,2) NOT NULL,
     NgayHetHan DATE NOT NULL

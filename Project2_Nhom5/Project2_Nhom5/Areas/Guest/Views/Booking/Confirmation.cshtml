@@ -1,0 +1,208 @@
+@model Project2_Nhom5.Areas.Guest.Models.BookingConfirmationViewModel
+@{
+    ViewData["Title"] = "Xác Nhận Đặt Vé";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        :root { --primary-color: #ff6b35; --secondary-color: #1a1a2e; --accent-color: #16213e; --text-primary: #333; --text-secondary: #666; --footer-text: #666; --bg-primary: #ffffff; --bg-secondary: #f8f9fa; --card-bg: #ffffff; --border-color: #e0e0e0; --shadow: 0 4px 20px rgba(0,0,0,0.1); --gradient: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); }
+        [data-theme="dark"] { --text-primary: #ffffff; --text-secondary: #b0b0b0; --footer-text: #b0b0b0; --bg-primary: #0f0f1a; --bg-secondary: #1a1a2e; --card-bg: #16213e; --border-color: #333; --shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        [data-theme="dark"] .form-control, [data-theme="dark"] .form-select { background-color: var(--bg-secondary); border-color: var(--border-color); color: var(--text-primary); }
+        [data-theme="dark"] .form-control:focus, [data-theme="dark"] .form-select:focus { background-color: var(--card-bg); border-color: var(--primary-color); color: var(--text-primary); box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25); }
+        [data-theme="dark"] .form-control::placeholder { color: var(--text-secondary); }
+        [data-theme="dark"] .modal-backdrop { background-color: rgba(0, 0, 0, 0.8); }
+        * { transition: all 0.3s ease; }
+        .hero-section { background: var(--bg-primary); min-height: 40vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+        .hero-title { font-size: 2.5rem; font-weight: bold; margin-bottom: 1rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-subtitle { font-size: 1.1rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .success-icon { font-size: 4rem; color: #28a745; margin-bottom: 1rem; }
+        .confirmation-card { background: var(--card-bg); border-radius: 20px; padding: 3rem; box-shadow: var(--shadow); border: 1px solid var(--border-color); text-align: center; }
+        .booking-code { background: var(--gradient); color: white; padding: 1rem 2rem; border-radius: 25px; font-size: 1.5rem; font-weight: bold; margin: 1rem 0; display: inline-block; }
+        .ticket-details { background: var(--bg-secondary); border-radius: 15px; padding: 2rem; margin: 2rem 0; }
+        .detail-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid var(--border-color); }
+        .detail-item:last-child { border-bottom: none; }
+        .detail-label { font-weight: 600; color: var(--text-primary); }
+        .detail-value { color: var(--text-secondary); }
+        .action-buttons { display: flex; gap: 1rem; justify-content: center; margin-top: 2rem; flex-wrap: wrap; }
+        .action-btn { padding: 12px 30px; border-radius: 25px; font-weight: 600; text-decoration: none; transition: all 0.3s ease; }
+        .primary-btn { background: var(--gradient); color: white; border: none; }
+        .primary-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3); color: white; }
+        .secondary-btn { background: transparent; color: var(--text-primary); border: 2px solid var(--border-color); }
+        .secondary-btn:hover { background: var(--bg-secondary); color: var(--text-primary); transform: translateY(-2px); }
+        .qr-code { background: white; padding: 1rem; border-radius: 10px; display: inline-block; margin: 1rem 0; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="hero-title reveal">Đặt Vé Thành Công!</h1>
+                <p class="hero-subtitle reveal">Cảm ơn bạn đã sử dụng dịch vụ của chúng tôi</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="text-center">
+                    <i class="fas fa-check-circle fa-6x text-success"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Confirmation Section -->
+<section class="section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="confirmation-card reveal">
+                    <div class="success-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    
+                    <h2 class="mb-3">Đặt Vé Thành Công!</h2>
+                    <p class="text-muted mb-4">Vé của bạn đã được xác nhận và sẽ được gửi đến email của bạn</p>
+                    
+                    <div class="booking-code">
+                        <i class="fas fa-ticket-alt me-2"></i>
+                        @Model.BookingCode
+                    </div>
+                    
+                    <p class="text-muted">Mã đặt vé của bạn</p>
+
+                    <!-- QR Code -->
+                    <div class="qr-code">
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=@Model.BookingCode" alt="QR Code" width="150" height="150">
+                    </div>
+                    <p class="text-muted">Quét mã QR để xem thông tin vé</p>
+
+                    <!-- Ticket Details -->
+                    <div class="ticket-details">
+                        <h4 class="mb-3">Chi Tiết Vé</h4>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Phim:</span>
+                            <span class="detail-value">@Model.MovieTitle</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Rạp chiếu:</span>
+                            <span class="detail-value">@Model.TheaterName</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Ngày chiếu:</span>
+                            <span class="detail-value">@Model.ShowDate.ToString("dd/MM/yyyy")</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Giờ chiếu:</span>
+                            <span class="detail-value">@Model.ShowTime.ToString(@"hh\:mm")</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Ghế:</span>
+                            <span class="detail-value">@string.Join(", ", Model.SeatCodes)</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Tổng tiền:</span>
+                            <span class="detail-value">@Model.TotalAmount.ToString("N0") VNĐ</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Phương thức thanh toán:</span>
+                            <span class="detail-value">@Model.PaymentMethod</span>
+                        </div>
+                        
+                        <div class="detail-item">
+                            <span class="detail-label">Ngày đặt:</span>
+                            <span class="detail-value">@Model.BookingDate.ToString("dd/MM/yyyy HH:mm")</span>
+                        </div>
+                    </div>
+
+                    <!-- Important Notes -->
+                    <div class="alert alert-info" role="alert">
+                        <h5><i class="fas fa-info-circle me-2"></i>Lưu ý quan trọng:</h5>
+                        <ul class="mb-0">
+                            <li>Vui lòng đến rạp trước giờ chiếu 15 phút để làm thủ tục</li>
+                            <li>Mang theo mã đặt vé hoặc QR code để nhận vé</li>
+                            <li>Vé không thể hoàn lại hoặc đổi suất chiếu</li>
+                            <li>Liên hệ hotline nếu có vấn đề: 1900-xxxx</li>
+                        </ul>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <a href="@Url.Action("History", "Booking")" class="action-btn secondary-btn">
+                            <i class="fas fa-history me-2"></i>
+                            Lịch Sử Đặt Vé
+                        </a>
+                        <a href="@Url.Action("Index", "Home")" class="action-btn primary-btn">
+                            <i class="fas fa-home me-2"></i>
+                            Về Trang Chủ
+                        </a>
+                        <button class="action-btn secondary-btn" onclick="printTicket()">
+                            <i class="fas fa-print me-2"></i>
+                            In Vé
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // theme toggle with persistence
+        (function(){
+            const body = document.body; const icon = document.getElementById('theme-icon'); const btn = document.getElementById('themeToggleBtn');
+            const saved = localStorage.getItem('theme');
+            if(saved === 'dark'){ body.setAttribute('data-theme','dark'); if(icon) icon.className='fas fa-sun'; }
+            else if(saved === 'light'){ body.removeAttribute('data-theme'); if(icon) icon.className='fas fa-moon'; }
+            if(btn){ btn.addEventListener('click', function(){ const dark = body.getAttribute('data-theme') === 'dark'; if(dark){ body.removeAttribute('data-theme'); localStorage.setItem('theme','light'); if(icon) icon.className='fas fa-moon'; } else { body.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); if(icon) icon.className='fas fa-sun'; } }); }
+        })();
+
+        // Print ticket function
+        function printTicket() {
+            const printContent = `
+                <div style="font-family: Arial, sans-serif; max-width: 400px; margin: 0 auto; padding: 20px;">
+                    <div style="text-align: center; border-bottom: 2px solid #ff6b35; padding-bottom: 20px; margin-bottom: 20px;">
+                        <h2 style="color: #ff6b35; margin: 0;">CINEMAX</h2>
+                        <p style="margin: 5px 0; color: #666;">Vé Xem Phim</p>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="margin: 0 0 10px 0; color: #333;">@Model.MovieTitle</h3>
+                        <p style="margin: 5px 0; color: #666;"><strong>Rạp:</strong> @Model.TheaterName</p>
+                        <p style="margin: 5px 0; color: #666;"><strong>Ngày:</strong> @Model.ShowDate.ToString("dd/MM/yyyy")</p>
+                        <p style="margin: 5px 0; color: #666;"><strong>Giờ:</strong> @Model.ShowTime.ToString(@"hh\:mm")</p>
+                        <p style="margin: 5px 0; color: #666;"><strong>Ghế:</strong> @string.Join(", ", Model.SeatCodes)</p>
+                        <p style="margin: 5px 0; color: #666;"><strong>Mã vé:</strong> @Model.BookingCode</p>
+                    </div>
+                    
+                    <div style="text-align: center; border-top: 1px solid #ddd; padding-top: 20px;">
+                        <p style="margin: 5px 0; color: #666;">Tổng tiền: @Model.TotalAmount.ToString("N0") VNĐ</p>
+                        <p style="margin: 5px 0; font-size: 12px; color: #999;">Vui lòng đến rạp trước giờ chiếu 15 phút</p>
+                    </div>
+                </div>
+            `;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(printContent);
+            printWindow.document.close();
+            printWindow.print();
+        }
+        
+        // reveal animation
+        function revealOnScroll(){ const els=document.querySelectorAll('.reveal'); els.forEach(el=>{ const wh=window.innerHeight; const top=el.getBoundingClientRect().top; if(top<wh-150){ el.classList.add('active'); } }); }
+        window.addEventListener('scroll', revealOnScroll); 
+        window.addEventListener('load', function() {
+            revealOnScroll();
+        });
+    </script>
+} 

@@ -120,6 +120,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUmV2ZW51ZXNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Project2_Nhom5/Project2_Nhom5/Project2_Nhom5/Areas/Admin/Views/Seats/BulkCreate.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2VhdHNcQnVsa0NyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Project2_Nhom5/Project2_Nhom5/Project2_Nhom5/Areas/Admin/Views/Seats/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2VhdHNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -242,6 +246,26 @@ build_metadata.AdditionalFiles.CssScope =
 
 [D:/Project2_Nhom5/Project2_Nhom5/Project2_Nhom5/Areas/Admin/Views/_ViewStart.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project2_Nhom5/Project2_Nhom5/Project2_Nhom5/Areas/Guest/Views/Booking/Confirmation.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcQm9va2luZ1xDb25maXJtYXRpb24uY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project2_Nhom5/Project2_Nhom5/Project2_Nhom5/Areas/Guest/Views/Booking/History.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcQm9va2luZ1xIaXN0b3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project2_Nhom5/Project2_Nhom5/Project2_Nhom5/Areas/Guest/Views/Booking/Payment.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcQm9va2luZ1xQYXltZW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project2_Nhom5/Project2_Nhom5/Project2_Nhom5/Areas/Guest/Views/Booking/SelectSeats.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcQm9va2luZ1xTZWxlY3RTZWF0cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Project2_Nhom5/Project2_Nhom5/Project2_Nhom5/Areas/Guest/Views/Booking/SelectShowtime.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcR3Vlc3RcVmlld3NcQm9va2luZ1xTZWxlY3RTaG93dGltZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Project2_Nhom5/Project2_Nhom5/Project2_Nhom5/Areas/Guest/Views/Home/Index.cshtml]

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project2_Nhom5.Models;
+using Project2_Nhom5.Areas.Admin.Models;
 
 namespace Project2_Nhom5.Controllers
 {
@@ -61,7 +62,7 @@ namespace Project2_Nhom5.Controllers
                 "seatCode" => sortOrder == "desc" ? seats.OrderByDescending(s => s.SeatCode) : seats.OrderBy(s => s.SeatCode),
                 "seatType" => sortOrder == "desc" ? seats.OrderByDescending(s => s.SeatType) : seats.OrderBy(s => s.SeatType),
                 "theater" => sortOrder == "desc" ? seats.OrderByDescending(s => s.Theater.Name) : seats.OrderBy(s => s.Theater.Name),
-                _ => seats.OrderBy(s => s.SeatId)
+                _ => seats.OrderByDescending(s => s.SeatId)
             };
 
             // Get total count for pagination
@@ -325,6 +326,129 @@ namespace Project2_Nhom5.Controllers
         private bool SeatExists(int id)
         {
             return _context.Seats.Any(e => e.SeatId == id);
+        }
+
+        // GET: Seats/BulkCreate
+        public async Task<IActionResult> BulkCreate()
+        {
+            ViewData["TheaterId"] = new SelectList(_context.Theaters, "TheaterId", "Name");
+            return View();
+        }
+
+        // POST: Seats/BulkCreate
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> BulkCreate([Bind("TheaterId,SeatType,StartRow,EndRow,StartColumn,EndColumn,SkipExisting")] BulkSeatCreateModel model)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    // Validate ranges
+                    if (model.StartRow > model.EndRow)
+                    {
+                        ModelState.AddModelError("EndRow", "Hàng kết thúc phải lớn hơn hoặc bằng hàng bắt đầu");
+                        ViewData["TheaterId"] = new SelectList(_context.Theaters, "TheaterId", "Name", model.TheaterId);
+                        return View(model);
+                    }
+
+                    if (model.StartColumn > model.EndColumn)
+                    {
+                        ModelState.AddModelError("EndColumn", "Cột kết thúc phải lớn hơn hoặc bằng cột bắt đầu");
+                        ViewData["TheaterId"] = new SelectList(_context.Theaters, "TheaterId", "Name", model.TheaterId);
+                        return View(model);
+                    }
+
+                    var seatsToAdd = new List<Seat>();
+                    var existingSeats = new List<string>();
+                    var addedSeats = new List<string>();
+
+                    // Generate seats
+                    for (int row = model.StartRow; row <= model.EndRow; row++)
+                    {
+                        for (int col = model.StartColumn; col <= model.EndColumn; col++)
+                        {
+                            var rowLetter = ((char)('A' + row - 1)).ToString();
+                            var seatCode = $"{rowLetter}{col:D2}";
+
+                            // Check if seat already exists
+                            var existingSeat = await _context.Seats
+                                .FirstOrDefaultAsync(s => s.TheaterId == model.TheaterId && s.SeatCode == seatCode);
+
+                            if (existingSeat != null)
+                            {
+                                if (model.SkipExisting)
+                                {
+                                    existingSeats.Add(seatCode);
+                                    continue;
+                                }
+                                else
+                                {
+                                    ModelState.AddModelError("", $"Ghế {seatCode} đã tồn tại trong rạp này");
+                                    ViewData["TheaterId"] = new SelectList(_context.Theaters, "TheaterId", "Name", model.TheaterId);
+                                    return View(model);
+                                }
+                            }
+
+                            var newSeat = new Seat
+                            {
+                                TheaterId = model.TheaterId,
+                                SeatCode = seatCode,
+                                SeatType = model.SeatType
+                            };
+
+                            seatsToAdd.Add(newSeat);
+                            addedSeats.Add(seatCode);
+                        }
+                    }
+
+                    if (seatsToAdd.Count > 0)
+                    {
+                        await _context.Seats.AddRangeAsync(seatsToAdd);
+                        await _context.SaveChangesAsync();
+                    }
+
+                    // Prepare response message
+                    var message = $"Đã tạo thành công {addedSeats.Count} ghế";
+                    if (existingSeats.Count > 0)
+                    {
+                        message += $", bỏ qua {existingSeats.Count} ghế đã tồn tại";
+                    }
+
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        return Json(new { 
+                            success = true, 
+                            message = message,
+                            addedCount = addedSeats.Count,
+                            skippedCount = existingSeats.Count,
+                            addedSeats = addedSeats,
+                            skippedSeats = existingSeats
+                        });
+                    }
+
+                    TempData["SuccessMessage"] = message;
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                    {
+                        var errors = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage);
+                        return Json(new { success = false, message = string.Join(", ", errors) });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "Có lỗi xảy ra khi tạo ghế hàng loạt: " + ex.Message });
+                }
+            }
+
+            ViewData["TheaterId"] = new SelectList(_context.Theaters, "TheaterId", "Name", model.TheaterId);
+            return View(model);
         }
     }
 }

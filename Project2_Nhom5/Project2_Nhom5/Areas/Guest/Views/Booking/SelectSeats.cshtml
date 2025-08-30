@@ -1,0 +1,283 @@
+@model Project2_Nhom5.Areas.Guest.Models.SeatSelectionViewModel
+@{
+    ViewData["Title"] = "Chọn Ghế";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section Styles {
+    <style>
+        :root { --primary-color: #ff6b35; --secondary-color: #1a1a2e; --accent-color: #16213e; --text-primary: #333; --text-secondary: #666; --footer-text: #666; --bg-primary: #ffffff; --bg-secondary: #f8f9fa; --card-bg: #ffffff; --border-color: #e0e0e0; --shadow: 0 4px 20px rgba(0,0,0,0.1); --gradient: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); }
+        [data-theme="dark"] { --text-primary: #ffffff; --text-secondary: #b0b0b0; --footer-text: #b0b0b0; --bg-primary: #0f0f1a; --bg-secondary: #1a1a2e; --card-bg: #16213e; --border-color: #333; --shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        [data-theme="dark"] .form-control, [data-theme="dark"] .form-select { background-color: var(--bg-secondary); border-color: var(--border-color); color: var(--text-primary); }
+        [data-theme="dark"] .form-control:focus, [data-theme="dark"] .form-select:focus { background-color: var(--card-bg); border-color: var(--primary-color); color: var(--text-primary); box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25); }
+        [data-theme="dark"] .form-control::placeholder { color: var(--text-secondary); }
+        [data-theme="dark"] .modal-backdrop { background-color: rgba(0, 0, 0, 0.8); }
+        * { transition: all 0.3s ease; }
+        .hero-section { background: var(--bg-primary); min-height: 30vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+        .hero-title { font-size: 2rem; font-weight: bold; margin-bottom: 1rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-subtitle { font-size: 1rem; color: var(--text-secondary); margin-bottom: 1.5rem; }
+        .movie-info-card { background: var(--card-bg); border-radius: 15px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border-color); margin-bottom: 2rem; }
+        .movie-poster { width: 100%; height: 200px; object-fit: cover; }
+        .movie-details { padding: 1.5rem; }
+        .movie-title { font-size: 1.3rem; font-weight: bold; margin-bottom: 0.5rem; color: var(--text-primary); }
+        .movie-info { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .theater-container { background: var(--card-bg); border-radius: 20px; padding: 2rem; box-shadow: var(--shadow); border: 1px solid var(--border-color); }
+        .screen { background: linear-gradient(135deg, #666 0%, #999 100%); color: white; text-align: center; padding: 1rem; border-radius: 10px; margin-bottom: 2rem; font-weight: bold; }
+        .seats-container { display: flex; flex-direction: column; gap: 0.5rem; align-items: center; }
+        .seat-row { display: flex; gap: 0.3rem; align-items: center; }
+        .row-label { width: 30px; text-align: center; font-weight: bold; color: var(--text-primary); font-size: 0.9rem; }
+        .seat { width: 35px; height: 35px; border: 2px solid var(--border-color); border-radius: 5px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold; cursor: pointer; transition: all 0.3s ease; }
+        .seat.available { background: var(--bg-secondary); color: var(--text-primary); }
+        .seat.available:hover { background: var(--primary-color); color: white; border-color: var(--primary-color); transform: scale(1.1); }
+        .seat.selected { background: var(--gradient); color: white; border-color: var(--primary-color); transform: scale(1.1); }
+        .seat.booked { background: #dc3545; color: white; border-color: #dc3545; cursor: not-allowed; opacity: 0.7; }
+        .seat.vip { border-color: #ffc107; }
+        .seat.vip.available { background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%); color: #000; }
+        .seat.vip.selected { background: var(--gradient); color: white; }
+        .seat-legend { display: flex; gap: 1rem; justify-content: center; margin-bottom: 2rem; flex-wrap: wrap; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
+        .legend-seat { width: 20px; height: 20px; border-radius: 3px; }
+        .legend-available { background: var(--bg-secondary); border: 2px solid var(--border-color); }
+        .legend-selected { background: var(--gradient); border: 2px solid var(--primary-color); }
+        .legend-booked { background: #dc3545; border: 2px solid #dc3545; }
+        .legend-vip { background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%); border: 2px solid #ffc107; }
+        .selection-summary { background: var(--card-bg); border-radius: 15px; padding: 1.5rem; box-shadow: var(--shadow); border: 1px solid var(--border-color); position: sticky; top: 20px; }
+        .summary-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: var(--text-primary); }
+        .selected-seats { margin-bottom: 1rem; }
+        .seat-item { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border-color); }
+        .seat-item:last-child { border-bottom: none; }
+        .seat-code { font-weight: 600; color: var(--text-primary); }
+        .seat-price { color: var(--text-secondary); }
+        .total-price { font-size: 1.1rem; font-weight: bold; color: var(--primary-color); margin-top: 1rem; padding-top: 1rem; border-top: 2px solid var(--border-color); }
+        .continue-btn { background: var(--gradient); border: none; padding: 12px 30px; border-radius: 25px; color: white; font-weight: 600; width: 100%; margin-top: 1rem; transition: all 0.3s ease; }
+        .continue-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255, 107, 53, 0.3); color: white; }
+        .continue-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+    </style>
+}
+
+<!-- Hero Section -->
+<section class="hero-section">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="hero-title reveal">Chọn Ghế Ngồi</h1>
+                <p class="hero-subtitle reveal">Chọn ghế phù hợp với sở thích của bạn</p>
+            </div>
+            <div class="col-lg-4">
+                <div class="text-center">
+                    <i class="fas fa-chair fa-6x text-primary"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Booking Section -->
+<section class="section">
+    <div class="container">
+        <div class="row">
+            <!-- Movie Info -->
+            <div class="col-lg-3">
+                <div class="movie-info-card reveal">
+                    <img src="@(!string.IsNullOrEmpty(Model.MoviePoster) ? Model.MoviePoster : "https://via.placeholder.com/300x200/ff6b35/ffffff?text=Movie")" alt="@Model.MovieTitle" class="movie-poster" loading="lazy">
+                    <div class="movie-details">
+                        <h3 class="movie-title">@Model.MovieTitle</h3>
+                        <p class="movie-info">
+                            <i class="fas fa-building me-2"></i>
+                            @Model.TheaterName
+                        </p>
+                        <p class="movie-info">
+                            <i class="fas fa-calendar me-2"></i>
+                            @Model.ShowDate.ToString("dd/MM/yyyy")
+                        </p>
+                        <p class="movie-info">
+                            <i class="fas fa-clock me-2"></i>
+                            @Model.ShowTime.ToString(@"hh\:mm")
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theater Layout -->
+            <div class="col-lg-6">
+                <div class="theater-container reveal">
+                    <div class="screen">
+                        <i class="fas fa-tv me-2"></i>
+                        MÀN HÌNH
+                    </div>
+
+                    <!-- Seat Legend -->
+                    <div class="seat-legend">
+                        <div class="legend-item">
+                            <div class="legend-seat legend-available"></div>
+                            <span>Có sẵn</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-seat legend-selected"></div>
+                            <span>Đã chọn</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-seat legend-booked"></div>
+                            <span>Đã đặt</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-seat legend-vip"></div>
+                            <span>VIP</span>
+                        </div>
+                    </div>
+
+                    <!-- Seats Layout -->
+                    <div class="seats-container">
+                        @{
+                            var rows = Model.AvailableSeats.Concat(Model.BookedSeats)
+                                .GroupBy(s => s.Row)
+                                .OrderBy(g => g.Key)
+                                .ToList();
+                        }
+
+                        @foreach (var row in rows)
+                        {
+                            <div class="seat-row">
+                                <div class="row-label">@row.Key</div>
+                                @foreach (var seat in row.OrderBy(s => s.Column))
+                                {
+                                    var seatClass = "seat";
+                                    if (seat.SeatType == "VIP") seatClass += " vip";
+                                    if (seat.IsBooked) seatClass += " booked";
+                                    else if (seat.IsSelected) seatClass += " selected";
+                                    else seatClass += " available";
+
+                                    <div class="@seatClass" 
+                                         data-seat-id="@seat.SeatId" 
+                                         data-seat-code="@seat.SeatCode"
+                                         data-seat-price="@seat.Price"
+                                         onclick="@(seat.IsBooked ? "" : "toggleSeat(this)")">
+                                        @seat.Column
+                                    </div>
+                                }
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selection Summary -->
+            <div class="col-lg-3">
+                <div class="selection-summary reveal">
+                    <h4 class="summary-title">
+                        <i class="fas fa-ticket-alt me-2"></i>
+                        Tóm Tắt Đặt Vé
+                    </h4>
+                    
+                    <div class="selected-seats" id="selectedSeats">
+                        <p class="text-muted">Chưa chọn ghế nào</p>
+                    </div>
+                    
+                    <div class="total-price" id="totalPrice">
+                        Tổng tiền: 0 VNĐ
+                    </div>
+                    
+                    <button class="continue-btn" id="continueBtn" disabled onclick="continueToPayment()">
+                        <i class="fas fa-arrow-right me-2"></i>
+                        Tiếp Tục Thanh Toán
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        // theme toggle with persistence
+        (function(){
+            const body = document.body; const icon = document.getElementById('theme-icon'); const btn = document.getElementById('themeToggleBtn');
+            const saved = localStorage.getItem('theme');
+            if(saved === 'dark'){ body.setAttribute('data-theme','dark'); if(icon) icon.className='fas fa-sun'; }
+            else if(saved === 'light'){ body.removeAttribute('data-theme'); if(icon) icon.className='fas fa-moon'; }
+            if(btn){ btn.addEventListener('click', function(){ const dark = body.getAttribute('data-theme') === 'dark'; if(dark){ body.removeAttribute('data-theme'); localStorage.setItem('theme','light'); if(icon) icon.className='fas fa-moon'; } else { body.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); if(icon) icon.className='fas fa-sun'; } }); }
+        })();
+
+        let selectedSeats = [];
+        let totalPrice = 0;
+
+        // Toggle seat selection
+        function toggleSeat(seatElement) {
+            const seatId = parseInt(seatElement.dataset.seatId);
+            const seatCode = seatElement.dataset.seatCode;
+            const seatPrice = parseInt(seatElement.dataset.seatPrice);
+            
+            if (seatElement.classList.contains('selected')) {
+                // Deselect seat
+                seatElement.classList.remove('selected');
+                selectedSeats = selectedSeats.filter(seat => seat.id !== seatId);
+                totalPrice -= seatPrice;
+            } else {
+                // Select seat
+                seatElement.classList.add('selected');
+                selectedSeats.push({
+                    id: seatId,
+                    code: seatCode,
+                    price: seatPrice
+                });
+                totalPrice += seatPrice;
+            }
+            
+            updateSummary();
+        }
+
+        // Update selection summary
+        function updateSummary() {
+            const selectedSeatsContainer = document.getElementById('selectedSeats');
+            const totalPriceElement = document.getElementById('totalPrice');
+            const continueBtn = document.getElementById('continueBtn');
+            
+            if (selectedSeats.length === 0) {
+                selectedSeatsContainer.innerHTML = '<p class="text-muted">Chưa chọn ghế nào</p>';
+                totalPriceElement.textContent = 'Tổng tiền: 0 VNĐ';
+                continueBtn.disabled = true;
+            } else {
+                let seatsHtml = '';
+                selectedSeats.forEach(seat => {
+                    seatsHtml += `
+                        <div class="seat-item">
+                            <span class="seat-code">${seat.code}</span>
+                            <span class="seat-price">${seat.price.toLocaleString()} VNĐ</span>
+                        </div>
+                    `;
+                });
+                
+                selectedSeatsContainer.innerHTML = seatsHtml;
+                totalPriceElement.textContent = `Tổng tiền: ${totalPrice.toLocaleString()} VNĐ`;
+                continueBtn.disabled = false;
+            }
+        }
+
+        // Continue to payment
+        function continueToPayment() {
+            if (selectedSeats.length === 0) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Chưa chọn ghế',
+                    text: 'Vui lòng chọn ít nhất một ghế để tiếp tục',
+                    confirmButtonText: 'Đóng',
+                    confirmButtonColor: '#ffc107'
+                });
+                return;
+            }
+            
+            const seatIds = selectedSeats.map(seat => seat.id).join(',');
+            const url = `@Url.Action("Payment", "Booking")?showtimeId=@Model.ShowtimeId&seatIds=${seatIds}`;
+            window.location.href = url;
+        }
+        
+        // reveal animation
+        function revealOnScroll(){ const els=document.querySelectorAll('.reveal'); els.forEach(el=>{ const wh=window.innerHeight; const top=el.getBoundingClientRect().top; if(top<wh-150){ el.classList.add('active'); } }); }
+        window.addEventListener('scroll', revealOnScroll); 
+        window.addEventListener('load', function() {
+            revealOnScroll();
+        });
+    </script>
+} 

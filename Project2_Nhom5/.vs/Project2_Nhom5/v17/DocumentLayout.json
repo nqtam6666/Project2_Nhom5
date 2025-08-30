@@ -164,7 +164,7 @@
               "RelativeDocumentMoniker": "Project2_Nhom5\\Areas\\Admin\\Views\\Auth\\Login.cshtml",
               "ToolTip": "D:\\Project2_Nhom5\\Project2_Nhom5\\Project2_Nhom5\\Areas\\Admin\\Views\\Auth\\Login.cshtml",
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Views\\Auth\\Login.cshtml",
-              "ViewState": "AgIAAB8AAAAAAAAAAAAtwC4AAAA+AAAAAAAAAA==",
+              "ViewState": "AgIAAC4AAAAAAAAAAAAtwDkAAAA6AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
               "WhenOpened": "2025-08-29T10:41:40.113Z",
               "EditorCaption": ""
@@ -179,8 +179,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Views\\Payments\\Index.cshtml",
               "ViewState": "AgIAABgBAAAAAAAAAAAtwCcBAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-29T05:10:45.697Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-29T05:10:45.697Z"
             },
             {
               "$type": "Document",
@@ -228,8 +227,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\UsersController.cs",
               "ViewState": "AgIAABkAAAAAAAAAAIA4wGMAAAAiAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-25T02:46:32.489Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-25T02:46:32.489Z"
             },
             {
               "$type": "Document",
@@ -265,8 +263,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Program.cs",
               "ViewState": "AgIAAG0AAAAAAAAAAAAAAHcAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-25T01:06:19.016Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-25T01:06:19.016Z"
             },
             {
               "$type": "Document",
@@ -278,8 +275,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\DiscountsController.cs",
               "ViewState": "AgIAABYAAAAAAAAAAAAnwCAAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-25T02:45:12.154Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-25T02:45:12.154Z"
             },
             {
               "$type": "Document",
@@ -303,8 +299,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Views\\Discounts\\Index.cshtml",
               "ViewState": "AgIAADwAAAAAAAAAAAAtwEwAAAA3AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-29T04:48:42.525Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-29T04:48:42.525Z"
             },
             {
               "$type": "Document",
@@ -316,8 +311,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\ShowtimesController.cs",
               "ViewState": "AgIAAC0AAAAAAAAAAAAvwDkAAAAxAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-25T02:46:22.394Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-25T02:46:22.394Z"
             },
             {
               "$type": "Document",
@@ -341,8 +335,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Controllers\\MoviesController.cs",
               "ViewState": "AgIAAC0AAAAAAAAAAAAvwDgAAAAcAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-25T02:45:26.305Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-25T02:45:26.305Z"
             },
             {
               "$type": "Document",
@@ -354,8 +347,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Guest\\Controllers\\HomeController.cs",
               "ViewState": "AgIAAC4BAAAAAAAAAIA4wIABAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-08-28T23:34:13.407Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-28T23:34:13.407Z"
             },
             {
               "$type": "Document",
@@ -367,8 +359,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Views\\Showtimes\\Edit.cshtml",
               "ViewState": "AgIAACwAAAAAAAAAAAAMwC4AAAA9AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-29T01:56:48.111Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-29T01:56:48.111Z"
             },
             {
               "$type": "Document",
@@ -380,8 +371,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Areas\\Admin\\Views\\Discounts\\Delete.cshtml",
               "ViewState": "AgIAAOEAAAAAAAAAAAAvwOsAAAABAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000759|",
-              "WhenOpened": "2025-08-29T02:13:40.135Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-29T02:13:40.135Z"
             },
             {
               "$type": "Document",
@@ -465,8 +455,7 @@
               "RelativeToolTip": "Project2_Nhom5\\Project2_Nhom5.csproj",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2025-08-25T05:02:22.52Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-08-25T05:02:22.52Z"
             },
             {
               "$type": "Document",

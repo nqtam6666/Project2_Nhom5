@@ -39,9 +39,9 @@ namespace Project2_Nhom5.Areas.Admin.Controllers
                 return View();
             }
 
-            Response.Cookies.Append("userId", user.UserId.ToString(), new CookieOptions { HttpOnly = true, IsEssential = true, MaxAge = System.TimeSpan.FromHours(8) });
-            Response.Cookies.Append("username", user.Username, new CookieOptions { HttpOnly = true, IsEssential = true, MaxAge = System.TimeSpan.FromHours(8) });
-            Response.Cookies.Append("role", "Admin", new CookieOptions { HttpOnly = true, IsEssential = true, MaxAge = System.TimeSpan.FromHours(8) });
+            Response.Cookies.Append("userId", user.UserId.ToString(), new CookieOptions { HttpOnly = true, IsEssential = true, MaxAge = System.TimeSpan.FromDays(30) });
+            Response.Cookies.Append("username", user.Username, new CookieOptions { HttpOnly = true, IsEssential = true, MaxAge = System.TimeSpan.FromDays(30) });
+            Response.Cookies.Append("role", "Admin", new CookieOptions { HttpOnly = true, IsEssential = true, MaxAge = System.TimeSpan.FromDays(30) });
 
             var dest = string.IsNullOrWhiteSpace(returnUrl) ? "/Admin" : returnUrl!;
             return Redirect(dest);

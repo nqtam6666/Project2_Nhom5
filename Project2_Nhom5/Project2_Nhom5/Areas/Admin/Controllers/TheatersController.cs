@@ -52,7 +52,7 @@ namespace Project2_Nhom5.Controllers
                 "name" => sortOrder == "desc" ? theaters.OrderByDescending(t => t.Name) : theaters.OrderBy(t => t.Name),
                 "location" => sortOrder == "desc" ? theaters.OrderByDescending(t => t.Location) : theaters.OrderBy(t => t.Location),
                 "roomNumber" => sortOrder == "desc" ? theaters.OrderByDescending(t => t.RoomNumber) : theaters.OrderBy(t => t.RoomNumber),
-                _ => theaters.OrderBy(t => t.TheaterId)
+                _ => theaters.OrderByDescending(t => t.TheaterId)
             };
 
             // Get total count for pagination

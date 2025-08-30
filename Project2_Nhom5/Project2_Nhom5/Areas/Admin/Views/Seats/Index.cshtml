@@ -25,9 +25,14 @@
         </h2>
         <p class="text-muted mb-0">Danh sách tất cả ghế ngồi trong hệ thống</p>
     </div>
-    <a asp-action="Create" class="admin-btn-primary">
-        <i class="fas fa-plus"></i>Thêm ghế mới
-    </a>
+    <div class="d-flex gap-2">
+        <a asp-action="Create" class="admin-btn-primary">
+            <i class="fas fa-plus"></i>Thêm ghế mới
+        </a>
+        <a asp-action="BulkCreate" class="admin-btn-success">
+            <i class="fas fa-layer-group"></i>Thêm hàng loạt
+        </a>
+    </div>
 </div>
 
 <!-- Search and Filter Section -->

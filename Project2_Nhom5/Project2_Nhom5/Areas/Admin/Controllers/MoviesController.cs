@@ -63,7 +63,7 @@ namespace Project2_Nhom5.Controllers
                 "genre" => sortOrder == "desc" ? movies.OrderByDescending(m => m.Genre) : movies.OrderBy(m => m.Genre),
                 "duration" => sortOrder == "desc" ? movies.OrderByDescending(m => m.Duration) : movies.OrderBy(m => m.Duration),
                 "status" => sortOrder == "desc" ? movies.OrderByDescending(m => m.Status) : movies.OrderBy(m => m.Status),
-                _ => movies.OrderBy(m => m.MovieId)
+                _ => movies.OrderByDescending(m => m.MovieId)
             };
 
             // Get total count for pagination

@@ -63,21 +63,21 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
                     {
                         HttpOnly = true,
                         IsEssential = true,
-                        MaxAge = TimeSpan.FromHours(8)
+                        MaxAge = TimeSpan.FromDays(30)
                     });
                     
                     Response.Cookies.Append("username", user.Username, new CookieOptions
                     {
                         HttpOnly = true,
                         IsEssential = true,
-                        MaxAge = TimeSpan.FromHours(8)
+                        MaxAge = TimeSpan.FromDays(30)
                     });
                     
                     Response.Cookies.Append("role", user.Role ?? "NguoiDung", new CookieOptions
                     {
                         HttpOnly = true,
                         IsEssential = true,
-                        MaxAge = TimeSpan.FromHours(8)
+                        MaxAge = TimeSpan.FromDays(30)
                     });
 
                     return Json(new { 

@@ -16,9 +16,14 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var today = DateOnly.FromDateTime(DateTime.Today);
+            var now = TimeOnly.FromDateTime(DateTime.Now);
+
             var showtimes = await _context.Showtimes
                 .Include(s => s.Movie)
                 .Include(s => s.Theater)
+                .Where(s => s.ShowDate > today || 
+                           (s.ShowDate == today && s.ShowTime > now))
                 .OrderBy(s => s.ShowDate)
                 .ThenBy(s => s.ShowTime)
                 .ToListAsync();
