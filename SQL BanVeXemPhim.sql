@@ -100,9 +100,9 @@ CREATE TABLE DoanhThu (
 -- Chèn dữ liệu vào bảng Nguoidung
 INSERT INTO NguoiDung (TenDangNhap, MatKhau, Email, SoDienThoai, VaiTro, TrangThai)
 VALUES 
-    ('doanquan', 'password1', 'doanquan6805@gmail.com', '0359271424', 'Admin', 'hoatdong'),
-    ('vanthinh', 'password1', 'thinhvannguyen113@gmail.com', '0343841426', 'Admin', 'hoatdong'),
-    ('quangtam', 'password1', 'nguyenquangtam179@gmail.com', '0961138440', 'Admin', 'hoatdong');
+    ('doanquan', '$2a$12$9zb1KReOgMBalO.Zn23RY.psk2pxOeARNvoVf4C0Aer4c3jUCV6lu', 'doanquan6805@gmail.com', '0359271424', 'Admin', 'hoatdong'),
+    ('vanthinh', '$2a$12$9zb1KReOgMBalO.Zn23RY.psk2pxOeARNvoVf4C0Aer4c3jUCV6lu', 'thinhvannguyen113@gmail.com', '0343841426', 'Admin', 'hoatdong'),
+    ('quangtam', '$2a$12$9zb1KReOgMBalO.Zn23RY.psk2pxOeARNvoVf4C0Aer4c3jUCV6lu', 'nguyenquangtam179@gmail.com', '0961138440', 'Admin', 'hoatdong');
 
 -- Chèn dữ liệu vào bảng Phim
 INSERT INTO Phim (TieuDe, TheLoai, ThoiLuong, MoTa, AnhBia, Trailer, TrangThai)
