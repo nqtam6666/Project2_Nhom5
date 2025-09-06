@@ -1,0 +1,188 @@
+/* Perfect Icon Centering - Alternative Approach */
+/* This file uses a different approach to ensure icons are perfectly centered */
+
+/* Reset all icon circle styles */
+.icon-circle,
+.icon-circle-lg {
+    position: relative !important;
+    overflow: hidden !important;
+}
+
+/* Method 1: Using CSS Grid (Modern browsers) */
+@supports (display: grid) {
+    .icon-circle {
+        width: 40px !important;
+        height: 40px !important;
+        display: grid !important;
+        place-items: center !important;
+        border-radius: 50% !important;
+    }
+    
+    .icon-circle-lg {
+        width: 80px !important;
+        height: 80px !important;
+        display: grid !important;
+        place-items: center !important;
+        border-radius: 50% !important;
+    }
+    
+    .icon-circle i,
+    .icon-circle .fas,
+    .icon-circle .far,
+    .icon-circle .fab,
+    .icon-circle .fa,
+    .icon-circle-lg i,
+    .icon-circle-lg .fas,
+    .icon-circle-lg .far,
+    .icon-circle-lg .fab,
+    .icon-circle-lg .fa {
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        font-size: inherit !important;
+    }
+}
+
+/* Method 2: Using Flexbox (Fallback) */
+@supports not (display: grid) {
+    .icon-circle {
+        width: 40px !important;
+        height: 40px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+    }
+    
+    .icon-circle-lg {
+        width: 80px !important;
+        height: 80px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        border-radius: 50% !important;
+    }
+    
+    .icon-circle i,
+    .icon-circle .fas,
+    .icon-circle .far,
+    .icon-circle .fab,
+    .icon-circle .fa,
+    .icon-circle-lg i,
+    .icon-circle-lg .fas,
+    .icon-circle-lg .far,
+    .icon-circle-lg .fab,
+    .icon-circle-lg .fa {
+        margin: 0 !important;
+        padding: 0 !important;
+        display: block !important;
+        font-size: inherit !important;
+    }
+}
+
+/* Method 3: Using Absolute Positioning (Nuclear option) */
+.icon-circle {
+    position: relative !important;
+    width: 40px !important;
+    height: 40px !important;
+    border-radius: 50% !important;
+}
+
+.icon-circle-lg {
+    position: relative !important;
+    width: 80px !important;
+    height: 80px !important;
+    border-radius: 50% !important;
+}
+
+.icon-circle i,
+.icon-circle .fas,
+.icon-circle .far,
+.icon-circle .fab,
+.icon-circle .fa {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 16px !important;
+    line-height: 1 !important;
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+.icon-circle-lg i,
+.icon-circle-lg .fas,
+.icon-circle-lg .far,
+.icon-circle-lg .fab,
+.icon-circle-lg .fa {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: 32px !important;
+    line-height: 1 !important;
+    display: block !important;
+    width: auto !important;
+    height: auto !important;
+}
+
+/* Override any FontAwesome specific styles */
+.icon-circle .fas::before,
+.icon-circle .far::before,
+.icon-circle .fab::before,
+.icon-circle .fa::before,
+.icon-circle-lg .fas::before,
+.icon-circle-lg .far::before,
+.icon-circle-lg .fab::before,
+.icon-circle-lg .fa::before {
+    display: inline-block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+/* Ensure proper spacing in containers */
+.d-flex.align-items-center .icon-circle {
+    margin-right: 12px !important;
+}
+
+.d-flex.align-items-center .icon-circle-lg {
+    margin-right: 16px !important;
+}
+
+/* Remove any conflicting styles */
+.icon-circle *,
+.icon-circle-lg * {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Force override any existing styles */
+.icon-circle,
+.icon-circle-lg {
+    box-sizing: border-box !important;
+}
+
+.icon-circle i,
+.icon-circle .fas,
+.icon-circle .far,
+.icon-circle .fab,
+.icon-circle .fa,
+.icon-circle-lg i,
+.icon-circle-lg .fas,
+.icon-circle-lg .far,
+.icon-circle-lg .fab,
+.icon-circle-lg .fa {
+    box-sizing: border-box !important;
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+} 

@@ -1,0 +1,402 @@
+﻿@model IEnumerable<Project2_Nhom5.Models.Revenue>
+
+@{
+    ViewData["Title"] = "Quản lý Doanh thu";
+    var searchTerm = ViewBag.Search?.ToString() ?? "";
+    var sortOrder = ViewBag.SortOrder?.ToString() ?? "";
+    var currentSort = ViewBag.CurrentSort?.ToString() ?? "";
+    var page = ViewBag.CurrentPage?.ToString() ?? "1";
+    var pageSize = ViewBag.PageSize?.ToString() ?? "10";
+    var theaterIdFilter = ViewBag.TheaterId?.ToString() ?? "";
+    var movieIdFilter = ViewBag.MovieId?.ToString() ?? "";
+    var startDateFilter = ViewBag.StartDate?.ToString() ?? "";
+    var endDateFilter = ViewBag.EndDate?.ToString() ?? "";
+    var totalCount = ViewBag.TotalCount ?? 0;
+    var totalPages = ViewBag.TotalPages ?? 1;
+    var currentPageInt = int.Parse(page);
+    var pageSizeInt = int.Parse(pageSize);
+    var startItem = ((currentPageInt - 1) * pageSizeInt) + 1;
+    var endItem = Math.Min(currentPageInt * pageSizeInt, totalCount);
+    var theaters = ViewBag.Theaters as List<Project2_Nhom5.Models.Theater> ?? new List<Project2_Nhom5.Models.Theater>();
+    var movies = ViewBag.Movies as List<Project2_Nhom5.Models.Movie> ?? new List<Project2_Nhom5.Models.Movie>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-chart-line me-2 text-success"></i>Quản lý Doanh thu
+        </h2>
+        <p class="text-muted mb-0">Danh sách tất cả báo cáo doanh thu trong hệ thống</p>
+    </div>
+    <a asp-action="Create" class="admin-btn-success">
+        <i class="fas fa-plus"></i>Thêm báo cáo mới
+    </a>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="card-dashboard mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">
+                    <i class="fas fa-search"></i>Tìm kiếm
+                </label>
+                <input type="text" name="search" class="form-control" placeholder="Tìm theo mã BC, lịch chiếu, phim, rạp..." value="@searchTerm">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-building"></i>Rạp chiếu
+                </label>
+                <select name="theaterId" class="form-select">
+                    <option value="">Tất cả rạp</option>
+                    @foreach (var theater in theaters)
+                    {
+                        if (theaterIdFilter == theater.TheaterId.ToString())
+                        {
+                            <option value="@theater.TheaterId" selected>@theater.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@theater.TheaterId">@theater.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-film"></i>Phim
+                </label>
+                <select name="movieId" class="form-select">
+                    <option value="">Tất cả phim</option>
+                    @foreach (var movie in movies)
+                    {
+                        if (movieIdFilter == movie.MovieId.ToString())
+                        {
+                            <option value="@movie.MovieId" selected>@movie.Title</option>
+                        }
+                        else
+                        {
+                            <option value="@movie.MovieId">@movie.Title</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-calendar"></i>Từ ngày
+                </label>
+                <input type="date" name="startDate" class="form-control" value="@startDateFilter">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-calendar"></i>Đến ngày
+                </label>
+                <input type="date" name="endDate" class="form-control" value="@endDateFilter">
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">
+                    <i class="fas fa-list"></i>Số dòng
+                </label>
+                <select name="pageSize" class="form-select">
+                    @if (pageSize == "10")
+                    {
+                        <option value="10" selected>10</option>
+                    }
+                    else
+                    {
+                        <option value="10">10</option>
+                    }
+                    @if (pageSize == "25")
+                    {
+                        <option value="25" selected>25</option>
+                    }
+                    else
+                    {
+                        <option value="25">25</option>
+                    }
+                    @if (pageSize == "50")
+                    {
+                        <option value="50" selected>50</option>
+                    }
+                    else
+                    {
+                        <option value="50">50</option>
+                    }
+                    @if (pageSize == "100")
+                    {
+                        <option value="100" selected>100</option>
+                    }
+                    else
+                    {
+                        <option value="100">100</option>
+                    }
+                </select>
+            </div>
+            <div class="col-12">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="admin-btn-primary">
+                        <i class="fas fa-search"></i>Tìm kiếm
+                    </button>
+                    <a asp-action="Index" class="admin-btn-secondary">
+                        <i class="fas fa-refresh"></i>Làm mới
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card-dashboard p-5 text-center">
+        <div class="bg-light text-muted icon-circle-lg mx-auto mb-3">
+            <i class="fas fa-chart-line fa-2x"></i>
+        </div>
+        <h4 class="text-muted">Chưa có báo cáo doanh thu nào</h4>
+        <p class="text-muted">Bắt đầu bằng cách thêm báo cáo doanh thu đầu tiên vào hệ thống</p>
+        <a asp-action="Create" class="admin-btn-success">
+            <i class="fas fa-plus"></i>Thêm báo cáo đầu tiên
+        </a>
+    </div>
+}
+else
+{
+    <div class="card-dashboard">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            <i class="fas fa-hashtag"></i>Mã báo cáo
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                theaterId = theaterIdFilter, 
+                                movieId = movieIdFilter,
+                                startDate = startDateFilter,
+                                endDate = endDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "movie" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "movie"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-film"></i>Lịch chiếu
+                                @if (currentSort == "movie")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                theaterId = theaterIdFilter, 
+                                movieId = movieIdFilter,
+                                startDate = startDateFilter,
+                                endDate = endDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "totalAmount" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "totalAmount"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-dollar-sign"></i>Tổng doanh thu
+                                @if (currentSort == "totalAmount")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                theaterId = theaterIdFilter, 
+                                movieId = movieIdFilter,
+                                startDate = startDateFilter,
+                                endDate = endDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "agencyCommission" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "agencyCommission"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-percent"></i>Hoa hồng
+                                @if (currentSort == "agencyCommission")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <i class="fas fa-calculator"></i>Doanh thu thực
+                        </th>
+                        <th class="text-center">
+                            <i class="fas fa-cogs"></i>Thao tác
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var actualRevenue = (item.TotalAmount ?? 0) - ((item.TotalAmount ?? 0) * (item.AgencyCommission ?? 0) / 100);
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-success text-white icon-circle me-3">
+                                        <i class="fas fa-chart-line"></i>
+                                    </div>
+                                    <div>
+                                        <strong>#@item.RevenueId.ToString("000000")</strong>
+                                        <br>
+                                        <small class="text-muted">@item.Showtime?.Movie?.Title</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                @if (item.Showtime != null)
+                                {
+                                    <div>
+                                        <strong>@item.Showtime.Movie?.Title</strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            @item.Showtime.ShowDate.ToString("dd/MM/yyyy") @item.Showtime.ShowTime.ToString("HH:mm")
+                                        </small>
+                                        <br>
+                                        <small class="text-muted">@item.Showtime.Theater?.Name</small>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>
+                                <span class="badge bg-success fs-6">
+                                    <i class="fas fa-dollar-sign"></i>@(item.TotalAmount?.ToString("N0") ?? "0") VNĐ
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-info fs-6">
+                                    <i class="fas fa-percent"></i>@(item.AgencyCommission?.ToString("F1") ?? "0")%
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-primary fs-6">
+                                    <i class="fas fa-calculator"></i>@actualRevenue.ToString("N0") VNĐ
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.RevenueId" class="admin-btn-secondary" style="padding: 6px 12px; font-size: 0.8rem;" title="Chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.RevenueId" class="admin-btn-success" style="padding: 6px 12px; font-size: 0.8rem;" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.RevenueId" class="admin-btn-danger" style="padding: 6px 12px; font-size: 0.8rem;" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="text-muted">
+            Hiển thị @startItem đến @endItem trong tổng số @totalCount báo cáo
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination mb-0">
+                @if (currentPageInt > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            theaterId = theaterIdFilter, 
+                            movieId = movieIdFilter,
+                            startDate = startDateFilter,
+                            endDate = endDateFilter,
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = currentPageInt - 1
+                        })">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                }
+                
+                @for (int i = Math.Max(1, currentPageInt - 2); i <= Math.Min(totalPages, currentPageInt + 2); i++)
+                {
+                    <li class="page-item @(i == currentPageInt ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            theaterId = theaterIdFilter, 
+                            movieId = movieIdFilter,
+                            startDate = startDateFilter,
+                            endDate = endDateFilter,
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = i
+                        })">@i</a>
+                    </li>
+                }
+                
+                @if (currentPageInt < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            theaterId = theaterIdFilter, 
+                            movieId = movieIdFilter,
+                            startDate = startDateFilter,
+                            endDate = endDateFilter,
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = currentPageInt + 1
+                        })">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-submit form when pageSize changes
+            $('select[name="pageSize"]').change(function() {
+                $(this).closest('form').submit();
+            });
+            
+            // Clear search when clicking refresh
+            $('a[href*="Index"]').click(function() {
+                if ($(this).text().includes('Làm mới')) {
+                    $(this).attr('href', '@Url.Action("Index")');
+                }
+            });
+        });
+    </script>
+}
+
+
+
+

@@ -1,0 +1,184 @@
+﻿@model Project2_Nhom5.Models.Seat
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Ghế ngồi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-warning"></i>Chỉnh sửa Ghế ngồi
+        </h2>
+        <p class="text-muted mb-0">Cập nhật thông tin ghế ngồi trong hệ thống</p>
+    </div>
+    <a asp-action="Index" class="admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i>Quay lại danh sách
+    </a>
+</div>
+
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Edit" method="post" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <input type="hidden" asp-for="SeatId" />
+            
+            <div class="col-md-6">
+                <label asp-for="TheaterId" class="form-label">
+                    <i class="fas fa-building"></i>Chọn rạp chiếu <span class="text-danger">*</span>
+                </label>
+                <select asp-for="TheaterId" class="form-select" asp-items="ViewBag.TheaterId">
+                    <option value="">Chọn rạp chiếu...</option>
+                </select>
+                <span asp-validation-for="TheaterId" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="SeatCode" class="form-label">
+                    <i class="fas fa-hashtag"></i>Mã ghế <span class="text-danger">*</span>
+                </label>
+                <input asp-for="SeatCode" class="form-control" placeholder="VD: A1, B2, C3..." />
+                <span asp-validation-for="SeatCode" class="text-danger small"></span>
+                <div class="form-text">Nhập mã ghế (VD: A1, B2, C3...)</div>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="SeatType" class="form-label">
+                    <i class="fas fa-tag"></i>Loại ghế <span class="text-danger">*</span>
+                </label>
+                <select asp-for="SeatType" class="form-select">
+                    <option value="thuong">Ghế thường</option>
+                    <option value="vip">Ghế VIP</option>
+                </select>
+                <span asp-validation-for="SeatType" class="text-danger small"></span>
+                <div class="form-text">Chọn loại ghế phù hợp</div>
+            </div>
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-warning"></i>Lưu ý khi chỉnh sửa ghế
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Mã ghế phải là duy nhất trong cùng một rạp</li>
+                            <li>Thay đổi loại ghế có thể ảnh hưởng đến giá vé</li>
+                            <li>Kiểm tra trùng lặp mã ghế trước khi lưu</li>
+                            <li>Đảm bảo ghế được gán đúng rạp chiếu</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="admin-btn-secondary">
+                        <i class="fas fa-times"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="admin-btn-success">
+                        <i class="fas fa-save"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Form submission with beautiful dialog
+            $('form').on('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const theaterId = formData.get('TheaterId');
+                const seatCode = formData.get('SeatCode');
+                const seatType = formData.get('SeatType');
+                
+                // Validation
+                if (!theaterId || !seatCode || !seatType) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Vui lòng điền đầy đủ thông tin bắt buộc',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                    return;
+                }
+                
+                // Show loading
+                Swal.fire({
+                    title: 'Đang cập nhật ghế ngồi...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                try {
+                    const response = await fetch('@Url.Action("Edit", "Seats", new { area = "Admin", id = Model.SeatId })', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        Swal.fire({
+                            html: `
+                                <div class="mt-3 text-center">
+                                    <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                    </lord-icon>
+                                    <div class="mt-4 pt-2 fs-15">
+                                        <h4 style="color: #333; font-weight: 600; margin-bottom: 8px;">Thành công!</h4>
+                                        <p style="color: #666; margin: 0;">${result.message}</p>
+                                    </div>
+                                </div>
+                            `,
+                            showConfirmButton: true,
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#0ab39c',
+                            allowOutsideClick: true,
+                            allowEscapeKey: true,
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                confirmButton: 'btn btn-primary w-xs mb-1'
+                            },
+                            background: '#fff',
+                            backdrop: 'rgba(0,0,0,0.4)'
+                        }).then(() => {
+                            window.location.href = '@Url.Action("Index", "Seats", new { area = "Admin" })';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: result.message,
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi cập nhật ghế ngồi',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+
+

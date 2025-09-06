@@ -1,0 +1,180 @@
+﻿@model Project2_Nhom5.Models.Theater
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Rạp chiếu";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-warning"></i>Chỉnh sửa Rạp chiếu
+        </h2>
+        <p class="text-muted mb-0">Cập nhật thông tin rạp chiếu: @Model.Name</p>
+    </div>
+    <a asp-action="Index" class="admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i>Quay lại danh sách
+    </a>
+</div>
+
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Edit" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <input type="hidden" asp-for="TheaterId" />
+            
+            <div class="col-md-6">
+                <label asp-for="Name" class="form-label">
+                    <i class="fas fa-building"></i>Tên rạp chiếu <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Name" class="form-control" placeholder="Nhập tên rạp chiếu..." />
+                <span asp-validation-for="Name" class="text-danger small"></span>
+                <div class="form-text">Ví dụ: CGV Aeon Mall, Lotte Cinema, BHD Star</div>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="Location" class="form-label">
+                    <i class="fas fa-map-marker-alt"></i>Địa điểm <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Location" class="form-control" placeholder="Nhập địa điểm..." />
+                <span asp-validation-for="Location" class="text-danger small"></span>
+                <div class="form-text">Ví dụ: Quận 1, TP.HCM hoặc Quận Ba Đình, Hà Nội</div>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="RoomNumber" class="form-label">
+                    <i class="fas fa-door-open"></i>Số phòng chiếu <span class="text-danger">*</span>
+                </label>
+                <input asp-for="RoomNumber" class="form-control" type="number" min="1" placeholder="Nhập số phòng..." />
+                <span asp-validation-for="RoomNumber" class="text-danger small"></span>
+                <div class="form-text">Số thứ tự phòng chiếu trong rạp</div>
+            </div>
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-warning"></i>Lưu ý khi chỉnh sửa
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Thay đổi tên rạp có thể ảnh hưởng đến lịch chiếu hiện tại</li>
+                            <li>Cập nhật địa điểm giúp khách hàng dễ tìm hơn</li>
+                            <li>Thay đổi số phòng cần kiểm tra trùng lặp</li>
+                            <li>Đảm bảo thông tin chính xác để tránh nhầm lẫn</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="admin-btn-secondary">
+                        <i class="fas fa-times"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="admin-btn-success">
+                        <i class="fas fa-save"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Form submission with beautiful dialog
+            $('form').on('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const name = formData.get('Name');
+                const location = formData.get('Location');
+                const roomNumber = formData.get('RoomNumber');
+                
+                // Validation
+                if (!name || !location || !roomNumber) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Vui lòng điền đầy đủ thông tin bắt buộc',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                    return;
+                }
+                
+                // Show loading
+                Swal.fire({
+                    title: 'Đang cập nhật rạp chiếu...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                try {
+                    const response = await fetch('@Url.Action("Edit", "Theaters", new { area = "Admin", id = Model.TheaterId })', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        Swal.fire({
+                            html: `
+                                <div class="mt-3 text-center">
+                                    <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                    </lord-icon>
+                                    <div class="mt-4 pt-2 fs-15">
+                                        <h4 style="color: #333; font-weight: 600; margin-bottom: 8px;">Thành công!</h4>
+                                        <p style="color: #666; margin: 0;">${result.message}</p>
+                                    </div>
+                                </div>
+                            `,
+                            showConfirmButton: true,
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#0ab39c',
+                            allowOutsideClick: true,
+                            allowEscapeKey: true,
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                confirmButton: 'btn btn-primary w-xs mb-1'
+                            },
+                            background: '#fff',
+                            backdrop: 'rgba(0,0,0,0.4)'
+                        }).then(() => {
+                            window.location.href = '@Url.Action("Index", "Theaters", new { area = "Admin" })';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: result.message,
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi cập nhật rạp chiếu',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+
+

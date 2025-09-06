@@ -1,0 +1,216 @@
+﻿@model Project2_Nhom5.Models.Payment
+
+@{
+    ViewData["Title"] = "Xóa Thanh toán";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-trash me-2 text-danger"></i>Xóa Thanh toán
+        </h2>
+        <p class="text-muted mb-0">Xác nhận xóa giao dịch khỏi hệ thống</p>
+    </div>
+    <a asp-action="Index" class="admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i>Quay lại danh sách
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-dashboard border-danger">
+            <div class="card-body text-center p-4">
+                <div class="bg-danger text-white rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </div>
+                <h4 class="text-danger mb-2">Cảnh báo!</h4>
+                <p class="text-muted">Bạn sắp xóa giao dịch thanh toán này. Hành động này không thể hoàn tác.</p>
+                
+                <div class="bg-light rounded p-3 mb-3">
+                    <i class="fas fa-credit-card fa-3x text-primary mb-2"></i>
+                    <h5 class="mb-2">#@Model.PaymentId.ToString("000000")</h5>
+                    <span class="badge bg-success mb-2">@Model.Amount.ToString("N0") VNĐ</span>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-secondary">#@(Model.Ticket?.TicketId.ToString("000000") ?? "N/A")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card-dashboard">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Thông tin giao dịch sẽ bị xóa
+                </h5>
+                
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Lưu ý:</strong> Việc xóa có thể ảnh hưởng đến báo cáo doanh thu.
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-primary text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Số tiền</small>
+                                <div class="fw-bold">@Model.Amount.ToString("N0") VNĐ</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-info text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Phương thức</small>
+                                <div class="fw-bold">@Model.PaymentMethod</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-warning text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Ngày thanh toán</small>
+                                <div class="fw-bold">@Model.PaymentDate?.ToString("dd/MM/yyyy HH:mm")</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-warning text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-ticket-alt"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Vé liên quan</small>
+                                <div class="fw-bold">#@(Model.Ticket?.TicketId.ToString("000000") ?? "N/A")</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form asp-action="Delete" class="mt-4">
+                    <input type="hidden" asp-for="PaymentId" />
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="admin-btn-secondary">
+                            <i class="fas fa-times"></i>Hủy bỏ
+                        </a>
+                        <button type="submit" class="admin-btn-danger" id="deleteBtn">
+                            <i class="fas fa-trash"></i>Xác nhận xóa
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Form submission with beautiful dialog
+            $('form').on('submit', async function(e) {
+                e.preventDefault();
+                
+                // Show confirmation dialog
+                const result = await Swal.fire({
+                    title: 'Xác nhận xóa?',
+                    text: "Bạn có chắc chắn muốn xóa giao dịch thanh toán này? Hành động này không thể hoàn tác.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Có, xóa!',
+                    cancelButtonText: 'Hủy bỏ'
+                });
+                
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Đang xóa giao dịch thanh toán...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    try {
+                        const formData = new FormData(this);
+                        const response = await fetch('@Url.Action("Delete", "Payments", new { area = "Admin" })', {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            },
+                            body: formData
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            Swal.fire({
+                                html: `
+                                    <div class="mt-3 text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                        </lord-icon>
+                                        <div class="mt-4 pt-2 fs-15">
+                                            <h4 style="color: #333; font-weight: 600; margin-bottom: 8px;">Thành công!</h4>
+                                            <p style="color: #666; margin: 0;">${result.message}</p>
+                                        </div>
+                                    </div>
+                                `,
+                                showConfirmButton: true,
+                                confirmButtonText: 'Ok',
+                                confirmButtonColor: '#0ab39c',
+                                allowOutsideClick: true,
+                                allowEscapeKey: true,
+                                customClass: {
+                                    popup: 'swal2-custom-popup',
+                                    confirmButton: 'btn btn-primary w-xs mb-1'
+                                },
+                                background: '#fff',
+                                backdrop: 'rgba(0,0,0,0.4)'
+                            }).then(() => {
+                                window.location.href = '@Url.Action("Index", "Payments", new { area = "Admin" })';
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi!',
+                                text: result.message,
+                                confirmButtonText: 'Đóng',
+                                confirmButtonColor: '#dc3545'
+                            });
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Có lỗi xảy ra khi xóa giao dịch thanh toán',
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

@@ -1,0 +1,193 @@
+/* Icon Alignment Fixes */
+/* This file contains specific fixes for icon alignment issues */
+
+/* Icon Circle Fixes - Complete Overhaul */
+.icon-circle {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    /* Use CSS Grid for perfect centering */
+    display: grid !important;
+    place-items: center !important;
+    /* Fallback for older browsers */
+    text-align: center;
+    vertical-align: middle;
+}
+
+.icon-circle i,
+.icon-circle .fas,
+.icon-circle .far,
+.icon-circle .fab,
+.icon-circle .fa {
+    font-size: 16px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* Ensure icon takes full space and centers perfectly */
+    display: block !important;
+    width: 1em !important;
+    height: 1em !important;
+    text-align: center !important;
+    /* FontAwesome specific fixes */
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+.icon-circle-lg {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    position: relative;
+    flex-shrink: 0;
+    /* Use CSS Grid for perfect centering */
+    display: grid !important;
+    place-items: center !important;
+    /* Fallback for older browsers */
+    text-align: center;
+    vertical-align: middle;
+}
+
+.icon-circle-lg i,
+.icon-circle-lg .fas,
+.icon-circle-lg .far,
+.icon-circle-lg .fab,
+.icon-circle-lg .fa {
+    font-size: 32px !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    /* Ensure icon takes full space and centers perfectly */
+    display: block !important;
+    width: 1em !important;
+    height: 1em !important;
+    text-align: center !important;
+    /* FontAwesome specific fixes */
+    font-style: normal !important;
+    font-variant: normal !important;
+    text-rendering: auto !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+}
+
+/* Ensure proper spacing in flex containers */
+.d-flex.align-items-center .icon-circle {
+    margin-right: 12px;
+}
+
+.d-flex.align-items-center .icon-circle-lg {
+    margin-right: 16px;
+}
+
+/* Override any conflicting icon spacing rules */
+.icon-circle *,
+.icon-circle-lg * {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* Specific fixes for different icon types */
+.icon-circle .fa,
+.icon-circle .fas,
+.icon-circle .far,
+.icon-circle .fab,
+.icon-circle-lg .fa,
+.icon-circle-lg .fas,
+.icon-circle-lg .far,
+.icon-circle-lg .fab {
+    display: block !important;
+    width: 1em !important;
+    height: 1em !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+    text-align: center !important;
+}
+
+/* Override any FontAwesome specific styles */
+.icon-circle .fas::before,
+.icon-circle .far::before,
+.icon-circle .fab::before,
+.icon-circle .fa::before,
+.icon-circle-lg .fas::before,
+.icon-circle-lg .far::before,
+.icon-circle-lg .fab::before,
+.icon-circle-lg .fa::before {
+    display: inline-block !important;
+    width: 1em !important;
+    height: 1em !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    vertical-align: middle !important;
+}
+
+/* Fix for table icons */
+.table .icon-circle {
+    margin-right: 12px;
+}
+
+/* Fix for card icons */
+.card .icon-circle {
+    margin-right: 12px;
+}
+
+/* Ensure icons are centered in all browsers */
+@supports (display: grid) {
+    .icon-circle,
+    .icon-circle-lg {
+        display: grid !important;
+        place-items: center !important;
+    }
+}
+
+/* Fallback for older browsers */
+@supports not (display: grid) {
+    .icon-circle,
+    .icon-circle-lg {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+}
+
+/* Alternative approach using pseudo-elements for perfect centering */
+.icon-circle::before,
+.icon-circle-lg::before {
+    content: '';
+    display: block;
+    width: 0;
+    height: 100%;
+    margin-left: -0.5em;
+}
+
+/* Force icon centering with transform */
+.icon-circle i,
+.icon-circle .fas,
+.icon-circle .far,
+.icon-circle .fab,
+.icon-circle .fa {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.icon-circle-lg i,
+.icon-circle-lg .fas,
+.icon-circle-lg .far,
+.icon-circle-lg .fab,
+.icon-circle-lg .fa {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    padding: 0 !important;
+} 

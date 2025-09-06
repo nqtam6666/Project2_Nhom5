@@ -1,0 +1,222 @@
+﻿@model Project2_Nhom5.Models.Ticket
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Vé xem phim";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-warning"></i>Chỉnh sửa Vé xem phim
+        </h2>
+        <p class="text-muted mb-0">Cập nhật thông tin vé xem phim trong hệ thống</p>
+    </div>
+    <a asp-action="Index" class="admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i>Quay lại danh sách
+    </a>
+</div>
+
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Edit" method="post" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            <input type="hidden" asp-for="TicketId" />
+            
+            <div class="col-md-6">
+                <label asp-for="UserId" class="form-label">
+                    <i class="fas fa-user"></i>Chọn khách hàng
+                </label>
+                <select asp-for="UserId" class="form-select" asp-items="ViewBag.UserId">
+                    <option value="">Chọn khách hàng...</option>
+                </select>
+                <span asp-validation-for="UserId" class="text-danger small"></span>
+                <div class="form-text">Để trống nếu là khách vãng lai</div>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="ShowtimeId" class="form-label">
+                    <i class="fas fa-calendar-alt"></i>Chọn lịch chiếu <span class="text-danger">*</span>
+                </label>
+                <select asp-for="ShowtimeId" class="form-select" asp-items="ViewBag.ShowtimeId" required>
+                    <option value="">Chọn lịch chiếu...</option>
+                </select>
+                <span asp-validation-for="ShowtimeId" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="SeatId" class="form-label">
+                    <i class="fas fa-chair"></i>Chọn ghế ngồi <span class="text-danger">*</span>
+                </label>
+                <select asp-for="SeatId" class="form-select" asp-items="ViewBag.SeatId" required>
+                    <option value="">Chọn ghế ngồi...</option>
+                </select>
+                <span asp-validation-for="SeatId" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="Price" class="form-label">
+                    <i class="fas fa-money-bill"></i>Giá vé <span class="text-danger">*</span>
+                </label>
+                <div class="input-group">
+                    <input asp-for="Price" class="form-control" type="number" step="1000" min="0" value="@((int)Model.Price)" placeholder="Nhập giá vé..." />
+                    <span class="input-group-text">VNĐ</span>
+                </div>
+                <span asp-validation-for="Price" class="text-danger small"></span>
+                <div class="form-text">Nhập giá vé bằng VNĐ (VD: 50000, 75000)</div>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="Status" class="form-label">
+                    <i class="fas fa-info-circle"></i>Trạng thái <span class="text-danger">*</span>
+                </label>
+                <select asp-for="Status" class="form-select" required>
+                    <option value="choxuly">Chờ xử lý</option>
+                    <option value="dathanhtoan">Đã thanh toán</option>
+                    <option value="dahuy">Đã hủy</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger small"></span>
+                <div class="form-text">Chọn trạng thái hiện tại của vé</div>
+            </div>
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-warning"></i>Lưu ý khi chỉnh sửa vé
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Thay đổi giá vé có thể ảnh hưởng đến thanh toán</li>
+                            <li>Thay đổi trạng thái cần thông báo cho khách hàng</li>
+                            <li>Kiểm tra ghế không bị trùng lịch</li>
+                            <li>Đảm bảo thông tin khách hàng chính xác</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="admin-btn-secondary">
+                        <i class="fas fa-times"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="admin-btn-success">
+                        <i class="fas fa-save"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Form submission with beautiful dialog
+            $('form').on('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const showtimeId = formData.get('ShowtimeId');
+                const seatId = formData.get('SeatId');
+                const price = formData.get('Price');
+                const status = formData.get('Status');
+                
+                // Validation
+                if (!showtimeId || !seatId || !price || !status) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Vui lòng điền đầy đủ thông tin bắt buộc',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                    return;
+                }
+                
+                // Validate price
+                if (parseFloat(price) % 1000 !== 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Giá vé phải là bội số của 1000 VNĐ',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                    return;
+                }
+                
+                // Show loading
+                Swal.fire({
+                    title: 'Đang cập nhật vé...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                try {
+                    const response = await fetch('@Url.Action("Edit", "Tickets", new { area = "Admin", id = Model.TicketId })', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        Swal.fire({
+                            html: `
+                                <div class="mt-3 text-center">
+                                    <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                    </lord-icon>
+                                    <div class="mt-4 pt-2 fs-15">
+                                        <h4 style="color: #333; font-weight: 600; margin-bottom: 8px;">Thành công!</h4>
+                                        <p style="color: #666; margin: 0;">${result.message}</p>
+                                    </div>
+                                </div>
+                            `,
+                            showConfirmButton: true,
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#0ab39c',
+                            allowOutsideClick: true,
+                            allowEscapeKey: true,
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                confirmButton: 'btn btn-primary w-xs mb-1'
+                            },
+                            background: '#fff',
+                            backdrop: 'rgba(0,0,0,0.4)'
+                        }).then(() => {
+                            window.location.href = '@Url.Action("Index", "Tickets", new { area = "Admin" })';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: result.message,
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi cập nhật vé',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+
+

@@ -1,0 +1,236 @@
+﻿@model Project2_Nhom5.Models.Discount
+
+@{
+    ViewData["Title"] = "Xóa Khuyến mãi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-trash me-2 text-danger"></i>Xóa Khuyến mãi
+        </h2>
+        <p class="text-muted mb-0">Xác nhận xóa khuyến mãi khỏi hệ thống</p>
+    </div>
+    <a asp-action="Index" class="admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i>Quay lại danh sách
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-dashboard border-danger">
+            <div class="card-body text-center p-4">
+                <div class="bg-danger text-white rounded-circle mx-auto mb-3" style="width: 80px; height: 80px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-exclamation-triangle fa-2x"></i>
+                </div>
+                <h4 class="text-danger mb-2">Cảnh báo!</h4>
+                <p class="text-muted">Bạn sắp xóa khuyến mãi này khỏi hệ thống. Hành động này không thể hoàn tác.</p>
+                
+                <div class="bg-light rounded p-3 mb-3">
+                    <i class="fas fa-percent fa-3x text-primary mb-2"></i>
+                    <h5 class="mb-2">@Model.Code</h5>
+                    @{
+                        var discountTypeText = Model.DiscountType switch
+                        {
+                            "percent" => "Phần trăm",
+                            "fixed" => "Số tiền cố định",
+                            _ => Model.DiscountType
+                        };
+                    }
+                    <span class="badge bg-info mb-2">@discountTypeText</span>
+                    <span class="badge bg-secondary">@Model.Value</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card-dashboard">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Thông tin khuyến mãi sẽ bị xóa
+                </h5>
+                
+                <div class="alert alert-warning" role="alert">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Lưu ý:</strong> Việc xóa khuyến mãi này sẽ ảnh hưởng đến các giao dịch đang sử dụng mã này.
+                </div>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-primary text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Mã khuyến mãi</small>
+                                <div class="fw-bold">@Model.Code</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-info text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-percent"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Loại khuyến mãi</small>
+                                <div class="fw-bold">@discountTypeText</div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-success text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-dollar-sign"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Giá trị khuyến mãi</small>
+                                <div class="fw-bold">
+                                    @if (Model.DiscountType == "percent")
+                                    {
+                                        <div class="text-success fw-bold fs-5">@Model.Value%</div>
+                                    }
+                                    else if (Model.DiscountType == "fixed")
+                                    {
+                                        <div class="text-info fw-bold fs-5">@Model.Value.ToString("N0") VNĐ</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-warning text-white rounded-circle p-2 me-3">
+                                <i class="fas fa-calendar-times"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Ngày hết hạn</small>
+                                <div class="fw-bold">@Model.ExpiryDate.ToString("dd/MM/yyyy")</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                @if (!string.IsNullOrEmpty(Model.Description))
+                {
+                    <div class="mt-4">
+                        <h6 class="mb-3">
+                            <i class="fas fa-align-left me-2 text-primary"></i>Mô tả
+                        </h6>
+                        <div class="p-3 bg-light rounded">
+                            @Model.Description
+                        </div>
+                    </div>
+                }
+                
+                <form asp-action="Delete" class="mt-4">
+                    <input type="hidden" asp-for="DiscountId" />
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="admin-btn-secondary">
+                            <i class="fas fa-times"></i>Hủy bỏ
+                        </a>
+                        <button type="submit" class="admin-btn-danger" id="deleteBtn">
+                            <i class="fas fa-trash"></i>Xác nhận xóa
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Form submission with beautiful dialog
+            $('form').on('submit', async function(e) {
+                e.preventDefault();
+                
+                // Show confirmation dialog
+                const result = await Swal.fire({
+                    title: 'Xác nhận xóa?',
+                    text: "Bạn có chắc chắn muốn xóa mã khuyến mãi này? Hành động này không thể hoàn tác.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Có, xóa!',
+                    cancelButtonText: 'Hủy bỏ'
+                });
+                
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Đang xóa mã khuyến mãi...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    try {
+                        const formData = new FormData(this);
+                        const response = await fetch('@Url.Action("Delete", "Discounts", new { area = "Admin" })', {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            },
+                            body: formData
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            Swal.fire({
+                                html: `
+                                    <div class="mt-3 text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                        </lord-icon>
+                                        <div class="mt-4 pt-2 fs-15">
+                                            <h4 style="color: #333; font-weight: 600; margin-bottom: 8px;">Thành công!</h4>
+                                            <p style="color: #666; margin: 0;">${result.message}</p>
+                                        </div>
+                                    </div>
+                                `,
+                                showConfirmButton: true,
+                                confirmButtonText: 'Ok',
+                                confirmButtonColor: '#0ab39c',
+                                allowOutsideClick: true,
+                                allowEscapeKey: true,
+                                customClass: {
+                                    popup: 'swal2-custom-popup',
+                                    confirmButton: 'btn btn-primary w-xs mb-1'
+                                },
+                                background: '#fff',
+                                backdrop: 'rgba(0,0,0,0.4)'
+                            }).then(() => {
+                                window.location.href = '@Url.Action("Index", "Discounts", new { area = "Admin" })';
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi!',
+                                text: result.message,
+                                confirmButtonText: 'Đóng',
+                                confirmButtonColor: '#dc3545'
+                            });
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Có lỗi xảy ra khi xóa mã khuyến mãi',
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,234 @@
+﻿@model Project2_Nhom5.Models.Seat
+
+@{
+    ViewData["Title"] = "Xóa Ghế ngồi";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-trash me-2 text-danger"></i>Xóa Ghế ngồi
+        </h2>
+        <p class="text-muted mb-0">Xác nhận xóa ghế ngồi khỏi hệ thống</p>
+    </div>
+    <a asp-action="Index" class="admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i>Quay lại danh sách
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-lg-8">
+        <div class="card-dashboard border-danger">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">
+                    <i class="fas fa-exclamation-triangle"></i>Cảnh báo: Xóa ghế ngồi
+                </h5>
+            </div>
+            <div class="card-body p-4">
+                <div class="alert alert-warning" role="alert">
+                    <h6 class="alert-heading">
+                        <i class="fas fa-exclamation-triangle"></i>Bạn có chắc chắn muốn xóa ghế này?
+                    </h6>
+                    <p class="mb-0">Hành động này không thể hoàn tác. Ghế ngồi sẽ bị xóa vĩnh viễn khỏi hệ thống.</p>
+                </div>
+                
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-primary text-white icon-circle me-3">
+                                <i class="fas fa-hashtag"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 text-muted">Mã ghế</h6>
+                                <h5 class="mb-0">@Model.SeatCode</h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-success text-white icon-circle me-3">
+                                <i class="fas fa-tag"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 text-muted">Loại ghế</h6>
+                                <h5 class="mb-0">
+                                    @if (Model.SeatType == "thuong")
+                                    {
+                                        <span class="badge bg-secondary">Ghế thường</span>
+                                    }
+                                    else if (Model.SeatType == "vip")
+                                    {
+                                        <span class="badge bg-warning">Ghế VIP</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-info">@Model.SeatType</span>
+                                    }
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="bg-info text-white icon-circle me-3">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <div>
+                                <h6 class="mb-1 text-muted">Rạp chiếu</h6>
+                                <h5 class="mb-0">
+                                    @if (Model.Theater != null)
+                                    {
+                                        <span>@Model.Theater.Name</span>
+                                        <br><small class="text-muted">@Model.Theater.Location - Phòng @Model.Theater.RoomNumber</small>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted">Chưa được gán</span>
+                                    }
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-4">
+        <div class="card-dashboard">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-3">
+                    <i class="fas fa-info-circle me-2 text-danger"></i>Thông tin bổ sung
+                </h5>
+                <div class="mb-3">
+                    <small class="text-muted">ID Ghế:</small>
+                    <div class="fw-bold">@Model.SeatId</div>
+                </div>
+                <div class="mb-3">
+                    <small class="text-muted">ID Rạp:</small>
+                    <div class="fw-bold">@Model.TheaterId</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card-dashboard mt-3">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-3">
+                    <i class="fas fa-cogs me-2 text-danger"></i>Thao tác
+                </h5>
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="SeatId" />
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="admin-btn-danger" id="deleteBtn">
+                            <i class="fas fa-trash"></i>Xác nhận xóa
+                        </button>
+                        <a asp-action="Index" class="admin-btn-secondary">
+                            <i class="fas fa-times"></i>Hủy bỏ
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Form submission with beautiful dialog
+            $('form').on('submit', async function(e) {
+                e.preventDefault();
+                
+                // Show confirmation dialog
+                const result = await Swal.fire({
+                    title: 'Xác nhận xóa?',
+                    text: "Bạn có chắc chắn muốn xóa ghế ngồi này? Hành động này không thể hoàn tác.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Có, xóa!',
+                    cancelButtonText: 'Hủy bỏ'
+                });
+                
+                if (result.isConfirmed) {
+                    // Show loading
+                    Swal.fire({
+                        title: 'Đang xóa ghế ngồi...',
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+                    
+                    try {
+                        const formData = new FormData(this);
+                        const response = await fetch('@Url.Action("Delete", "Seats", new { area = "Admin" })', {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                            },
+                            body: formData
+                        });
+                        
+                        const result = await response.json();
+                        
+                        if (result.success) {
+                            Swal.fire({
+                                html: `
+                                    <div class="mt-3 text-center">
+                                        <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                        </lord-icon>
+                                        <div class="mt-4 pt-2 fs-15">
+                                            <h4 style="color: #333; font-weight: 600; margin-bottom: 8px;">Thành công!</h4>
+                                            <p style="color: #666; margin: 0;">${result.message}</p>
+                                        </div>
+                                    </div>
+                                `,
+                                showConfirmButton: true,
+                                confirmButtonText: 'Ok',
+                                confirmButtonColor: '#0ab39c',
+                                allowOutsideClick: true,
+                                allowEscapeKey: true,
+                                customClass: {
+                                    popup: 'swal2-custom-popup',
+                                    confirmButton: 'btn btn-primary w-xs mb-1'
+                                },
+                                background: '#fff',
+                                backdrop: 'rgba(0,0,0,0.4)'
+                            }).then(() => {
+                                window.location.href = '@Url.Action("Index", "Seats", new { area = "Admin" })';
+                            });
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Lỗi!',
+                                text: result.message,
+                                confirmButtonText: 'Đóng',
+                                confirmButtonColor: '#dc3545'
+                            });
+                        }
+                    } catch (error) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: 'Có lỗi xảy ra khi xóa ghế ngồi',
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                }
+            });
+        });
+    </script>
+}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

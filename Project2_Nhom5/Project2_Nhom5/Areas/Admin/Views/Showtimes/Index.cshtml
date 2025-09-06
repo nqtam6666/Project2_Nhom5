@@ -1,0 +1,395 @@
+﻿@model IEnumerable<Project2_Nhom5.Models.Showtime>
+
+@{
+    ViewData["Title"] = "Quản lý lịch chiếu";
+    var searchTerm = ViewBag.Search?.ToString() ?? "";
+    var sortOrder = ViewBag.SortOrder?.ToString() ?? "";
+    var currentSort = ViewBag.CurrentSort?.ToString() ?? "";
+    var page = ViewBag.CurrentPage?.ToString() ?? "1";
+    var pageSize = ViewBag.PageSize?.ToString() ?? "10";
+    var movieIdFilter = ViewBag.MovieId?.ToString() ?? "";
+    var theaterIdFilter = ViewBag.TheaterId?.ToString() ?? "";
+    var showDateFilter = ViewBag.ShowDate?.ToString() ?? "";
+    var totalCount = ViewBag.TotalCount ?? 0;
+    var totalPages = ViewBag.TotalPages ?? 1;
+    var currentPageInt = int.Parse(page);
+    var pageSizeInt = int.Parse(pageSize);
+    var startItem = ((currentPageInt - 1) * pageSizeInt) + 1;
+    var endItem = Math.Min(currentPageInt * pageSizeInt, totalCount);
+    var movies = ViewBag.Movies as List<Project2_Nhom5.Models.Movie> ?? new List<Project2_Nhom5.Models.Movie>();
+    var theaters = ViewBag.Theaters as List<Project2_Nhom5.Models.Theater> ?? new List<Project2_Nhom5.Models.Theater>();
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-calendar-alt me-2 text-primary"></i>Quản lý Lịch chiếu
+        </h2>
+        <p class="text-muted mb-0">Danh sách tất cả lịch chiếu phim trong hệ thống</p>
+    </div>
+    <div>
+        <a href="@Url.Action("BulkCreate", "Showtimes", new { area = "Admin" })" class="admin-btn-warning me-2">
+            <i class="fas fa-layer-group"></i>Thêm hàng loạt
+        </a>
+        <a href="@Url.Action("Create", "Showtimes", new { area = "Admin" })" class="admin-btn-primary">
+            <i class="fas fa-plus"></i>Thêm mới
+        </a>
+    </div>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="card-dashboard mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">
+                    <i class="fas fa-search"></i>Tìm kiếm
+                </label>
+                <input type="text" name="search" class="form-control" placeholder="Tìm theo tên phim, rạp..." value="@searchTerm">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-film"></i>Phim
+                </label>
+                <select name="movieId" class="form-select">
+                    <option value="">Tất cả phim</option>
+                    @foreach (var movie in movies)
+                    {
+                        if (movieIdFilter == movie.MovieId.ToString())
+                        {
+                            <option value="@movie.MovieId" selected>@movie.Title</option>
+                        }
+                        else
+                        {
+                            <option value="@movie.MovieId">@movie.Title</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-building"></i>Rạp chiếu
+                </label>
+                <select name="theaterId" class="form-select">
+                    <option value="">Tất cả rạp</option>
+                    @foreach (var theater in theaters)
+                    {
+                        if (theaterIdFilter == theater.TheaterId.ToString())
+                        {
+                            <option value="@theater.TheaterId" selected>@theater.Name</option>
+                        }
+                        else
+                        {
+                            <option value="@theater.TheaterId">@theater.Name</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-calendar"></i>Ngày chiếu
+                </label>
+                <input type="date" name="showDate" class="form-control" value="@showDateFilter">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-list"></i>Số dòng
+                </label>
+                <select name="pageSize" class="form-select">
+                    @if (pageSize == "10")
+                    {
+                        <option value="10" selected>10</option>
+                    }
+                    else
+                    {
+                        <option value="10">10</option>
+                    }
+                    @if (pageSize == "25")
+                    {
+                        <option value="25" selected>25</option>
+                    }
+                    else
+                    {
+                        <option value="25">25</option>
+                    }
+                    @if (pageSize == "50")
+                    {
+                        <option value="50" selected>50</option>
+                    }
+                    else
+                    {
+                        <option value="50">50</option>
+                    }
+                    @if (pageSize == "100")
+                    {
+                        <option value="100" selected>100</option>
+                    }
+                    else
+                    {
+                        <option value="100">100</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-1">
+                <label class="form-label">&nbsp;</label>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="admin-btn-primary">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <a asp-action="Index" class="admin-btn-secondary">
+                        <i class="fas fa-refresh"></i>
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card-dashboard p-5 text-center">
+        <i class="fas fa-calendar-alt fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Chưa có lịch chiếu nào</h4>
+        <p class="text-muted">Bắt đầu bằng cách thêm lịch chiếu đầu tiên vào hệ thống</p>
+        <a href="@Url.Action("Create", "Showtimes", new { area = "Admin" })" class="admin-btn-primary">
+            <i class="fas fa-plus"></i>Thêm lịch chiếu đầu tiên
+        </a>
+    </div>
+}
+else
+{
+    <div class="card-dashboard">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            <i class="fas fa-hashtag"></i>ID
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                movieId = movieIdFilter, 
+                                theaterId = theaterIdFilter, 
+                                showDate = showDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "movie" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "movie"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-film"></i>Phim
+                                @if (currentSort == "movie")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                movieId = movieIdFilter, 
+                                theaterId = theaterIdFilter, 
+                                showDate = showDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "theater" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "theater"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-building"></i>Rạp chiếu
+                                @if (currentSort == "theater")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                movieId = movieIdFilter, 
+                                theaterId = theaterIdFilter, 
+                                showDate = showDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "date" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "date"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-calendar"></i>Ngày chiếu
+                                @if (currentSort == "date")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                movieId = movieIdFilter, 
+                                theaterId = theaterIdFilter, 
+                                showDate = showDateFilter,
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "time" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "time"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-clock"></i>Giờ chiếu
+                                @if (currentSort == "time")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <i class="fas fa-cogs"></i>Thao tác
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <span class="badge bg-secondary">#@item.ShowtimeId</span>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-primary text-white icon-circle me-3">
+                                        <i class="fas fa-film"></i>
+                                    </div>
+                                    <div>
+                                        <strong>@item.Movie?.Title</strong>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <div class="bg-info text-white icon-circle me-3">
+                                        <i class="fas fa-building"></i>
+                                    </div>
+                                    <div>
+                                        <strong>@item.Theater?.Name</strong>
+                                        <br><small class="text-muted">@item.Theater?.Location</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-success">
+                                    <i class="fas fa-calendar"></i>@item.ShowDate.ToString("dd/MM/yyyy")
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge bg-warning">
+                                    <i class="fas fa-clock"></i>@item.ShowTime.ToString("HH:mm")
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a href="@Url.Action("Edit", "Showtimes", new { area = "Admin", id = item.ShowtimeId })" class="admin-btn-success" style="padding: 6px 12px; font-size: 0.8rem; min-width: 35px; justify-content: center;" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="@Url.Action("Delete", "Showtimes", new { area = "Admin", id = item.ShowtimeId })" class="admin-btn-danger" style="padding: 6px 12px; font-size: 0.8rem; min-width: 35px; justify-content: center;" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="text-muted">
+            Hiển thị @startItem đến @endItem trong tổng số @totalCount lịch chiếu
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination mb-0">
+                @if (currentPageInt > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            movieId = movieIdFilter, 
+                            theaterId = theaterIdFilter, 
+                            showDate = showDateFilter,
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = currentPageInt - 1
+                        })">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                }
+                
+                @for (int i = Math.Max(1, currentPageInt - 2); i <= Math.Min(totalPages, currentPageInt + 2); i++)
+                {
+                    <li class="page-item @(i == currentPageInt ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            movieId = movieIdFilter, 
+                            theaterId = theaterIdFilter, 
+                            showDate = showDateFilter,
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = i
+                        })">@i</a>
+                    </li>
+                }
+                
+                @if (currentPageInt < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            movieId = movieIdFilter, 
+                            theaterId = theaterIdFilter, 
+                            showDate = showDateFilter,
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = currentPageInt + 1
+                        })">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-submit form when pageSize changes
+            $('select[name="pageSize"]').change(function() {
+                $(this).closest('form').submit();
+            });
+            
+            // Clear search when clicking refresh
+            $('a[href*="Index"]').click(function() {
+                if ($(this).text().includes('Làm mới')) {
+                    $(this).attr('href', '@Url.Action("Index")');
+                }
+            });
+        });
+    </script>
+}
+
+
+

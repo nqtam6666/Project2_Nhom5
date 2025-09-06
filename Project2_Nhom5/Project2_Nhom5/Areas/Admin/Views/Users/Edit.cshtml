@@ -1,0 +1,252 @@
+﻿@model Project2_Nhom5.Models.EditUserViewModel
+
+@{
+    ViewData["Title"] = "Chỉnh sửa Người dùng";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-edit me-2 text-warning"></i>Chỉnh sửa Người dùng
+        </h2>
+        <p class="text-muted mb-0">Cập nhật thông tin người dùng #@Model.UserId</p>
+    </div>
+    <a asp-action="Index" class="admin-btn-secondary">
+        <i class="fas fa-arrow-left"></i>Quay lại danh sách
+    </a>
+</div>
+
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Edit" method="post" class="row g-3">
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>Message Error: @ViewData["ErrorMessage"]
+            </div>
+            <input type="hidden" asp-for="UserId" />
+            
+            <div class="col-md-6">
+                <label asp-for="Username" class="form-label">
+                    <i class="fas fa-user"></i>Tên đăng nhập <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Username" class="form-control" placeholder="Nhập tên đăng nhập..." />
+                <span asp-validation-for="Username" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="Password" class="form-label">
+                    <i class="fas fa-lock"></i>Mật khẩu mới
+                </label>
+                <input asp-for="Password" class="form-control" type="password" placeholder="Để trống nếu không đổi mật khẩu..." />
+                <span asp-validation-for="Password" class="text-danger small"></span>
+                <div class="form-text">Để trống nếu không muốn thay đổi mật khẩu</div>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="Email" class="form-label">
+                    <i class="fas fa-envelope"></i>Email <span class="text-danger">*</span>
+                </label>
+                <input asp-for="Email" class="form-control" type="email" placeholder="Nhập email..." />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="Phone" class="form-label">
+                    <i class="fas fa-phone"></i>Số điện thoại
+                </label>
+                <input asp-for="Phone" class="form-control" placeholder="Nhập số điện thoại..." />
+                <span asp-validation-for="Phone" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="Role" class="form-label">
+                    <i class="fas fa-user-tag"></i>Vai trò <span class="text-danger">*</span>
+                </label>
+                <select asp-for="Role" class="form-select">
+                    <option value="">Chọn vai trò...</option>
+                    <option value="NguoiDung">Người dùng</option>
+                    <option value="Admin">Quản trị viên</option>
+                    <option value="DaiLy">Đại lý</option>
+                </select>
+                <span asp-validation-for="Role" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-md-6">
+                <label asp-for="Status" class="form-label">
+                    <i class="fas fa-info-circle"></i>Trạng thái <span class="text-danger">*</span>
+                </label>
+                <select asp-for="Status" class="form-select">
+                    <option value="">Chọn trạng thái...</option>
+                    <option value="hoatdong">Hoạt động</option>
+                    <option value="khonghoatdong">Không hoạt động</option>
+                </select>
+                <span asp-validation-for="Status" class="text-danger small"></span>
+            </div>
+            
+            <div class="col-12">
+                <div class="card bg-light">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-info-circle me-2 text-warning"></i>Lưu ý khi chỉnh sửa
+                        </h6>
+                        <ul class="mb-0">
+                            <li>Thay đổi vai trò sẽ ảnh hưởng đến quyền truy cập</li>
+                            <li>Trạng thái "Không hoạt động" sẽ ngăn người dùng đăng nhập</li>
+                            <li>Email và tên đăng nhập phải là duy nhất</li>
+                            <li>Mật khẩu chỉ được cập nhật khi nhập giá trị mới</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="admin-btn-secondary">
+                        <i class="fas fa-times"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="admin-btn-success">
+                        <i class="fas fa-save"></i>Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            var currentUserId = @Model.UserId;
+            
+            // Add custom validation for email uniqueness (excluding current user)
+            $('#Email').on('blur', function() {
+                var email = $(this).val();
+                if (email) {
+                    $.get('/Admin/Users/CheckEmailExists', { email: email, excludeUserId: currentUserId }, function(exists) {
+                        if (exists) {
+                            $('#Email').addClass('is-invalid');
+                            if (!$('#Email').next('.text-danger').length) {
+                                $('#Email').after('<span class="text-danger small">Email này đã được sử dụng</span>');
+                            }
+                        } else {
+                            $('#Email').removeClass('is-invalid');
+                            $('#Email').next('.text-danger').remove();
+                        }
+                    });
+                }
+            });
+
+            // Add custom validation for username uniqueness (excluding current user)
+            $('#Username').on('blur', function() {
+                var username = $(this).val();
+                if (username) {
+                    $.get('/Admin/Users/CheckUsernameExists', { username: username, excludeUserId: currentUserId }, function(exists) {
+                        if (exists) {
+                            $('#Username').addClass('is-invalid');
+                            if (!$('#Username').next('.text-danger').length) {
+                                $('#Username').after('<span class="text-danger small">Tên đăng nhập này đã được sử dụng</span>');
+                            }
+                        } else {
+                            $('#Username').removeClass('is-invalid');
+                            $('#Username').next('.text-danger').remove();
+                        }
+                    });
+                }
+            });
+            
+            // Form submission with beautiful dialog
+            $('form').on('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const username = formData.get('Username');
+                const email = formData.get('Email');
+                const role = formData.get('Role');
+                const status = formData.get('Status');
+                
+                // Validation
+                if (!username || !email || !role || !status) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Vui lòng điền đầy đủ thông tin bắt buộc',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                    return;
+                }
+                
+                // Show loading
+                Swal.fire({
+                    title: 'Đang cập nhật người dùng...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                try {
+                    const response = await fetch('@Url.Action("Edit", "Users", new { area = "Admin", id = Model.UserId })', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        Swal.fire({
+                            html: `
+                                <div class="mt-3 text-center">
+                                    <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                    </lord-icon>
+                                    <div class="mt-4 pt-2 fs-15">
+                                        <h4 style="color: #333; font-weight: 600; margin-bottom: 8px;">Thành công!</h4>
+                                        <p style="color: #666; margin: 0;">${result.message}</p>
+                                    </div>
+                                </div>
+                            `,
+                            showConfirmButton: true,
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#0ab39c',
+                            allowOutsideClick: true,
+                            allowEscapeKey: true,
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                confirmButton: 'btn btn-primary w-xs mb-1'
+                            },
+                            background: '#fff',
+                            backdrop: 'rgba(0,0,0,0.4)'
+                        }).then(() => {
+                            window.location.href = '@Url.Action("Index", "Users", new { area = "Admin" })';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: result.message,
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi cập nhật người dùng',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+
+

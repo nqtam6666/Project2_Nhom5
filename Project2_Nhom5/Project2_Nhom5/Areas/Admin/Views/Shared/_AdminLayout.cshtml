@@ -1,0 +1,649 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/icon-fixes.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/perfect-icon-center.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Project2_Nhom5.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Lordicon -->
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    @await RenderSectionAsync("Styles", required: false)
+    <style>
+        .admin-sidebar {
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            overflow-y: auto;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-sidebar.collapsed {
+            width: 70px !important;
+            min-width: 70px !important;
+        }
+        
+        /* Responsive layout adjustments */
+        .col-md-3.col-lg-2 {
+            transition: all 0.3s ease;
+        }
+        
+        /* When sidebar is collapsed, adjust main content area */
+        .admin-sidebar.collapsed ~ .col-md-9.col-lg-10 {
+            flex: 1;
+            max-width: calc(100% - 70px);
+            width: calc(100% - 70px);
+            margin-left: 0;
+            padding-left: 0;
+        }
+        
+        .admin-sidebar.collapsed ~ .col-md-9.col-lg-10 .admin-content {
+            width: 100%;
+            margin-left: 0;
+            padding-left: 0;
+        }
+        
+        .admin-sidebar.collapsed ~ .col-md-9.col-lg-10 .admin-header {
+            width: 100%;
+            margin-left: 0;
+            padding-left: 0;
+        }
+        
+        .admin-sidebar.collapsed ~ .col-md-9.col-lg-10 .container-fluid {
+            width: 100%;
+            max-width: 100%;
+            padding-left: 0;
+            padding-right: 0;
+            margin-left: 0;
+        }
+        
+        .admin-sidebar.collapsed .sidebar-brand h4,
+        .admin-sidebar.collapsed .sidebar-brand small,
+        .admin-sidebar.collapsed .nav-link span {
+            display: none !important;
+        }
+        
+        .admin-sidebar.collapsed .nav-link {
+            text-align: center;
+            padding: 12px 8px !important;
+            margin: 2px 5px !important;
+        }
+        
+        .admin-sidebar.collapsed .nav-link i {
+            margin-right: 0 !important;
+            font-size: 1.2rem;
+        }
+        
+        .sidebar-toggle {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            color: white;
+            border-radius: 8px;
+            width: 36px;
+            height: 36px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            padding: 0;
+            margin: 0;
+            line-height: 1;
+        }
+        
+        .sidebar-toggle:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+        
+        .sidebar-toggle i {
+            margin: 8px !important;
+            padding: 0 !important;
+            font-size: 16px;
+            line-height: 1;
+            display: block;
+            text-align: center;
+        }
+        .admin-sidebar .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 2px 10px;
+            transition: all 0.3s ease;
+        }
+        .admin-sidebar .nav-link:hover {
+            background-color: rgba(255,255,255,0.1);
+            color: white;
+            transform: translateX(5px);
+        }
+        .admin-sidebar .nav-link.active {
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+        }
+        .admin-content {
+            background-color: #f8f9fa;
+            min-height: 100vh;
+        }
+        .admin-header {
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 15px 0;
+        }
+        .sidebar-brand {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-brand .d-flex {
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .sidebar-brand h4 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .card-dashboard {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .card-dashboard:hover {
+            transform: translateY(-5px);
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        
+        /* SweetAlert2 Custom Styles */
+        .swal2-custom-popup {
+            border-radius: 20px !important;
+            padding: 2.5rem !important;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3) !important;
+            border: none !important;
+        }
+        
+        .swal2-custom-popup .swal2-title {
+            color: #333 !important;
+            font-weight: 600 !important;
+            font-size: 1.5rem !important;
+        }
+        
+        .swal2-custom-popup .swal2-html-container {
+            margin: 1rem 0 !important;
+        }
+        
+        .swal2-custom-popup .swal2-confirm {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border: none !important;
+            border-radius: 25px !important;
+            padding: 12px 30px !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+            transition: all 0.3s ease !important;
+        }
+        
+        .swal2-custom-popup .swal2-confirm:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4) !important;
+        }
+            color: #333 !important;
+            font-weight: 600 !important;
+        }
+        
+        .swal2-custom-popup .swal2-html-container {
+            color: #666 !important;
+        }
+        
+        .swal2-custom-popup .swal2-confirm {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border: none !important;
+            border-radius: 25px !important;
+            padding: 10px 25px !important;
+            font-weight: 600 !important;
+        }
+        
+        .swal2-custom-popup .swal2-confirm:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3) !important;
+        }
+        
+        /* Admin Button Styles */
+        .admin-btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 10px 20px !important;
+            border-radius: 25px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3) !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+        
+        .admin-btn-primary:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4) !important;
+            color: white !important;
+            text-decoration: none !important;
+        }
+        
+        .admin-btn-secondary {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 8px 16px !important;
+            border-radius: 20px !important;
+            font-weight: 500 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 3px 12px rgba(240, 147, 251, 0.3) !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            font-size: 0.9rem !important;
+        }
+        
+        .admin-btn-secondary:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 6px 20px rgba(240, 147, 251, 0.4) !important;
+            color: white !important;
+            text-decoration: none !important;
+        }
+        
+        .admin-btn-success {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 10px 20px !important;
+            border-radius: 25px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(79, 172, 254, 0.3) !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+        
+        .admin-btn-success:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(79, 172, 254, 0.4) !important;
+            color: white !important;
+            text-decoration: none !important;
+        }
+        
+        .admin-btn-warning {
+            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 10px 20px !important;
+            border-radius: 25px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(250, 112, 154, 0.3) !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+        
+        .admin-btn-warning:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(250, 112, 154, 0.4) !important;
+            color: white !important;
+            text-decoration: none !important;
+        }
+        
+        .admin-btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%) !important;
+            border: none !important;
+            color: white !important;
+            padding: 10px 20px !important;
+            border-radius: 25px !important;
+            font-weight: 600 !important;
+            transition: all 0.3s ease !important;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3) !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 10px !important;
+        }
+        
+        .admin-btn-danger:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4) !important;
+            color: white !important;
+            text-decoration: none !important;
+        }
+        
+        /* Admin Header Styling */
+        .admin-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+            color: white !important;
+            box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3) !important;
+            padding: 20px 0 !important;
+        }
+        
+        .admin-header h4 {
+            color: white !important;
+            font-weight: 600 !important;
+            margin: 0 !important;
+        }
+        
+        .admin-header .btn {
+            margin-left: 10px !important;
+        }
+        
+        /* Icon spacing improvements - chỉ áp dụng cho các icon không trong admin buttons */
+        .fas:not(.admin-btn-primary .fas):not(.admin-btn-secondary .fas):not(.admin-btn-success .fas):not(.admin-btn-warning .fas):not(.admin-btn-danger .fas),
+        .far:not(.admin-btn-primary .far):not(.admin-btn-secondary .far):not(.admin-btn-success .far):not(.admin-btn-warning .far):not(.admin-btn-danger .far),
+        .fab:not(.admin-btn-primary .fab):not(.admin-btn-secondary .fab):not(.admin-btn-success .fab):not(.admin-btn-warning .fab):not(.admin-btn-danger .fab) {
+            margin-right: 8px !important;
+        }
+        
+        /* Table header icons */
+        .table th .fas,
+        .table th .far,
+        .table th .fab {
+            margin-right: 6px !important;
+        }
+        
+        /* Badge icons */
+        .badge .fas,
+        .badge .far,
+        .badge .fab {
+            margin-right: 4px !important;
+        }
+        
+        /* Form label icons */
+        .form-label .fas,
+        .form-label .far,
+        .form-label .fab {
+            margin-right: 6px !important;
+        }
+        
+        /* Alert icons */
+        .alert .fas,
+        .alert .far,
+        .alert .fab {
+            margin-right: 8px !important;
+        }
+        
+        /* Sidebar icons */
+        .admin-sidebar .nav-link .fas,
+        .admin-sidebar .nav-link .far,
+        .admin-sidebar .nav-link .fab {
+            margin-right: 10px !important;
+        }
+        
+        /* Admin buttons - đảm bảo icon không có margin-right */
+        .admin-btn-primary .fas,
+        .admin-btn-primary .far,
+        .admin-btn-primary .fab,
+        .admin-btn-secondary .fas,
+        .admin-btn-secondary .far,
+        .admin-btn-secondary .fab,
+        .admin-btn-success .fas,
+        .admin-btn-success .far,
+        .admin-btn-success .fab,
+        .admin-btn-warning .fas,
+        .admin-btn-warning .far,
+        .admin-btn-warning .fab,
+        .admin-btn-danger .fas,
+        .admin-btn-danger .far,
+        .admin-btn-danger .fab {
+            margin-right: 0 !important;
+        }
+        
+        /* Table action buttons - đảm bảo kích thước đều */
+        .table .admin-btn-secondary,
+        .table .admin-btn-success,
+        .table .admin-btn-danger {
+            min-width: 35px !important;
+            justify-content: center !important;
+            padding: 6px 12px !important;
+            font-size: 0.8rem !important;
+            margin-right: 2px !important;
+        }
+        
+        /* Quick actions section */
+        .quick-actions h4 {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+        }
+        
+        .quick-actions h4 .fas {
+            margin-right: 0 !important;
+        }
+        
+        /* Icon circle specific fixes - override any other icon rules */
+        .icon-circle,
+        .icon-circle-lg {
+            position: relative !important;
+            display: grid !important;
+            place-items: center !important;
+            text-align: center !important;
+        }
+        
+        .icon-circle .fas,
+        .icon-circle .far,
+        .icon-circle .fab,
+        .icon-circle .fa,
+        .icon-circle-lg .fas,
+        .icon-circle-lg .far,
+        .icon-circle-lg .fab,
+        .icon-circle-lg .fa {
+            position: absolute !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            font-size: inherit !important;
+            display: block !important;
+            width: 1em !important;
+            height: 1em !important;
+            text-align: center !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 px-0">
+                <div class="admin-sidebar">
+                    <div class="sidebar-brand">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h4 class="mb-0"><i class="fas fa-film"></i><span>Cinema Admin</span></h4>
+                            <button class="sidebar-toggle" type="button" style="display: inline-flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-bars" style="margin: 0; padding: 0;"></i>
+                            </button>
+                        </div>
+                        <small>Quản lý hệ thống</small>
+                    </div>
+                    <nav class="nav flex-column">
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Home" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Home" asp-action="Index">
+                            <i class="fas fa-home"></i><span>Dashboard</span>
+                        </a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Movies" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Movies" asp-action="Index">
+                            <i class="fas fa-film"></i><span>Phim</span>
+                        </a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Theaters" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Theaters" asp-action="Index">
+                            <i class="fas fa-building"></i><span>Rạp chiếu</span>
+                        </a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Showtimes" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Showtimes" asp-action="Index">
+                            <i class="fas fa-calendar-alt"></i><span>Lịch chiếu</span>
+                        </a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Seats" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Seats" asp-action="Index">
+                            <i class="fas fa-chair"></i><span>Ghế ngồi</span>
+                        </a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Tickets" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Tickets" asp-action="Index">
+                            <i class="fas fa-ticket-alt"></i><span>Vé xem phim</span>
+                        </a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Payments" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Payments" asp-action="Index">
+                            <i class="fas fa-credit-card"></i><span>Thanh toán</span>
+                        </a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Discounts" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Discounts" asp-action="Index">
+                            <i class="fas fa-percent"></i><span>Khuyến mãi</span>
+                        </a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Revenues" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Revenues" asp-action="Index">
+                            <i class="fas fa-chart-line"></i><span>Doanh thu</span>
+                        </a>
+                        <a class="nav-link @(ViewContext.RouteData.Values["Controller"]?.ToString() == "Users" ? "active" : "")" 
+                           asp-area="Admin" asp-controller="Users" asp-action="Index">
+                            <i class="fas fa-users"></i><span>Người dùng</span>
+                        </a>
+                    </nav>
+                </div>
+            </div>
+            
+            <!-- Main Content -->
+            <div class="col-md-9 col-lg-10 px-0">
+                <div class="admin-content" style="transition: all 0.3s ease;">
+                    <!-- Header -->
+                    <div class="admin-header">
+                        <div class="container-fluid">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    <h4 class="mb-0">
+                                        <i class="fas fa-cog" style="margin-left: 10px;"></i>@ViewData["Title"]
+                                    </h4>
+                                </div>
+                                <div class="col-auto">
+                                    <div class="d-flex align-items-center">
+                                        <span class="me-3 fw-bold">
+                                            <i class="fas fa-shield-alt"></i>Admin Panel
+                                        </span>
+                                        <a href="/" class="admin-btn-secondary">
+                                            <i class="fas fa-external-link-alt"></i>Về trang chủ
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Content -->
+                    <div class="container-fluid p-4">
+                        @RenderBody()
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.querySelector('.admin-sidebar');
+            const toggleIcon = sidebarToggle.querySelector('i');
+            
+            // Load saved state from localStorage
+            const isCollapsed = localStorage.getItem('adminSidebarCollapsed') === 'true';
+            if (isCollapsed) {
+                sidebar.classList.add('collapsed');
+                toggleIcon.classList.remove('fa-bars');
+                toggleIcon.classList.add('fa-chevron-right');
+                
+                // Apply collapsed state to main content
+                const mainContent = document.querySelector('.admin-content');
+                const mainContainer = document.querySelector('.col-md-9.col-lg-10');
+                if (mainContent && mainContainer) {
+                    mainContainer.style.width = 'calc(100% - 70px)';
+                    mainContainer.style.maxWidth = 'calc(100% - 70px)';
+                    mainContainer.style.marginLeft = '0';
+                    mainContainer.style.paddingLeft = '0';
+                    mainContent.style.width = '100%';
+                    mainContent.style.marginLeft = '0';
+                    mainContent.style.paddingLeft = '0';
+                }
+            }
+            
+            // sidebarToggle.addEventListener('click', function() {
+            //     sidebar.classList.toggle('collapsed');
+                
+            //     // Update icon
+            //     if (sidebar.classList.contains('collapsed')) {
+            //         toggleIcon.classList.remove('fa-bars');
+            //         toggleIcon.classList.add('fa-chevron-right');
+            //         localStorage.setItem('adminSidebarCollapsed', 'true');
+                    
+            //         // Adjust main content
+            //         const mainContent = document.querySelector('.admin-content');
+            //         const mainContainer = document.querySelector('.col-md-9.col-lg-10');
+            //         if (mainContent && mainContainer) {
+            //             mainContainer.style.width = 'calc(100% - 70px)';
+            //             mainContainer.style.maxWidth = 'calc(100% - 70px)';
+            //             mainContainer.style.marginLeft = '0';
+            //             mainContainer.style.paddingLeft = '0';
+            //             mainContent.style.width = '100%';
+            //             mainContent.style.marginLeft = '0';
+            //             mainContent.style.paddingLeft = '0';
+            //         }
+            //     } else {
+            //         toggleIcon.classList.remove('fa-chevron-right');
+            //         toggleIcon.classList.add('fa-bars');
+            //         localStorage.setItem('adminSidebarCollapsed', 'false');
+                    
+            //         // Reset main content
+            //         const mainContent = document.querySelector('.admin-content');
+            //         const mainContainer = document.querySelector('.col-md-9.col-lg-10');
+            //         if (mainContent && mainContainer) {
+            //             mainContainer.style.width = '';
+            //             mainContainer.style.maxWidth = '';
+            //             mainContainer.style.marginLeft = '';
+            //             mainContainer.style.paddingLeft = '';
+            //             mainContent.style.width = '100%';
+            //             mainContent.style.marginLeft = '0';
+            //             mainContent.style.paddingLeft = '';
+            //         }
+            //     }
+            // });
+        });
+    </script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
+
+
+

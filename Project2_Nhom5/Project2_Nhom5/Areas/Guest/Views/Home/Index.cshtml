@@ -1,0 +1,654 @@
+@model Project2_Nhom5.Areas.Guest.Models.GuestHomeViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "Trang chủ";
+    var isAdmin = (bool)(ViewData["IsAdmin"] ?? false);
+}
+
+@section Styles {
+    <style>
+        :root { --primary-color: #ff6b35; --secondary-color: #1a1a2e; --accent-color: #16213e; --text-primary: #333; --text-secondary: #666; --footer-text: #666; --bg-primary: #ffffff; --bg-secondary: #f8f9fa; --card-bg: #ffffff; --border-color: #e0e0e0; --shadow: 0 4px 20px rgba(0,0,0,0.1); --gradient: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); }
+        [data-theme="dark"] { --text-primary: #ffffff; --text-secondary: #b0b0b0; --footer-text: #b0b0b0; --bg-primary: #0f0f1a; --bg-secondary: #1a1a2e; --card-bg: #16213e; --border-color: #333; --shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        [data-theme="dark"] .form-control, [data-theme="dark"] .form-select { background-color: var(--bg-secondary); border-color: var(--border-color); color: var(--text-primary); }
+        [data-theme="dark"] .form-control:focus, [data-theme="dark"] .form-select:focus { background-color: var(--card-bg); border-color: var(--primary-color); color: var(--text-primary); box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25); }
+        [data-theme="dark"] .form-control::placeholder { color: var(--text-secondary); }
+        [data-theme="dark"] .modal-backdrop { background-color: rgba(0, 0, 0, 0.8); }
+        * { transition: all 0.3s ease; }
+        .hero-section { background: var(--bg-primary); min-height: 70vh; display: flex; align-items: center; position: relative; overflow: hidden; }
+        .hero-title { font-size: 3rem; font-weight: bold; margin-bottom: 1.5rem; background: var(--gradient); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero-subtitle { font-size: 1.2rem; color: var(--text-secondary); margin-bottom: 2rem; }
+        .cta-button { background: var(--gradient); border: none; padding: 12px 32px; border-radius: 50px; color: white; font-size: 1rem; font-weight: 600; text-decoration: none; display: inline-block; box-shadow: var(--shadow); }
+        .cta-button:hover { transform: translateY(-3px); box-shadow: 0 8px 30px rgba(255, 107, 53, 0.4); color: white; }
+        .movie-card { background: var(--card-bg); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow); border: 1px solid var(--border-color); position: relative; }
+        .movie-card:hover { transform: translateY(-6px); box-shadow: 0 20px 40px rgba(0,0,0,0.15); }
+        .movie-poster { width: 100%; height: 350px; object-fit: cover; }
+        .movie-info { padding: 1.2rem; display: flex; flex-direction: column; height: 100%; }
+        .movie-title { font-size: 1.2rem; font-weight: bold; margin-bottom: 0.5rem; color: var(--text-primary); }
+        .movie-genre { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 0.5rem; }
+        .rating { display: flex; align-items: center; margin-bottom: 1rem; }
+        .stars { color: #ffc107; margin-right: 0.5rem; }
+        .book-btn { background: var(--gradient); border: none; padding: 10px 25px; border-radius: 25px; color: white; font-weight: 500; width: 100%; margin-top: auto; }
+        .loading { vertical-align: middle; margin-right: 3px; display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,.3); border-radius: 50%; border-top-color: #fff; animation: spin 1s ease-in-out infinite; }
+        @@keyframes spin { to { transform: rotate(360deg); } }
+        .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+        .login-image-container { position: relative; height: 100%; min-height: 300px; overflow: hidden; border-radius: 15px; }
+        .login-image { width: 100%; height: 100%; object-fit: cover; }
+        .login-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(255, 107, 53, 0.8) 0%, rgba(247, 147, 30, 0.8) 100%); display: flex; align-items: center; justify-content: center; }
+        .login-form-container { padding: 2rem; }
+        .login-title { font-size: 2rem; font-weight: bold; color: var(--text-primary); margin-bottom: 0.5rem; }
+        .login-subtitle { color: var(--text-secondary); margin-bottom: 2rem; }
+        .login-input { border-radius: 10px; border: 2px solid var(--border-color); padding: 12px 15px; transition: all 0.3s ease; }
+        .login-input:focus { border-color: var(--primary-color); box-shadow: 0 0 0 0.2rem rgba(255, 107, 53, 0.25); }
+        .login-btn { border-radius: 10px; padding: 12px; font-weight: 600; transition: all 0.3s ease; }
+        .login-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .login-btn-hero { background: var(--gradient); border: none; padding: 12px 24px; border-radius: 25px; font-weight: 600; transition: all 0.3s ease; }
+        .login-btn-hero:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4); color: white; }
+    </style>
+}
+
+<!-- Hero Section -->
+<section id="home" class="hero-section">
+    <div class="floating-element"><i class="fas fa-film fa-3x"></i></div>
+    <div class="floating-element"><i class="fas fa-ticket-alt fa-2x"></i></div>
+    <div class="floating-element"><i class="fas fa-popcorn fa-3x"></i></div>
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6 hero-content">
+                <h1 class="hero-title reveal" style="margin-top: 100px;">Trải Nghiệm Điện Ảnh Đỉnh Cao</h1>
+                <p class="hero-subtitle reveal">Đặt vé xem phim online dễ dàng, nhanh chóng với hàng trăm bộ phim hot nhất hiện tại</p>
+                <a href="#movies" class="cta-button reveal" style="margin-bottom: 10px;"><i class="fas fa-play me-2"></i>Đặt Vé Ngay</a>
+            </div>
+            <div class="col-lg-6"><div class="hero-image reveal"><img src="~/img/hero-cinema.jpg" alt="Cinema" class="img-fluid rounded-4 shadow" loading="lazy"></div></div>
+        </div>
+    </div>
+</section>
+
+<!-- Movies Section -->
+<section id="movies" class="section">
+    <div class="container">
+        <h2 class="section-title reveal">Phim Đang Chiếu</h2>
+        <div class="row">
+            @foreach (var m in Model.NowShowing)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="movie-card reveal">
+                        <img src="@(!string.IsNullOrEmpty(m.PosterUrl) ? m.PosterUrl : "https://via.placeholder.com/300x450/ff6b35/ffffff?text=Movie")" alt="@m.Title" class="movie-poster" loading="lazy">
+                        <div class="movie-info">
+                            <h3 class="movie-title">@m.Title</h3>
+                            <p class="movie-genre">@m.Genre</p>
+                            <div class="rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i></div><span>@(m.Duration?.ToString() ?? "") phút</span></div>
+                            <a href="@Url.Action("SelectShowtime", "Booking", new { movieId = m.MovieId })" class="book-btn" style="text-decoration: none; display: block;"><i class="fas fa-ticket-alt me-2"></i>Đặt Vé</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        <h2 class="section-title reveal mt-5">Sắp Chiếu</h2>
+        <div class="row">
+            @foreach (var m in Model.ComingSoon)
+            {
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="movie-card reveal">
+                        <img src="@(!string.IsNullOrEmpty(m.PosterUrl) ? m.PosterUrl : "https://via.placeholder.com/300x450/ff6b35/ffffff?text=Movie")" alt="@m.Title" class="movie-poster" loading="lazy">
+                        <div class="movie-info">
+                            <h3 class="movie-title">@m.Title</h3>
+                            <p class="movie-genre">@m.Genre</p>
+                            <div class="rating"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i></div><span>@(m.Duration?.ToString() ?? "") phút</span></div>
+                            <button class="book-btn" style="text-decoration: none; display: block; background: #6c757d; cursor: not-allowed;" disabled><i class="fas fa-clock me-2"></i>Sắp Chiếu</button>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="login-image-container">
+                            <img src="~/img/hero-cinema.jpg" alt="Cinema" class="login-image">
+                            <div class="login-overlay">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-film fa-4x mb-3"></i>
+                                    <h3>CineMax</h3>
+                                    <p>Trải nghiệm điện ảnh đỉnh cao</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="login-form-container">
+                            <div class="text-center mb-4">
+                                <h2 class="login-title">Đăng Nhập</h2>
+                                <p class="login-subtitle">Chào mừng bạn trở lại với CineMax</p>
+                            </div>
+                            <form id="loginForm">
+                                <div class="form-group mb-3">
+                                    <label for="username" class="form-label"><i class="fas fa-user me-2"></i>Tên đăng nhập</label>
+                                    <input type="text" class="form-control login-input" id="username" placeholder="Nhập tên đăng nhập" required value="quangtam">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="password" class="form-label"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
+                                    <input type="password" class="form-control login-input" id="password" placeholder="Nhập mật khẩu" required value="password1">
+                                </div>
+                                <div class="form-group mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                                        <label class="form-check-label" for="rememberMe">
+                                            Ghi nhớ đăng nhập
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary login-btn w-100">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Đăng Nhập
+                                </button>
+                            </form>
+                            <div class="text-center mt-4">
+                                <p class="text-muted">Chưa có tài khoản? <a href="#" onclick="showRegisterForm()" class="text-primary"  style="text-decoration: none;">Đăng ký ngay</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="login-image-container">
+                            <img src="~/img/hero-cinema.jpg" alt="Cinema" class="login-image">
+                            <div class="login-overlay">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-user-plus fa-4x mb-3"></i>
+                                    <h3>Đăng Ký</h3>
+                                    <p>Tham gia cùng chúng tôi</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="login-form-container">
+                            <div class="text-center mb-4">
+                                <h2 class="login-title">Đăng Ký Tài Khoản</h2>
+                                <p class="login-subtitle">Tạo tài khoản mới để bắt đầu</p>
+                            </div>
+                            <form id="registerForm">
+                                <div class="form-group mb-3">
+                                    <label for="regUsername" class="form-label"><i class="fas fa-user me-2"></i>Tên đăng nhập</label>
+                                    <input type="text" class="form-control login-input" id="regUsername" placeholder="Nhập tên đăng nhập" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="regEmail" class="form-label"><i class="fas fa-envelope me-2"></i>Email</label>
+                                    <input type="email" class="form-control login-input" id="regEmail" placeholder="Nhập email" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="regPhone" class="form-label"><i class="fas fa-phone me-2"></i>Số điện thoại</label>
+                                    <input type="tel" class="form-control login-input" id="regPhone" placeholder="Nhập số điện thoại">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="regPassword" class="form-label"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
+                                    <input type="password" class="form-control login-input" id="regPassword" placeholder="Nhập mật khẩu" required>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label for="regConfirmPassword" class="form-label"><i class="fas fa-lock me-2"></i>Xác nhận mật khẩu</label>
+                                    <input type="password" class="form-control login-input" id="regConfirmPassword" placeholder="Xác nhận mật khẩu" required>
+                                </div>
+                                <button type="submit" class="btn btn-success login-btn w-100">
+                                    <i class="fas fa-user-plus me-2"></i>Đăng Ký
+                                </button>
+                            </form>
+                            <div class="text-center mt-4">
+                                <p class="text-muted">Đã có tài khoản? <a href="#" onclick="showLoginForm()" class="text-primary">Đăng nhập</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // theme toggle with persistence
+        (function(){
+            const body = document.body; const icon = document.getElementById('theme-icon'); const btn = document.getElementById('themeToggleBtn');
+            const saved = localStorage.getItem('theme');
+            if(saved === 'dark'){ body.setAttribute('data-theme','dark'); if(icon) icon.className='fas fa-sun'; }
+            else if(saved === 'light'){ body.removeAttribute('data-theme'); if(icon) icon.className='fas fa-moon'; }
+            if(btn){ btn.addEventListener('click', function(){ const dark = body.getAttribute('data-theme') === 'dark'; if(dark){ body.removeAttribute('data-theme'); localStorage.setItem('theme','light'); if(icon) icon.className='fas fa-moon'; } else { body.setAttribute('data-theme','dark'); localStorage.setItem('theme','dark'); if(icon) icon.className='fas fa-sun'; } }); }
+        })();
+        // Login form handling
+        const loginForm = document.getElementById('loginForm');
+        if(loginForm) {
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                const rememberMe = document.getElementById('rememberMe').checked;
+                
+                const button = this.querySelector('button[type="submit"]');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<span class="loading"></span> Đang xử lý...';
+                button.disabled = true;
+                
+                try {
+                    const response = await fetch('@Url.Action("Login", "Home", new { area = "Guest" })', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            password: password,
+                            rememberMe: rememberMe
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        // Hiển thị thông báo thành công
+                        Swal.fire({
+                            html: `
+                                <div class="mt-3">
+                                    <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                    </lord-icon>
+                                    <div class="mt-4 pt-2 fs-15">
+                                        <h4>${result.message}</h4>
+                                        <p class="text-muted mx-4 mb-0">${result.message}</p>
+                                    </div>
+                                </div>
+                            `,
+                            showConfirmButton: true,
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#0ab39c',
+                            allowOutsideClick: true,
+                            allowEscapeKey: true,
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                confirmButton: 'btn btn-primary w-xs mb-1'
+                            }
+                        }).then(() => {
+                            // Đóng modal
+                            const modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                            if (modal) modal.hide();
+                            
+                            // Cập nhật UI ngay lập tức nếu có user data
+                            if (result.user) {
+                                // Kiểm tra trạng thái user
+                                if (result.user.status === 'hoatdong') {
+                                    updateUIAfterLogin(result.user);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Lỗi!',
+                                        text: 'Tài khoản không hoạt động',
+                                        confirmButtonText: 'Đóng',
+                                        confirmButtonColor: '#dc3545',
+                                        allowOutsideClick: true,
+                                        allowEscapeKey: true
+                                    });
+                                    return;
+                                }
+                            }
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: result.message,
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545',
+                            allowOutsideClick: true,
+                            allowEscapeKey: true
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi đăng nhập',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545',
+                        allowOutsideClick: true,
+                        allowEscapeKey: true
+                    });
+                } finally {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            });
+        }
+        
+        // Register form handling
+        const registerForm = document.getElementById('registerForm');
+        if(registerForm) {
+            registerForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                const username = document.getElementById('regUsername').value;
+                const email = document.getElementById('regEmail').value;
+                const phone = document.getElementById('regPhone').value;
+                const password = document.getElementById('regPassword').value;
+                const confirmPassword = document.getElementById('regConfirmPassword').value;
+                
+                // Validation
+                if (password !== confirmPassword) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Mật khẩu xác nhận không khớp',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545',
+                        allowOutsideClick: true,
+                        allowEscapeKey: true
+                    });
+                    return;
+                }
+                
+                const button = this.querySelector('button[type="submit"]');
+                const originalText = button.innerHTML;
+                button.innerHTML = '<span class="loading"></span> Đang xử lý...';
+                button.disabled = true;
+                
+                try {
+                    const response = await fetch('@Url.Action("Register", "Home", new { area = "Guest" })', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            username: username,
+                            email: email,
+                            phone: phone,
+                            password: password,
+                            confirmPassword: confirmPassword
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        Swal.fire({
+                            html: `
+                                <div class="mt-3">
+                                    <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                    </lord-icon>
+                                    <div class="mt-4 pt-2 fs-15">
+                                        <h4>${result.message}</h4>
+                                        <p class="text-muted mx-4 mb-0">${result.message}</p>
+                                    </div>
+                                </div>
+                            `,
+                            showConfirmButton: true,
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#0ab39c',
+                            allowOutsideClick: true,
+                            allowEscapeKey: true,
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                confirmButton: 'btn btn-primary w-xs mb-1'
+                            }
+                        }).then(() => {
+                            // Chuyển về form đăng nhập
+                            showLoginForm();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: result.message,
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545',
+                            allowOutsideClick: true,
+                            allowEscapeKey: true
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi đăng ký',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545',
+                        allowOutsideClick: true,
+                        allowEscapeKey: true
+                    });
+                } finally {
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                }
+            });
+        }
+        
+        // Helper functions
+        function showLoginForm() {
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            const registerModal = bootstrap.Modal.getInstance(document.getElementById('registerModal'));
+            if (registerModal) registerModal.hide();
+            loginModal.show();
+        }
+        
+        function showRegisterForm() {
+            const registerModal = new bootstrap.Modal(document.getElementById('registerModal'));
+            const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+            if (loginModal) loginModal.hide();
+            registerModal.show();
+        }
+        
+        function showNotification(message, type) {
+            if (type === 'success') {
+                Swal.fire({
+                    html: `
+                        <div class="mt-3">
+                            <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                            </lord-icon>
+                            <div class="mt-4 pt-2 fs-15">
+                                <h4>${message}</h4>
+                                <p class="text-muted mx-4 mb-0">${message}</p>
+                            </div>
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#0ab39c',
+                    allowOutsideClick: true,
+                    allowEscapeKey: true,
+                    customClass: {
+                        popup: 'swal2-custom-popup',
+                        confirmButton: 'btn btn-primary w-xs mb-1'
+                    }
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: message,
+                    confirmButtonText: 'Đóng',
+                    confirmButtonColor: '#dc3545',
+                    allowOutsideClick: true,
+                    allowEscapeKey: true
+                });
+            }
+        }
+        
+        async function logout() {
+            try {
+                const response = await fetch('@Url.Action("Logout", "Home", new { area = "Guest" })', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Swal.fire({
+                        html: `
+                            <div class="mt-3">
+                                <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                </lord-icon>
+                                <div class="mt-4 pt-2 fs-15">
+                                    <h4>${result.message}</h4>
+                                    <p class="text-muted mx-4 mb-0">${result.message}</p>
+                                </div>
+                            </div>
+                        `,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Ok',
+                        confirmButtonColor: '#0ab39c',
+                        allowOutsideClick: true,
+                        allowEscapeKey: true,
+                        customClass: {
+                            popup: 'swal2-custom-popup',
+                            confirmButton: 'btn btn-primary w-xs mb-1'
+                        }
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: result.message,
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545',
+                        allowOutsideClick: true,
+                        allowEscapeKey: true
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Có lỗi xảy ra khi đăng xuất',
+                    confirmButtonText: 'Đóng',
+                    confirmButtonColor: '#dc3545',
+                    allowOutsideClick: true,
+                    allowEscapeKey: true
+                });
+            }
+        }
+        
+        function showLoginModal() {
+            const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+            loginModal.show();
+        }
+        
+        // Function để cập nhật UI sau khi đăng nhập thành công
+        function updateUIAfterLogin(userData) {
+            const navbar = document.querySelector('.navbar');
+            const loginButton = navbar.querySelector('.login-button');
+            
+            if (loginButton) {
+                // Thay thế nút đăng nhập bằng thông tin user trong navbar
+                const userInfoHTML = `
+                    <div class="user-nav-section ms-3 d-flex align-items-center">
+                        <div class="user-info me-3">
+                            <div class="user-greeting-nav fw-bold">Xin chào, ${userData.username}!</div>
+                            <div class="user-role-nav small">${userData.role === 'Admin' ? 'Quản trị viên' : 'Khách hàng'}</div>
+                        </div>
+                        <div class="user-actions-nav d-flex align-items-center gap-2">
+                            ${userData.role === 'Admin' ? 
+                                '<a href="/Admin/Home" class="btn btn-warning"><i class="fas fa-gauge-high me-1"></i>Admin</a>' : 
+                                ''
+                            }
+                            <button onclick="logout()" class="btn btn-outline-secondary">
+                                <i class="fas fa-sign-out-alt me-1"></i>Đăng Xuất
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+                loginButton.outerHTML = userInfoHTML;
+            }
+        }
+        // reveal animation
+        function revealOnScroll(){ const els=document.querySelectorAll('.reveal'); els.forEach(el=>{ const wh=window.innerHeight; const top=el.getBoundingClientRect().top; if(top<wh-150){ el.classList.add('active'); } }); }
+        window.addEventListener('scroll', revealOnScroll); 
+        window.addEventListener('load', function() {
+            revealOnScroll();
+            // Kiểm tra trạng thái đăng nhập khi trang load
+            checkLoginStatus();
+        });
+        
+        // Function để kiểm tra trạng thái đăng nhập
+        async function checkLoginStatus() {
+            try {
+                const response = await fetch('@Url.Action("GetCurrentUser", "Home", new { area = "Guest" })');
+                const result = await response.json();
+                
+                if (result.success && result.isLoggedIn && result.user) {
+                    console.log('User is logged in:', result.user);
+                    // Kiểm tra trạng thái user trước khi cập nhật UI
+                    if (result.user.status === 'hoatdong') {
+                        updateUIAfterLogin(result.user);
+                    } else {
+                        console.log('User account is not active');
+                        // Nếu tài khoản không hoạt động, logout
+                        await logout();
+                    }
+                } else {
+                    console.log('User is not logged in');
+                }
+            } catch (error) {
+                console.log('Error checking login status:', error);
+            }
+        }
+        // book
+        function bookMovie(movieTitle) {
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<span class="loading"></span> Đang xử lý...';
+            button.disabled = true;
+            
+            setTimeout(() => {
+                Swal.fire({
+                    html: `
+                        <div class="mt-3">
+                            <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                            </lord-icon>
+                            <div class="mt-4 pt-2 fs-15">
+                                <h4>Đặt vé thành công!</h4>
+                                <p class="text-muted mx-4 mb-0">Bạn đã chọn đặt vé cho phim: "${movieTitle}"<br>Vui lòng chọn suất chiếu và ghế ngồi!</p>
+                            </div>
+                        </div>
+                    `,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Ok',
+                    confirmButtonColor: '#0ab39c',
+                    allowOutsideClick: true,
+                    allowEscapeKey: true,
+                    customClass: {
+                        popup: 'swal2-custom-popup',
+                        confirmButton: 'btn btn-primary w-xs mb-1'
+                    }
+                });
+                
+                button.innerHTML = originalText;
+                button.disabled = false;
+            }, 800);
+        }
+    </script>
+} 

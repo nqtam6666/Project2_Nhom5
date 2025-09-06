@@ -1,0 +1,439 @@
+﻿@model IEnumerable<Project2_Nhom5.Models.Movie>
+
+@{
+    ViewData["Title"] = "Quản lý Phim";
+    var searchTerm = ViewBag.Search?.ToString() ?? "";
+    var sortOrder = ViewBag.SortOrder?.ToString() ?? "";
+    var currentSort = ViewBag.CurrentSort?.ToString() ?? "";
+    var page = ViewBag.CurrentPage?.ToString() ?? "1";
+    var pageSize = ViewBag.PageSize?.ToString() ?? "10";
+    var genreFilter = ViewBag.Genre?.ToString() ?? "";
+    var statusFilter = ViewBag.Status?.ToString() ?? "";
+    var totalCount = ViewBag.TotalCount ?? 0;
+    var totalPages = ViewBag.TotalPages ?? 1;
+    var currentPageInt = int.Parse(page);
+    var pageSizeInt = int.Parse(pageSize);
+    var startItem = ((currentPageInt - 1) * pageSizeInt) + 1;
+    var endItem = Math.Min(currentPageInt * pageSizeInt, totalCount);
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-film me-2 text-primary"></i>Quản lý Phim
+        </h2>
+        <p class="text-muted mb-0">Danh sách tất cả phim trong hệ thống</p>
+    </div>
+    <a asp-action="Create" class="admin-btn-primary">
+        <i class="fas fa-plus"></i>Thêm phim mới
+    </a>
+</div>
+
+<!-- Search and Filter Section -->
+<div class="card-dashboard mb-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">
+                    <i class="fas fa-search"></i>Tìm kiếm
+                </label>
+                <input type="text" name="search" class="form-control" placeholder="Tìm theo tên phim, thể loại..." value="@searchTerm">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">
+                    <i class="fas fa-tags"></i>Thể loại
+                </label>
+                <select name="genre" class="form-select">
+                    <option value="">Tất cả thể loại</option>
+                    @if (genreFilter == "Hành động")
+                    {
+                        <option value="Hành động" selected>Hành động</option>
+                    }
+                    else
+                    {
+                        <option value="Hành động">Hành động</option>
+                    }
+                    @if (genreFilter == "Tình cảm")
+                    {
+                        <option value="Tình cảm" selected>Tình cảm</option>
+                    }
+                    else
+                    {
+                        <option value="Tình cảm">Tình cảm</option>
+                    }
+                    @if (genreFilter == "Hài hước")
+                    {
+                        <option value="Hài hước" selected>Hài hước</option>
+                    }
+                    else
+                    {
+                        <option value="Hài hước">Hài hước</option>
+                    }
+                    @if (genreFilter == "Kinh dị")
+                    {
+                        <option value="Kinh dị" selected>Kinh dị</option>
+                    }
+                    else
+                    {
+                        <option value="Kinh dị">Kinh dị</option>
+                    }
+                    @if (genreFilter == "Viễn tưởng")
+                    {
+                        <option value="Viễn tưởng" selected>Viễn tưởng</option>
+                    }
+                    else
+                    {
+                        <option value="Viễn tưởng">Viễn tưởng</option>
+                    }
+                    @if (genreFilter == "Hoạt hình")
+                    {
+                        <option value="Hoạt hình" selected>Hoạt hình</option>
+                    }
+                    else
+                    {
+                        <option value="Hoạt hình">Hoạt hình</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">
+                    <i class="fas fa-toggle-on"></i>Trạng thái
+                </label>
+                <select name="status" class="form-select">
+                    <option value="">Tất cả trạng thái</option>
+                    @if (statusFilter == "dangchieu")
+                    {
+                        <option value="dangchieu" selected>Đang chiếu</option>
+                    }
+                    else
+                    {
+                        <option value="dangchieu">Đang chiếu</option>
+                    }
+                    @if (statusFilter == "sapchieu")
+                    {
+                        <option value="sapchieu" selected>Sắp chiếu</option>
+                    }
+                    else
+                    {
+                        <option value="sapchieu">Sắp chiếu</option>
+                    }
+                    @if (statusFilter == "ngungchieu")
+                    {
+                        <option value="ngungchieu" selected>Ngừng chiếu</option>
+                    }
+                    else
+                    {
+                        <option value="ngungchieu">Ngừng chiếu</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">
+                    <i class="fas fa-list"></i>Số dòng
+                </label>
+                <select name="pageSize" class="form-select">
+                    @if (pageSize == "10")
+                    {
+                        <option value="10" selected>10</option>
+                    }
+                    else
+                    {
+                        <option value="10">10</option>
+                    }
+                    @if (pageSize == "25")
+                    {
+                        <option value="25" selected>25</option>
+                    }
+                    else
+                    {
+                        <option value="25">25</option>
+                    }
+                    @if (pageSize == "50")
+                    {
+                        <option value="50" selected>50</option>
+                    }
+                    else
+                    {
+                        <option value="50">50</option>
+                    }
+                    @if (pageSize == "100")
+                    {
+                        <option value="100" selected>100</option>
+                    }
+                    else
+                    {
+                        <option value="100">100</option>
+                    }
+                </select>
+            </div>
+            <div class="col-12">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="admin-btn-primary">
+                        <i class="fas fa-search"></i>Tìm kiếm
+                    </button>
+                    <a asp-action="Index" class="admin-btn-secondary">
+                        <i class="fas fa-refresh"></i>Làm mới
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card-dashboard p-5 text-center">
+        <i class="fas fa-film fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">Chưa có phim nào</h4>
+        <p class="text-muted">Bắt đầu bằng cách thêm phim đầu tiên vào hệ thống</p>
+        <a asp-action="Create" class="admin-btn-primary">
+            <i class="fas fa-plus"></i>Thêm phim đầu tiên
+        </a>
+    </div>
+}
+else
+{
+    <div class="card-dashboard">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>
+                            <i class="fas fa-image"></i>Poster
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                genre = genreFilter, 
+                                status = statusFilter, 
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "title" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "title"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-heading"></i>Tên phim
+                                @if (currentSort == "title")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                genre = genreFilter, 
+                                status = statusFilter, 
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "genre" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "genre"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-tags"></i>Thể loại
+                                @if (currentSort == "genre")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                genre = genreFilter, 
+                                status = statusFilter, 
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "duration" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "duration"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-clock"></i>Thời lượng
+                                @if (currentSort == "duration")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th>
+                            <a href="@Url.Action("Index", new { 
+                                search = searchTerm, 
+                                genre = genreFilter, 
+                                status = statusFilter, 
+                                pageSize = pageSize,
+                                sortOrder = currentSort == "status" && sortOrder == "asc" ? "desc" : "asc",
+                                currentSort = "status"
+                            })" class="text-decoration-none text-dark">
+                                <i class="fas fa-info-circle"></i>Trạng thái
+                                @if (currentSort == "status")
+                                {
+                                    <i class="fas fa-sort-@(sortOrder == "asc" ? "up" : "down") ms-1"></i>
+                                }
+                                else
+                                {
+                                    <i class="fas fa-sort ms-1 text-muted"></i>
+                                }
+                            </a>
+                        </th>
+                        <th class="text-center">
+                            <i class="fas fa-cogs"></i>Thao tác
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(item.PosterUrl))
+                                {
+                                    <img src="~/@item.PosterUrl" alt="@item.Title" class="rounded" style="width: 50px; height: 70px; object-fit: cover;" />
+                                }
+                                else
+                                {
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 70px;">
+                                        <i class="fas fa-image text-muted"></i>
+                                    </div>
+                                }
+                            </td>
+                            <td>
+                                <div>
+                                    <strong>@Html.DisplayFor(modelItem => item.Title)</strong>
+                                    @if (!string.IsNullOrEmpty(item.Description))
+                                    {
+                                        <br><small class="text-muted">@(item.Description.Length > 50 ? item.Description.Substring(0, 50) + "..." : item.Description)</small>
+                                    }
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-info">@Html.DisplayFor(modelItem => item.Genre)</span>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">@item.Duration phút</span>
+                            </td>
+                            <td>
+                                @{
+                                    var statusClass = item.Status switch
+                                    {
+                                        "dangchieu" => "bg-success",
+                                        "sapchieu" => "bg-warning",
+                                        "ngungchieu" => "bg-secondary",
+                                        _ => "bg-secondary"
+                                    };
+                                    var statusText = item.Status switch
+                                    {
+                                        "dangchieu" => "Đang chiếu",
+                                        "sapchieu" => "Sắp chiếu",
+                                        "ngungchieu" => "Ngừng chiếu",
+                                        _ => item.Status
+                                    };
+                                }
+                                <span class="badge @statusClass">@statusText</span>
+                            </td>
+                            <td class="text-center">
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.MovieId" class="admin-btn-secondary" style="padding: 6px 12px; font-size: 0.8rem; min-width: 35px; justify-content: center;" title="Chi tiết">
+                                        <i class="fas fa-eye"></i>
+                                    </a>
+                                    <a asp-action="Edit" asp-route-id="@item.MovieId" class="admin-btn-success" style="padding: 6px 12px; font-size: 0.8rem; min-width: 35px; justify-content: center;" title="Sửa">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.MovieId" class="admin-btn-danger" style="padding: 6px 12px; font-size: 0.8rem; min-width: 35px; justify-content: center;" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Pagination -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="text-muted">
+            Hiển thị @startItem đến @endItem trong tổng số @totalCount phim
+        </div>
+        <nav aria-label="Page navigation">
+            <ul class="pagination mb-0">
+                
+                @if (currentPageInt > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            genre = genreFilter, 
+                            status = statusFilter, 
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = currentPageInt - 1
+                        })">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                }
+                
+                @for (int i = Math.Max(1, currentPageInt - 2); i <= Math.Min(totalPages, currentPageInt + 2); i++)
+                {
+                    <li class="page-item @(i == currentPageInt ? "active" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            genre = genreFilter, 
+                            status = statusFilter, 
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = i
+                        })">@i</a>
+                    </li>
+                }
+                
+                @if (currentPageInt < totalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" href="@Url.Action("Index", new { 
+                            search = searchTerm, 
+                            genre = genreFilter, 
+                            status = statusFilter, 
+                            pageSize = pageSize,
+                            sortOrder = sortOrder,
+                            currentSort = currentSort,
+                            page = currentPageInt + 1
+                        })">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+}
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Auto-submit form when pageSize changes
+            $('select[name="pageSize"]').change(function() {
+                $(this).closest('form').submit();
+            });
+            
+            // Clear search when clicking refresh
+            $('a[href*="Index"]').click(function() {
+                if ($(this).text().includes('Làm mới')) {
+                    $(this).attr('href', '@Url.Action("Index")');
+                }
+            });
+        });
+    </script>
+}
+
+
+

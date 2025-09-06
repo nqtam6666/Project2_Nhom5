@@ -1,0 +1,401 @@
+﻿@model Project2_Nhom5.Models.Movie
+
+@{
+    ViewData["Title"] = "Thêm Phim Mới";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1">
+            <i class="fas fa-plus-circle me-2 text-primary"></i>Thêm Phim Mới
+        </h2>
+        <p class="text-muted mb-0">Nhập thông tin phim mới vào hệ thống</p>
+    </div>
+            <a asp-action="Index" class="admin-btn-secondary">
+            <i class="fas fa-arrow-left"></i>Quay lại danh sách
+        </a>
+</div>
+
+<div class="card-dashboard">
+    <div class="card-body p-4">
+        <form asp-action="Create" class="row g-3">
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+            
+            <div class="col-md-8">
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label asp-for="Title" class="form-label">
+                            <i class="fas fa-heading"></i>Tên phim <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Title" class="form-control" placeholder="Nhập tên phim..." />
+                        <span asp-validation-for="Title" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="Genre" class="form-label">
+                            <i class="fas fa-tags"></i>Thể loại <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Genre" class="form-control" list="genreOptions" placeholder="Chọn hoặc nhập thể loại..." />
+                        <datalist id="genreOptions">
+                            <option value="Hành động"></option>
+                            <option value="Tình cảm"></option>
+                            <option value="Hài hước"></option>
+                            <option value="Kinh dị"></option>
+                            <option value="Viễn tưởng"></option>
+                            <option value="Hoạt hình"></option>
+                            <option value="Tài liệu"></option>
+                            <option value="Khác"></option>
+                        </datalist>
+                        <span asp-validation-for="Genre" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="Duration" class="form-label">
+                            <i class="fas fa-clock"></i>Thời lượng (phút) <span class="text-danger">*</span>
+                        </label>
+                        <input asp-for="Duration" class="form-control" type="number" min="1" placeholder="120" />
+                        <span asp-validation-for="Duration" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <label asp-for="Status" class="form-label">
+                            <i class="fas fa-info-circle"></i>Trạng thái
+                        </label>
+                        <select asp-for="Status" class="form-select">
+                            <option value="sapchieu">Sắp chiếu</option>
+                            <option value="dangchieu">Đang chiếu</option>
+                            <option value="ngungchieu">Ngừng chiếu</option>
+                        </select>
+                        <span asp-validation-for="Status" class="text-danger small"></span>
+                    </div>
+                    
+                    <div class="col-12">
+                        <label asp-for="Description" class="form-label">
+                            <i class="fas fa-align-left"></i>Mô tả
+                        </label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả phim..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-4">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <label asp-for="PosterUrl" class="form-label">
+                            <i class="fas fa-image"></i>Đường dẫn Poster
+                        </label>
+                        <div class="input-group">
+                            <input asp-for="PosterUrl" class="form-control" placeholder="img/poster1.jpg" id="posterUrlInput" />
+                            <button type="button" class="admin-btn-secondary" id="uploadBtn">
+                                <i class="fas fa-upload"></i>Upload
+                            </button>
+                        </div>
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;" />
+                        <span asp-validation-for="PosterUrl" class="text-danger small"></span>
+                        <div class="form-text">Nhập đường dẫn hình ảnh poster hoặc upload file từ máy tính</div>
+                        
+                        <!-- Upload Progress -->
+                        <div id="uploadProgress" class="mt-2" style="display: none;">
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted">Đang upload...</small>
+                        </div>
+                        
+                        <!-- Upload Result -->
+                        <div id="uploadResult" class="mt-2" style="display: none;">
+                            <div class="alert alert-success" role="alert">
+                                <i class="fas fa-check-circle"></i>
+                                <span id="uploadMessage"></span>
+                            </div>
+                        </div>
+                        
+                        <!-- Image Preview -->
+                        <div id="imagePreview" class="mt-3" style="display: none;">
+                            <img id="previewImg" src="" alt="Preview" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;" />
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <label asp-for="TrailerUrl" class="form-label">
+                            <i class="fas fa-video"></i>URL Trailer
+                        </label>
+                        <input asp-for="TrailerUrl" class="form-control" placeholder="https://youtube.com/watch?v=..." />
+                        <span asp-validation-for="TrailerUrl" class="text-danger small"></span>
+                        <div class="form-text">Nhập đường dẫn video trailer trên YouTube</div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <i class="fas fa-info-circle fa-2x text-primary mb-2"></i>
+                                <h6>Lưu ý</h6>
+                                <small class="text-muted">
+                                    Các trường có dấu <span class="text-danger">*</span> là bắt buộc phải nhập.
+                                    Sau khi tạo phim, bạn có thể chỉnh sửa thông tin bất cứ lúc nào.
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-12">
+                <hr class="my-4">
+                <div class="d-flex justify-content-end gap-2">
+                    <a asp-action="Index" class="admin-btn-secondary">
+                        <i class="fas fa-times"></i>Hủy bỏ
+                    </a>
+                    <button type="submit" class="admin-btn-primary">
+                        <i class="fas fa-save"></i>Lưu phim
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            const uploadBtn = $('#uploadBtn');
+            const fileInput = $('#fileInput');
+            const posterUrlInput = $('#posterUrlInput');
+            const uploadProgress = $('#uploadProgress');
+            const uploadResult = $('#uploadResult');
+            const uploadMessage = $('#uploadMessage');
+            const imagePreview = $('#imagePreview');
+            const previewImg = $('#previewImg');
+            const progressBar = $('.progress-bar');
+
+            // Click upload button
+            uploadBtn.click(function() {
+                fileInput.click();
+            });
+
+            // File selected
+            fileInput.change(function() {
+                const file = this.files[0];
+                if (file) {
+                    uploadFile(file);
+                }
+            });
+
+            // Drag and drop functionality
+            const dropZone = $('.input-group');
+            
+            dropZone.on('dragover', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).addClass('border-primary');
+            });
+
+            dropZone.on('dragleave', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('border-primary');
+            });
+
+            dropZone.on('drop', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                $(this).removeClass('border-primary');
+                
+                const files = e.originalEvent.dataTransfer.files;
+                if (files.length > 0) {
+                    uploadFile(files[0]);
+                }
+            });
+
+            function uploadFile(file) {
+                // Validate file type
+                const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                if (!allowedTypes.includes(file.type)) {
+                    showError('Chỉ chấp nhận file hình ảnh: JPG, PNG, GIF, WebP.');
+                    return;
+                }
+
+                // Validate file size (5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    showError('File quá lớn. Kích thước tối đa là 5MB.');
+                    return;
+                }
+
+                // Show progress
+                showProgress();
+
+                // Create FormData
+                const formData = new FormData();
+                formData.append('file', file);
+
+                // Upload file
+                $.ajax({
+                    url: '/Admin/Movies/UploadPoster',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    xhr: function() {
+                        const xhr = new window.XMLHttpRequest();
+                        xhr.upload.addEventListener('progress', function(evt) {
+                            if (evt.lengthComputable) {
+                                const percentComplete = (evt.loaded / evt.total) * 100;
+                                progressBar.css('width', percentComplete + '%');
+                            }
+                        }, false);
+                        return xhr;
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            // Set the path in input
+                            posterUrlInput.val(response.path);
+                            
+                            // Show success message
+                            showSuccess(response.message);
+                            
+                            // Show preview
+                            showPreview(response.path);
+                        } else {
+                            showError(response.message);
+                        }
+                    },
+                    error: function() {
+                        showError('Lỗi upload. Vui lòng thử lại.');
+                    },
+                    complete: function() {
+                        hideProgress();
+                    }
+                });
+            }
+
+            function showProgress() {
+                uploadProgress.show();
+                uploadResult.hide();
+                progressBar.css('width', '0%');
+            }
+
+            function hideProgress() {
+                uploadProgress.hide();
+            }
+
+            function showSuccess(message) {
+                uploadMessage.text(message);
+                uploadResult.find('.alert').removeClass('alert-danger').addClass('alert-success');
+                uploadResult.show();
+            }
+
+            function showError(message) {
+                uploadMessage.text(message);
+                uploadResult.find('.alert').removeClass('alert-success').addClass('alert-danger');
+                uploadResult.show();
+            }
+
+            function showPreview(path) {
+                previewImg.attr('src', '~/' + path);
+                imagePreview.show();
+            }
+
+            // Clear file input when form is reset
+            $('form').on('reset', function() {
+                fileInput.val('');
+                uploadProgress.hide();
+                uploadResult.hide();
+                imagePreview.hide();
+            });
+            
+            // Form submission with beautiful dialog
+            $('form').on('submit', async function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const title = formData.get('Title');
+                const genre = formData.get('Genre');
+                const duration = formData.get('Duration');
+                
+                // Validation
+                if (!title || !genre || !duration) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Vui lòng điền đầy đủ thông tin bắt buộc',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                    return;
+                }
+                
+                // Show loading
+                Swal.fire({
+                    title: 'Đang tạo phim...',
+                    allowOutsideClick: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+                
+                try {
+                    const response = await fetch('@Url.Action("Create", "Movies", new { area = "Admin" })', {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'RequestVerificationToken': document.querySelector('input[name="__RequestVerificationToken"]').value
+                        },
+                        body: formData
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        Swal.fire({
+                            html: `
+                                <div class="mt-3 text-center">
+                                    <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                    </lord-icon>
+                                    <div class="mt-4 pt-2 fs-15">
+                                        <h4 style="color: #333; font-weight: 600; margin-bottom: 8px;">Thành công!</h4>
+                                        <p style="color: #666; margin: 0;">${result.message}</p>
+                                    </div>
+                                </div>
+                            `,
+                            showConfirmButton: true,
+                            confirmButtonText: 'Ok',
+                            confirmButtonColor: '#0ab39c',
+                            allowOutsideClick: true,
+                            allowEscapeKey: true,
+                            customClass: {
+                                popup: 'swal2-custom-popup',
+                                confirmButton: 'btn btn-primary w-xs mb-1'
+                            },
+                            background: '#fff',
+                            backdrop: 'rgba(0,0,0,0.4)'
+                        }).then(() => {
+                            window.location.href = '@Url.Action("Index", "Movies", new { area = "Admin" })';
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Lỗi!',
+                            text: result.message,
+                            confirmButtonText: 'Đóng',
+                            confirmButtonColor: '#dc3545'
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: 'Có lỗi xảy ra khi tạo phim',
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545'
+                    });
+                }
+            });
+        });
+    </script>
+}
+
+
+

@@ -1,0 +1,136 @@
+﻿@model Project2_Nhom5.Models.Showtime
+
+@{
+    ViewData["Title"] = "Chi tiết Lịch chiếu";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+<div>
+        <h2 class="mb-1">
+            <i class="fas fa-eye me-2 text-info"></i>Chi tiết Lịch chiếu
+        </h2>
+        <p class="text-muted mb-0">Thông tin chi tiết về lịch chiếu</p>
+    </div>
+    <div class="d-flex gap-2">
+        <a asp-action="Edit" asp-route-id="@Model?.ShowtimeId" class="admin-btn-success">
+            <i class="fas fa-edit"></i>Chỉnh sửa
+        </a>
+        <a asp-action="Index" class="admin-btn-secondary">
+            <i class="fas fa-arrow-left"></i>Quay lại danh sách
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <div class="card-dashboard">
+            <div class="card-body text-center p-4">
+                <div class="bg-primary text-white icon-circle-lg mx-auto mb-3">
+                    <i class="fas fa-calendar-alt fa-2x"></i>
+                </div>
+                <h4 class="mb-2">Lịch chiếu #@Model.ShowtimeId.ToString("000000")</h4>
+                <span class="badge bg-info mb-2">@Model.ShowDate.ToString("dd/MM/yyyy")</span>
+                <span class="badge bg-success">@Model.ShowTime.ToString("HH:mm")</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card-dashboard">
+            <div class="card-body p-4">
+                <h5 class="card-title mb-4">
+                    <i class="fas fa-info-circle me-2 text-primary"></i>Thông tin chi tiết
+                </h5>
+                
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-primary text-white icon-circle me-3">
+                                <i class="fas fa-calendar"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Ngày chiếu</small>
+                                <div class="fw-bold">@Model.ShowDate.ToString("dd/MM/yyyy")</div>
+                                <small class="text-muted">@Model.ShowDate.ToString("dddd", new System.Globalization.CultureInfo("vi-VN"))</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-info text-white icon-circle me-3">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Giờ chiếu</small>
+                                <div class="fw-bold">@Model.ShowTime.ToString("HH:mm")</div>
+                                <small class="text-muted">Thời gian bắt đầu</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-warning text-white icon-circle me-3">
+                                <i class="fas fa-film"></i>
+                            </div>
+                            <div>
+                                <small class="text-muted">Phim</small>
+                                <div class="fw-bold">@(Model.Movie?.Title ?? "N/A")</div>
+                                @if (Model.Movie != null)
+                                {
+                                    <small class="text-muted">@Model.Movie.Genre - @Model.Movie.Duration phút</small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center p-3 bg-light rounded">
+                            <div class="bg-success text-white icon-circle me-3">
+                                <i class="fas fa-building"></i>
+</div>
+<div>
+                                <small class="text-muted">Rạp chiếu</small>
+                                <div class="fw-bold">@(Model.Theater?.Name ?? "N/A")</div>
+                                @if (Model.Theater != null)
+                                {
+                                    <small class="text-muted">@Model.Theater.Location - Phòng @Model.Theater.RoomNumber</small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h6 class="mb-3">
+                        <i class="fas fa-ticket-alt me-2 text-primary"></i>Thông tin bổ sung
+                    </h6>
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-ticket-alt fa-2x text-primary mb-2"></i>
+                                    <h6>Vé đã bán</h6>
+                                    <p class="mb-0 text-muted">Xem danh sách vé của lịch chiếu này</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-light">
+                                <div class="card-body text-center">
+                                    <i class="fas fa-chart-line fa-2x text-success mb-2"></i>
+                                    <h6>Doanh thu</h6>
+                                    <p class="mb-0 text-muted">Xem báo cáo doanh thu</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

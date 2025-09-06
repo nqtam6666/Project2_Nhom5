@@ -1,0 +1,307 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Cinema</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Project2_Nhom5.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- SweetAlert2 CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- Lordicon -->
+    <script src="https://cdn.lordicon.com/lordicon.js"></script>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <header>
+        @await Html.PartialAsync("_Navbar")
+    </header>
+    <div class="container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer" id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-3">
+                    <h5 class="mb-2">CineMax</h5>
+                    <p class="mb-2">Hệ thống rạp chiếu phim hàng đầu Việt Nam với công nghệ hiện đại và dịch vụ tốt nhất.</p>
+                    <div class="social-links">
+                        <a href="#" class="me-3"><i class="fab fa-facebook fa-2x"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-instagram fa-2x"></i></a>
+                        <a href="#" class="me-3"><i class="fab fa-youtube fa-2x"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <h5 class="mb-2">Liên Kết</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-1"><a href="#">Về Chúng Tôi</a></li>
+                        <li class="mb-1"><a href="#">Điều Khoản</a></li>
+                        <li class="mb-1"><a href="#">Chính Sách</a></li>
+                        <li class="mb-1"><a href="#">Hỗ Trợ</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 mb-3">
+                    <h5 class="mb-2">Liên Hệ</h5>
+                    <p class="mb-1"><i class="fas fa-phone me-2"></i>096.1138.440</p>
+                    <p class="mb-1"><i class="fas fa-envelope me-2"></i>abc@gmail.com</p>
+                    <p class="mb-1"><i class="fas fa-map-marker-alt me-2"></i>28A Đ. Lê Trọng Tấn, Hà Cầu, Hà Đông, Hà Nội 100000</p>
+                </div>
+            </div>
+            <hr class="my-3">
+            <div class="text-center">
+                <p class="mb-0">&copy; 2025 CineMax. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+<!-- Login Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="login-image-container">
+                            <img src="~/img/hero-cinema.jpg" alt="Cinema" class="login-image">
+                            <div class="login-overlay">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-film fa-4x mb-3"></i>
+                                    <h3>CineMax</h3>
+                                    <p>Trải nghiệm điện ảnh đỉnh cao</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="login-form-container">
+                            <div class="text-center mb-4">
+                                <h2 class="login-title">Đăng Nhập</h2>
+                                <p class="login-subtitle">Chào mừng bạn trở lại với CineMax</p>
+                            </div>
+                            <form id="loginForm">
+                                <div class="form-group mb-3">
+                                    <label for="username" class="form-label"><i class="fas fa-user me-2"></i>Tên đăng nhập</label>
+                                    <input type="text" class="form-control login-input" id="username" placeholder="Nhập tên đăng nhập" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="password" class="form-label"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
+                                    <input type="password" class="form-control login-input" id="password" placeholder="Nhập mật khẩu" required>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                                        <label class="form-check-label" for="rememberMe">
+                                            Ghi nhớ đăng nhập
+                                        </label>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary login-btn w-100">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Đăng Nhập
+                                </button>
+                            </form>
+                            <div class="text-center mt-4">
+                                <p class="text-muted">Chưa có tài khoản? <a href="#" onclick="showRegisterForm()" class="text-primary" style="text-decoration: none;">Đăng ký ngay</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Register Modal -->
+<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="login-image-container">
+                            <img src="~/img/hero-cinema.jpg" alt="Cinema" class="login-image">
+                            <div class="login-overlay">
+                                <div class="text-center text-white">
+                                    <i class="fas fa-user-plus fa-4x mb-3"></i>
+                                    <h3>Đăng Ký</h3>
+                                    <p>Tham gia cùng chúng tôi</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="login-form-container">
+                            <div class="text-center mb-4">
+                                <h2 class="login-title">Đăng Ký Tài Khoản</h2>
+                                <p class="login-subtitle">Tạo tài khoản mới để bắt đầu</p>
+                            </div>
+                            <form id="registerForm">
+                                <div class="form-group mb-3">
+                                    <label for="regUsername" class="form-label"><i class="fas fa-user me-2"></i>Tên đăng nhập</label>
+                                    <input type="text" class="form-control login-input" id="regUsername" placeholder="Nhập tên đăng nhập" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="regEmail" class="form-label"><i class="fas fa-envelope me-2"></i>Email</label>
+                                    <input type="email" class="form-control login-input" id="regEmail" placeholder="Nhập email" required>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="regPhone" class="form-label"><i class="fas fa-phone me-2"></i>Số điện thoại</label>
+                                    <input type="tel" class="form-control login-input" id="regPhone" placeholder="Nhập số điện thoại">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="regPassword" class="form-label"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
+                                    <input type="password" class="form-control login-input" id="regPassword" placeholder="Nhập mật khẩu" required>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label for="regConfirmPassword" class="form-label"><i class="fas fa-lock me-2"></i>Xác nhận mật khẩu</label>
+                                    <input type="password" class="form-control login-input" id="regConfirmPassword" placeholder="Xác nhận mật khẩu" required>
+                                </div>
+                                <button type="submit" class="btn btn-success login-btn w-100">
+                                    <i class="fas fa-user-plus me-2"></i>Đăng Ký
+                                </button>
+                            </form>
+                            <div class="text-center mt-4">
+                                <p class="text-muted">Đã có tài khoản? <a href="#" onclick="showLoginForm()" class="text-primary">Đăng nhập</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+    <script>
+        // Theme toggle with persistence
+        document.addEventListener('DOMContentLoaded', function() {
+            const root = document.documentElement;
+            const icon = document.getElementById('theme-icon');
+            const btn = document.getElementById('themeToggleBtn');
+
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') {
+                root.setAttribute('data-theme', 'dark');
+                if (icon) icon.className = 'fas fa-sun';
+            } else if (saved === 'light') {
+                root.removeAttribute('data-theme');
+                if (icon) icon.className = 'fas fa-moon';
+            }
+
+            if (btn) {
+                btn.addEventListener('click', function () {
+                    const isDark = root.getAttribute('data-theme') === 'dark';
+                    if (isDark) {
+                        root.removeAttribute('data-theme');
+                        localStorage.setItem('theme', 'light');
+                        if (icon) icon.className = 'fas fa-moon';
+                    } else {
+                        root.setAttribute('data-theme', 'dark');
+                        localStorage.setItem('theme', 'dark');
+                        if (icon) icon.className = 'fas fa-sun';
+                    }
+                });
+            }
+        });
+        
+        // Logout function for all pages
+        async function logout() {
+            try {
+                const response = await fetch('/Guest/Home/Logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    Swal.fire({
+                        html: `
+                            <div class="mt-3">
+                                <lord-icon src="https://cdn.lordicon.com/lupuorrc.json" trigger="loop" colors="primary:#0ab39c,secondary:#405189" style="width:120px;height:120px">
+                                </lord-icon>
+                                <div class="mt-4 pt-2 fs-15">
+                                    <h4>${result.message}</h4>
+                                    <p class="text-muted mx-4 mb-0">${result.message}</p>
+                                </div>
+                            </div>
+                        `,
+                        showConfirmButton: true,
+                        confirmButtonText: 'Ok',
+                        confirmButtonColor: '#0ab39c',
+                        allowOutsideClick: true,
+                        allowEscapeKey: true,
+                        customClass: {
+                            popup: 'swal2-custom-popup',
+                            confirmButton: 'btn btn-primary w-xs mb-1'
+                        }
+                    }).then(() => {
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Lỗi!',
+                        text: result.message,
+                        confirmButtonText: 'Đóng',
+                        confirmButtonColor: '#dc3545',
+                        allowOutsideClick: true,
+                        allowEscapeKey: true
+                    });
+                }
+            } catch (error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Lỗi!',
+                    text: 'Có lỗi xảy ra khi đăng xuất',
+                    confirmButtonText: 'Đóng',
+                    confirmButtonColor: '#dc3545',
+                    allowOutsideClick: true,
+                    allowEscapeKey: true
+                });
+            }
+        }
+        
+        // Highlight active nav link
+        function highlightActiveNavLink() {
+            const currentPath = window.location.pathname;
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                const href = link.getAttribute('href');
+                
+                if (href === currentPath || 
+                    (currentPath === '/' && href === '/') ||
+                    (currentPath.startsWith('/Movies') && href === '/Movies') ||
+                    (currentPath.startsWith('/Showtimes') && href === '/Showtimes') ||
+                    (currentPath.startsWith('/Theaters') && href === '/Theaters')) {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        // Call on page load
+        document.addEventListener('DOMContentLoaded', highlightActiveNavLink);
+    </script>
+    
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
