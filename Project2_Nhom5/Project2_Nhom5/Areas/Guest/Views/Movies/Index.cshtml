@@ -77,7 +77,7 @@
             {
                 <div class="col-lg-4 col-md-6 movie-item" data-status="@movie.Status">
                     <div class="movie-card reveal">
-                        <img src="@(!string.IsNullOrEmpty(movie.PosterUrl) ? movie.PosterUrl : "https://via.placeholder.com/300x450/ff6b35/ffffff?text=Movie")" alt="@movie.Title" class="movie-poster" loading="lazy">
+                        <img src="@(!string.IsNullOrEmpty(movie.PosterUrl) ? Url.Content("~/" + movie.PosterUrl) : "https://placehold.co/400x250/ff6b35/ffffff?text=Movie")" alt="@movie.Title" class="movie-poster" loading="lazy">
                         <div class="movie-info">
                             <h3 class="movie-title">@movie.Title</h3>
                             <p class="movie-genre">@movie.Genre</p>

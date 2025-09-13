@@ -51,6 +51,7 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
             var userId = Request.Cookies["userId"];
             if (string.IsNullOrEmpty(userId))
             {
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập để xem suất chiếu.";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -88,6 +89,7 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
             var userId = Request.Cookies["userId"];
             if (string.IsNullOrEmpty(userId))
             {
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập để chọn ghế.";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -138,7 +140,7 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
                     SeatType = seat.SeatType ?? "thuong",
                     IsBooked = bookedSeatIds.Contains(seat.SeatId),
                     IsSelected = false,
-                    Price = seat.SeatType == "VIP" ? 95000 : 75000,
+                    Price = (seat.SeatType ?? "thuong") == "VIP" ? 95000 : 75000,
                     Row = row,
                     Column = column
                 };
@@ -181,7 +183,7 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
                     s.SeatId,
                     s.SeatCode,
                     s.SeatType,
-                    Price = s.SeatType == "VIP" ? 95000 : 75000
+                    Price = (s.SeatType ?? "thuong") == "VIP" ? 95000 : 75000
                 })
                 .ToListAsync();
 
@@ -200,18 +202,21 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
         [HttpGet]
         public async Task<IActionResult> Payment(int showtimeId, [FromQuery] string seatIds)
         {
-            var userId = Request.Cookies["userId"];
-            if (string.IsNullOrEmpty(userId))
+            try
             {
-                return RedirectToAction("Index", "Home");
-            }
+                var userId = Request.Cookies["userId"];
+                if (string.IsNullOrEmpty(userId))
+                {
+                    TempData["ErrorMessage"] = "Bạn cần đăng nhập để thực hiện thanh toán.";
+                    return RedirectToAction("Index", "Home");
+                }
 
-            if (string.IsNullOrEmpty(seatIds))
-            {
-                return RedirectToAction("SelectSeats", new { showtimeId });
-            }
+                if (string.IsNullOrEmpty(seatIds))
+                {
+                    return RedirectToAction("SelectSeats", new { showtimeId });
+                }
 
-            var selectedSeatIds = seatIds.Split(',').Select(int.Parse).ToList();
+                var selectedSeatIds = seatIds.Split(',').Select(int.Parse).ToList();
 
             var showtime = await _context.Showtimes
                 .Include(s => s.Movie)
@@ -230,7 +235,7 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
                     SeatId = s.SeatId,
                     SeatCode = s.SeatCode,
                     SeatType = s.SeatType ?? "thuong",
-                    Price = s.SeatType == "VIP" ? 95000 : 75000
+                    Price = (s.SeatType ?? "thuong") == "VIP" ? 95000 : 75000
                 })
                 .ToListAsync();
 
@@ -250,11 +255,18 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
                 TotalAmount = subtotal
             };
 
-            ViewData["IsLoggedIn"] = true;
-            ViewData["Username"] = Request.Cookies["username"];
-            ViewData["IsAdmin"] = string.Equals(Request.Cookies["role"], "Admin", StringComparison.OrdinalIgnoreCase);
+                ViewData["IsLoggedIn"] = true;
+                ViewData["Username"] = Request.Cookies["username"];
+                ViewData["IsAdmin"] = string.Equals(Request.Cookies["role"], "Admin", StringComparison.OrdinalIgnoreCase);
 
-            return View(viewModel);
+                return View(viewModel);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                Console.WriteLine($"Error in Payment action: {ex.Message}");
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // API để áp dụng mã giảm giá
@@ -329,7 +341,7 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
                 foreach (var seatId in request.SeatIds)
                 {
                     var seat = await _context.Seats.FindAsync(seatId);
-                    var price = seat?.SeatType == "VIP" ? 95000 : 75000;
+                    var price = (seat?.SeatType ?? "thuong") == "VIP" ? 95000 : 75000;
 
                     var ticket = new Ticket
                     {
@@ -390,6 +402,7 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
             var userId = Request.Cookies["userId"];
             if (string.IsNullOrEmpty(userId))
             {
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập để xem xác nhận đặt vé.";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -437,6 +450,7 @@ namespace Project2_Nhom5.Areas.Guest.Controllers
             var userId = Request.Cookies["userId"];
             if (string.IsNullOrEmpty(userId))
             {
+                TempData["ErrorMessage"] = "Bạn cần đăng nhập để xem lịch sử đặt vé.";
                 return RedirectToAction("Index", "Home");
             }
 

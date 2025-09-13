@@ -81,7 +81,7 @@
             <!-- Movie Info -->
             <div class="col-lg-3">
                 <div class="movie-info-card reveal">
-                    <img src="@(!string.IsNullOrEmpty(Model.MoviePoster) ? Model.MoviePoster : "https://via.placeholder.com/300x200/ff6b35/ffffff?text=Movie")" alt="@Model.MovieTitle" class="movie-poster" loading="lazy">
+                    <img src="@(!string.IsNullOrEmpty(Model.MoviePoster) ? Url.Content("~/" + Model.MoviePoster) : "https://placehold.co/400x250/ff6b35/ffffff?text=Movie")" alt="@Model.MovieTitle" class="movie-poster" loading="lazy">
                     <div class="movie-details">
                         <h3 class="movie-title">@Model.MovieTitle</h3>
                         <p class="movie-info">

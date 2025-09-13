@@ -64,6 +64,18 @@
     </div>
 </section>
 
+<!-- Error Message Display -->
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="container mt-3">
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    </div>
+}
+
 <!-- Movies Section -->
 <section id="movies" class="section">
     <div class="container">
@@ -73,7 +85,7 @@
             {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="movie-card reveal">
-                        <img src="@(!string.IsNullOrEmpty(m.PosterUrl) ? m.PosterUrl : "https://via.placeholder.com/300x450/ff6b35/ffffff?text=Movie")" alt="@m.Title" class="movie-poster" loading="lazy">
+                        <img src="@(!string.IsNullOrEmpty(m.PosterUrl) ? Url.Content("~/" + m.PosterUrl) : "https://placehold.co/400x250/ff6b35/ffffff?text=Movie")" alt="@m.Title" class="movie-poster" loading="lazy">
                         <div class="movie-info">
                             <h3 class="movie-title">@m.Title</h3>
                             <p class="movie-genre">@m.Genre</p>
@@ -90,7 +102,7 @@
             {
                 <div class="col-lg-4 col-md-6 mb-4">
                     <div class="movie-card reveal">
-                        <img src="@(!string.IsNullOrEmpty(m.PosterUrl) ? m.PosterUrl : "https://via.placeholder.com/300x450/ff6b35/ffffff?text=Movie")" alt="@m.Title" class="movie-poster" loading="lazy">
+                        <img src="@(!string.IsNullOrEmpty(m.PosterUrl) ? Url.Content("~/" + m.PosterUrl) : "https://placehold.co/400x250/ff6b35/ffffff?text=Movie")" alt="@m.Title" class="movie-poster" loading="lazy">
                         <div class="movie-info">
                             <h3 class="movie-title">@m.Title</h3>
                             <p class="movie-genre">@m.Genre</p>
@@ -138,7 +150,7 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="password" class="form-label"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
-                                    <input type="password" class="form-control login-input" id="password" placeholder="Nhập mật khẩu" required value="password1">
+                                    <input type="password" class="form-control login-input" id="homePassword" placeholder="Nhập mật khẩu" required value="password1">
                                 </div>
                                 <div class="form-group mb-4">
                                     <div class="form-check">
@@ -205,11 +217,11 @@
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="regPassword" class="form-label"><i class="fas fa-lock me-2"></i>Mật khẩu</label>
-                                    <input type="password" class="form-control login-input" id="regPassword" placeholder="Nhập mật khẩu" required>
+                                    <input type="password" class="form-control login-input" id="homeRegPassword" placeholder="Nhập mật khẩu" required>
                                 </div>
                                 <div class="form-group mb-4">
                                     <label for="regConfirmPassword" class="form-label"><i class="fas fa-lock me-2"></i>Xác nhận mật khẩu</label>
-                                    <input type="password" class="form-control login-input" id="regConfirmPassword" placeholder="Xác nhận mật khẩu" required>
+                                    <input type="password" class="form-control login-input" id="homeRegConfirmPassword" placeholder="Xác nhận mật khẩu" required>
                                 </div>
                                 <button type="submit" class="btn btn-success login-btn w-100">
                                     <i class="fas fa-user-plus me-2"></i>Đăng Ký
@@ -243,7 +255,7 @@
                 e.preventDefault();
                 
                 const username = document.getElementById('username').value;
-                const password = document.getElementById('password').value;
+                const password = document.getElementById('homePassword').value;
                 const rememberMe = document.getElementById('rememberMe').checked;
                 
                 const button = this.querySelector('button[type="submit"]');
@@ -349,8 +361,8 @@
                 const username = document.getElementById('regUsername').value;
                 const email = document.getElementById('regEmail').value;
                 const phone = document.getElementById('regPhone').value;
-                const password = document.getElementById('regPassword').value;
-                const confirmPassword = document.getElementById('regConfirmPassword').value;
+                const password = document.getElementById('homeRegPassword').value;
+                const confirmPassword = document.getElementById('homeRegConfirmPassword').value;
                 
                 // Validation
                 if (password !== confirmPassword) {
