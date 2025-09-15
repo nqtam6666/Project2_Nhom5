@@ -1,0 +1,337 @@
+@model Project2_Nhom5.Areas.Guest.Models.PendingPaymentsViewModel
+@{
+    ViewData["Title"] = "Vé chưa thanh toán";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-12">
+            <h2 class="mb-4">
+                <i class="fas fa-credit-card me-2"></i>
+                Vé chưa thanh toán
+            </h2>
+            
+            @if (!Model.PendingTickets.Any())
+            {
+                <div class="alert alert-info text-center">
+                    <i class="fas fa-info-circle me-2"></i>
+                    Bạn không có vé nào chưa thanh toán.
+                </div>
+                <div class="text-center mt-3">
+                    <a href="@Url.Action("Index", "Home")" class="btn btn-primary">
+                        <i class="fas fa-home me-2"></i>
+                        Về trang chủ
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="row">
+                    <!-- Danh sách vé -->
+                    <div class="col-lg-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-ticket-alt me-2"></i>
+                                    Chọn vé để thanh toán (@Model.PendingTickets.Count vé)
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    <input type="checkbox" id="selectAll" class="form-check-input">
+                                                </th>
+                                                <th>Phim</th>
+                                                <th>Rạp</th>
+                                                <th>Ngày chiếu</th>
+                                                <th>Ghế</th>
+                                                <th>Giá</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var ticket in Model.PendingTickets)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        <input type="checkbox" class="form-check-input ticket-checkbox" 
+                                                               value="@ticket.TicketId" data-price="@ticket.Price">
+                                                    </td>
+                                                    <td>
+                                                        <strong>@ticket.MovieTitle</strong>
+                                                    </td>
+                                                    <td>@ticket.TheaterName</td>
+                                                    <td>
+                                                        @ticket.ShowDate.ToString("dd/MM/yyyy")<br>
+                                                        <small class="text-muted">@ticket.ShowTime.ToString(@"hh\:mm")</small>
+                                                    </td>
+                                                    <td>
+                                                        <span class="badge @(ticket.SeatType == "VIP" ? "bg-warning" : "bg-secondary")">
+                                                            @ticket.SeatCode
+                                                        </span>
+                                                        <br>
+                                                        <small class="text-muted">@ticket.SeatType</small>
+                                                    </td>
+                                                    <td>
+                                                        <strong class="text-primary">@ticket.Price.ToString("N0") VNĐ</strong>
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Thanh toán -->
+                    <div class="col-lg-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-shopping-cart me-2"></i>
+                                    Thanh toán
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div id="selectedTicketsInfo" style="display: none;">
+                                    <h6>Vé đã chọn:</h6>
+                                    <div id="selectedTicketsList" class="mb-3"></div>
+                                    
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <strong>Tổng tiền:</strong>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <span id="totalAmount" class="text-primary">0 VNĐ</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="discountCode" class="form-label">Mã giảm giá (tùy chọn)</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="discountCode" placeholder="Nhập mã giảm giá">
+                                            <button class="btn btn-outline-secondary" type="button" id="applyDiscount">
+                                                <i class="fas fa-check"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div id="discountInfo" style="display: none;" class="mb-3">
+                                        <div class="alert alert-success">
+                                            <i class="fas fa-tag me-2"></i>
+                                            <span id="discountMessage"></span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <strong>Giảm giá:</strong>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <span id="discountAmount" class="text-success">0 VNĐ</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-3">
+                                        <div class="col-6">
+                                            <strong>Thành tiền:</strong>
+                                        </div>
+                                        <div class="col-6 text-end">
+                                            <span id="finalAmount" class="text-primary fw-bold">0 VNĐ</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="paymentMethod" class="form-label">Phương thức thanh toán</label>
+                                        <select class="form-select" id="paymentMethod">
+                                            <option value="">Chọn phương thức thanh toán</option>
+                                            <option value="momo">MoMo</option>
+                                            <option value="banking">Chuyển khoản</option>
+                                            <option value="cash">Tiền mặt</option>
+                                        </select>
+                                    </div>
+
+                                    <button class="btn btn-success w-100" id="processPayment" disabled>
+                                        <i class="fas fa-credit-card me-2"></i>
+                                        Thanh toán
+                                    </button>
+                                </div>
+
+                                <div id="noSelectionInfo" class="text-center text-muted">
+                                    <i class="fas fa-hand-pointer fa-3x mb-3"></i>
+                                    <p>Vui lòng chọn vé để thanh toán</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            let selectedTickets = [];
+            let totalAmount = 0;
+            let discountAmount = 0;
+            let finalAmount = 0;
+
+            // Select all checkbox
+            $('#selectAll').change(function() {
+                $('.ticket-checkbox').prop('checked', this.checked);
+                updateSelectedTickets();
+            });
+
+            // Individual ticket checkbox
+            $('.ticket-checkbox').change(function() {
+                updateSelectAllState();
+                updateSelectedTickets();
+            });
+
+            function updateSelectAllState() {
+                const totalCheckboxes = $('.ticket-checkbox').length;
+                const checkedCheckboxes = $('.ticket-checkbox:checked').length;
+                $('#selectAll').prop('checked', totalCheckboxes === checkedCheckboxes);
+            }
+
+            function updateSelectedTickets() {
+                selectedTickets = [];
+                $('.ticket-checkbox:checked').each(function() {
+                    selectedTickets.push(parseInt($(this).val()));
+                });
+
+                if (selectedTickets.length > 0) {
+                    $('#selectedTicketsInfo').show();
+                    $('#noSelectionInfo').hide();
+                    loadSelectedTicketsInfo();
+                } else {
+                    $('#selectedTicketsInfo').hide();
+                    $('#noSelectionInfo').show();
+                }
+            }
+
+            function loadSelectedTicketsInfo() {
+                $.ajax({
+                    url: '@Url.Action("GetSelectedTicketsInfo", "Booking")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(selectedTickets),
+                    success: function(response) {
+                        if (response.success) {
+                            displaySelectedTickets(response.tickets);
+                            totalAmount = response.totalPrice;
+                            updateAmounts();
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi tải thông tin vé');
+                    }
+                });
+            }
+
+            function displaySelectedTickets(tickets) {
+                let html = '';
+                tickets.forEach(function(ticket) {
+                    html += `
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <div>
+                                <small class="text-muted">${ticket.movieTitle}</small><br>
+                                <small>${ticket.seatCode} - ${ticket.seatType}</small>
+                            </div>
+                            <small class="text-primary">${ticket.price.toLocaleString()} VNĐ</small>
+                        </div>
+                    `;
+                });
+                $('#selectedTicketsList').html(html);
+            }
+
+            function updateAmounts() {
+                $('#totalAmount').text(totalAmount.toLocaleString() + ' VNĐ');
+                finalAmount = totalAmount - discountAmount;
+                $('#finalAmount').text(finalAmount.toLocaleString() + ' VNĐ');
+                
+                // Enable/disable payment button
+                const paymentMethod = $('#paymentMethod').val();
+                $('#processPayment').prop('disabled', !paymentMethod || finalAmount <= 0);
+            }
+
+            // Apply discount
+            $('#applyDiscount').click(function() {
+                const discountCode = $('#discountCode').val().trim();
+                if (!discountCode) {
+                    alert('Vui lòng nhập mã giảm giá');
+                    return;
+                }
+
+                $.ajax({
+                    url: '@Url.Action("ApplyDiscountToSelected", "Booking")',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        discountCode: discountCode,
+                        subTotal: totalAmount
+                    }),
+                    success: function(response) {
+                        if (response.success) {
+                            discountAmount = response.discountAmount;
+                            $('#discountAmount').text(discountAmount.toLocaleString() + ' VNĐ');
+                            $('#discountMessage').text(`Giảm ${response.discountAmount.toLocaleString()} VNĐ`);
+                            $('#discountInfo').show();
+                            updateAmounts();
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('Có lỗi xảy ra khi áp dụng mã giảm giá');
+                    }
+                });
+            });
+
+            // Payment method change
+            $('#paymentMethod').change(function() {
+                updateAmounts();
+            });
+
+            // Process payment
+            $('#processPayment').click(function() {
+                const paymentMethod = $('#paymentMethod').val();
+                const discountCode = $('#discountCode').val().trim();
+
+                if (!paymentMethod) {
+                    alert('Vui lòng chọn phương thức thanh toán');
+                    return;
+                }
+
+                if (confirm('Bạn có chắc chắn muốn thanh toán cho ' + selectedTickets.length + ' vé?')) {
+                    $.ajax({
+                        url: '@Url.Action("ProcessSelectedPayments", "Booking")',
+                        type: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify({
+                            selectedTicketIds: selectedTickets,
+                            paymentMethod: paymentMethod,
+                            discountCode: discountCode || null
+                        }),
+                        success: function(response) {
+                            if (response.success) {
+                                alert('Thanh toán thành công! Mã đặt vé: ' + response.bookingCode);
+                                location.reload();
+                            } else {
+                                alert(response.message);
+                            }
+                        },
+                        error: function() {
+                            alert('Có lỗi xảy ra khi thanh toán');
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+}

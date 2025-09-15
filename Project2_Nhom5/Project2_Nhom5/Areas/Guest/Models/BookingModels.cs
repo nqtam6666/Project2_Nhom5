@@ -82,6 +82,7 @@ namespace Project2_Nhom5.Areas.Guest.Models
         public string PaymentMethod { get; set; } = string.Empty;
         public DateTime BookingDate { get; set; }
         public string BookingCode { get; set; } = string.Empty;
+        public string Status { get; set; } = string.Empty;
     }
 
     // View model cho lịch sử đặt vé

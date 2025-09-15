@@ -13,5 +13,13 @@ public partial class Revenue
 
     public decimal? AgencyCommission { get; set; }
 
+    public DateTime? CreatedDate { get; set; }
+
+    public int? TicketsSold { get; set; }
+
+    public decimal? TotalTicketPrice { get; set; }
+
+    public decimal? ActualRevenue { get; set; }
+
     public virtual Showtime? Showtime { get; set; }
 }

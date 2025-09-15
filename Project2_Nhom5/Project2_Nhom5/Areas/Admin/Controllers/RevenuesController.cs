@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Project2_Nhom5.Models;
+using Project2_Nhom5.Services;
 
 namespace Project2_Nhom5.Controllers
 {
@@ -13,10 +14,12 @@ namespace Project2_Nhom5.Controllers
     public class RevenuesController : Controller
     {
         private readonly Project2_Nhom5Context _context;
+        private readonly RevenueService _revenueService;
 
-        public RevenuesController(Project2_Nhom5Context context)
+        public RevenuesController(Project2_Nhom5Context context, RevenueService revenueService)
         {
             _context = context;
+            _revenueService = revenueService;
         }
 
         // GET: Revenues
@@ -153,7 +156,7 @@ namespace Project2_Nhom5.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RevenueId,ShowtimeId,TotalAmount,AgencyCommission")] Revenue revenue)
+        public async Task<IActionResult> Create([Bind("RevenueId,ShowtimeId,TotalAmount,AgencyCommission,CreatedDate,TicketsSold,TotalTicketPrice,ActualRevenue")] Revenue revenue)
         {
             try
             {
@@ -244,7 +247,7 @@ namespace Project2_Nhom5.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RevenueId,ShowtimeId,TotalAmount,AgencyCommission")] Revenue revenue)
+        public async Task<IActionResult> Edit(int id, [Bind("RevenueId,ShowtimeId,TotalAmount,AgencyCommission,CreatedDate,TicketsSold,TotalTicketPrice,ActualRevenue")] Revenue revenue)
         {
             try
             {
@@ -374,6 +377,49 @@ namespace Project2_Nhom5.Controllers
             }
             
             return RedirectToAction(nameof(Index));
+        }
+
+        // POST: Revenues/RefreshRevenue
+        [HttpPost]
+        public async Task<IActionResult> RefreshRevenue(int showtimeId)
+        {
+            try
+            {
+                await _revenueService.UpdateRevenueForShowtimeAsync(showtimeId);
+                
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = true, message = "Cập nhật doanh thu thành công!" });
+                }
+                
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+                {
+                    return Json(new { success = false, message = "Có lỗi xảy ra: " + ex.Message });
+                }
+                
+                return RedirectToAction(nameof(Index));
+            }
+        }
+
+        // GET: Revenues/Stats
+        public async Task<IActionResult> Stats()
+        {
+            var currentYear = DateTime.Now.Year;
+            var monthlyStats = await _revenueService.GetMonthlyRevenueStatsAsync(currentYear);
+            var totalRevenue = await _revenueService.GetTotalRevenueAsync(
+                new DateTime(currentYear, 1, 1), 
+                new DateTime(currentYear, 12, 31)
+            );
+
+            ViewBag.MonthlyStats = monthlyStats;
+            ViewBag.TotalRevenue = totalRevenue;
+            ViewBag.CurrentYear = currentYear;
+
+            return View();
         }
 
         private bool RevenueExists(int id)

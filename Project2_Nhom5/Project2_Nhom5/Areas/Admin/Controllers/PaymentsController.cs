@@ -132,7 +132,7 @@ namespace Project2_Nhom5.Controllers
             var availableTickets = await _context.Tickets
                 .Include(t => t.Showtime)
                 .ThenInclude(s => s.Movie)
-                .Where(t => t.Status == "choxuly" && !_context.Payments.Any(p => p.TicketId == t.TicketId))
+                .Where(t => t.Status == "ChoXuLy" && !_context.Payments.Any(p => p.TicketId == t.TicketId))
                 .Select(t => new { 
                     t.TicketId, 
                     DisplayText = $"Vé #{t.TicketId} - {(t.Showtime != null && t.Showtime.Movie != null ? t.Showtime.Movie.Title : "N/A")} ({(t.Showtime != null ? $"{t.Showtime.ShowDate:dd/MM/yyyy} {t.Showtime.ShowTime:HH:mm}" : "N/A")})" 
@@ -162,11 +162,11 @@ namespace Project2_Nhom5.Controllers
                 if (ModelState.IsValid)
                 {
                     _context.Add(payment);
-                    // Sau khi thanh toán, cập nhật trạng thái vé thành 'dathanhtoan'
+                    // Sau khi thanh toán, cập nhật trạng thái vé thành 'DaThanhToan'
                     var ticket = await _context.Tickets.FirstOrDefaultAsync(t => t.TicketId == payment.TicketId);
                     if (ticket != null)
                     {
-                        ticket.Status = "dathanhtoan";
+                        ticket.Status = "DaThanhToan";
                         _context.Tickets.Update(ticket);
                     }
                     await _context.SaveChangesAsync();

@@ -17,6 +17,12 @@ public partial class Ticket
 
     public string? Status { get; set; }
 
+    public decimal? OriginalPrice { get; set; }
+
+    public int? DiscountId { get; set; }
+
+    public decimal? DiscountAmount { get; set; }
+
     public virtual Payment? Payment { get; set; }
 
     public virtual Seat? Seat { get; set; }
@@ -24,4 +30,6 @@ public partial class Ticket
     public virtual Showtime? Showtime { get; set; }
 
     public virtual User? User { get; set; }
+
+    public virtual Discount? Discount { get; set; }
 }

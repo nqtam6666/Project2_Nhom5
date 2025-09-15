@@ -125,6 +125,9 @@ public partial class Project2_Nhom5Context : DbContext
             entity.Property(e => e.SeatId).HasColumnName("MaGhe");
             entity.Property(e => e.Price).HasColumnName("GiaVe").HasColumnType("decimal(10,2)");
             entity.Property(e => e.Status).HasColumnName("TrangThai");
+            entity.Property(e => e.OriginalPrice).HasColumnName("GiaGoc").HasColumnType("decimal(10,2)");
+            entity.Property(e => e.DiscountId).HasColumnName("MaGiamGia");
+            entity.Property(e => e.DiscountAmount).HasColumnName("GiaTriGiamGia").HasColumnType("decimal(10,2)").HasDefaultValue(0m);
 
             entity.HasOne(d => d.Seat)
                 .WithMany(p => p.Tickets)
@@ -139,6 +142,11 @@ public partial class Project2_Nhom5Context : DbContext
             entity.HasOne(d => d.User)
                 .WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.SetNull);
+
+            entity.HasOne(d => d.Discount)
+                .WithMany()
+                .HasForeignKey(d => d.DiscountId)
                 .OnDelete(DeleteBehavior.SetNull);
         });
 
@@ -169,6 +177,17 @@ public partial class Project2_Nhom5Context : DbContext
             entity.Property(e => e.ShowtimeId).HasColumnName("MaSuatChieu");
             entity.Property(e => e.TotalAmount).HasColumnName("TongTien").HasColumnType("decimal(15,2)").HasDefaultValue(0m);
             entity.Property(e => e.AgencyCommission).HasColumnName("HoaHongDaiLy").HasColumnType("decimal(5,2)").HasDefaultValue(0m);
+            
+            // DoanhThuThuc is a computed column - exclude from insert/update
+            entity.Property(e => e.ActualRevenue)
+                .HasColumnName("DoanhThuThuc")
+                .HasColumnType("decimal(15,2)")
+                .HasDefaultValue(0m)
+                .ValueGeneratedOnAddOrUpdate();
+            
+            entity.Property(e => e.CreatedDate).HasColumnName("NgayTao").HasColumnType("datetime").HasDefaultValueSql("GETDATE()");
+            entity.Property(e => e.TicketsSold).HasColumnName("SoVeBan").HasDefaultValue(0);
+            entity.Property(e => e.TotalTicketPrice).HasColumnName("TongGiaVe").HasColumnType("decimal(15,2)").HasDefaultValue(0m);
 
             entity.HasOne(d => d.Showtime)
                 .WithMany(p => p.Revenues)

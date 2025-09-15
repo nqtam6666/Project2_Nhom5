@@ -48,29 +48,29 @@
                 </label>
                 <select name="status" class="form-select">
                     <option value="">Tất cả trạng thái</option>
-                    @if (statusFilter == "choxuly")
+                    @if (statusFilter == "choxuly" || statusFilter == "ChoXuLy")
                     {
-                        <option value="choxuly" selected>Chờ xử lý</option>
+                        <option value="ChoXuLy" selected>Chờ xử lý</option>
                     }
                     else
                     {
-                        <option value="choxuly">Chờ xử lý</option>
+                        <option value="ChoXuLy">Chờ xử lý</option>
                     }
-                    @if (statusFilter == "dathanhtoan")
+                    @if (statusFilter == "dathanhtoan" || statusFilter == "DaThanhToan")
                     {
-                        <option value="dathanhtoan" selected>Đã thanh toán</option>
-                    }
-                    else
-                    {
-                        <option value="dathanhtoan">Đã thanh toán</option>
-                    }
-                    @if (statusFilter == "dahuy")
-                    {
-                        <option value="dahuy" selected>Đã hủy</option>
+                        <option value="DaThanhToan" selected>Đã thanh toán</option>
                     }
                     else
                     {
-                        <option value="dahuy">Đã hủy</option>
+                        <option value="DaThanhToan">Đã thanh toán</option>
+                    }
+                    @if (statusFilter == "dahuy" || statusFilter == "DaHuy")
+                    {
+                        <option value="DaHuy" selected>Đã hủy</option>
+                    }
+                    else
+                    {
+                        <option value="DaHuy">Đã hủy</option>
                     }
                 </select>
             </div>
@@ -301,19 +301,20 @@ else
                             </td>
                             <td>
                                 @{
-                                    var statusClass = item.Status switch
+                                    var statusLower = item.Status?.ToLower() ?? "";
+                                    var statusClass = statusLower switch
                                     {
-                                        "choxuly" => "bg-warning",
-                                        "dathanhtoan" => "bg-success",
-                                        "dahuy" => "bg-danger",
+                                        "choxuly" or "choxuly" => "bg-warning",
+                                        "dathanhtoan" or "dathanhtoan" => "bg-success",
+                                        "dahuy" or "dahuy" => "bg-danger",
                                         _ => "bg-info"
                                     };
-                                    var statusText = item.Status switch
+                                    var statusText = statusLower switch
                                     {
-                                        "choxuly" => "Chờ xử lý",
-                                        "dathanhtoan" => "Đã thanh toán",
-                                        "dahuy" => "Đã hủy",
-                                        _ => item.Status
+                                        "choxuly" or "choxuly" => "Chờ xử lý",
+                                        "dathanhtoan" or "dathanhtoan" => "Đã thanh toán",
+                                        "dahuy" or "dahuy" => "Đã hủy",
+                                        _ => item.Status ?? "Không xác định"
                                     };
                                 }
                                 <span class="badge @statusClass">@statusText</span>
